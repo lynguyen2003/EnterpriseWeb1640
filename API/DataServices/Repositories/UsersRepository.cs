@@ -58,6 +58,7 @@ namespace DataServices.Repositories
                     existingUser.UserName = users.UserName;
                     existingUser.Email = users.Email;
                     existingUser.Phone = users.Phone;
+                    existingUser.FaculitiesId = users.FaculitiesId;
                     //TO DO:
 
                     await _context.SaveChangesAsync();

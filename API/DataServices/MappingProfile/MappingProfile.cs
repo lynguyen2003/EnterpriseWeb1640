@@ -16,7 +16,9 @@ namespace DataServices.MappingProfile
     {
         public MappingProfile() {
             CreateMap<CreateUserDTO, Users>().ReverseMap();
-            CreateMap<UsersDTO, Users>().ReverseMap();
+            CreateMap<UsersDTO, Users>()
+                .ForMember(dest => dest.FaculitiesId, opt => opt.MapFrom(src => src.FaculityId))
+                .ReverseMap();
             CreateMap<UpdateUserDTO, Users>().ReverseMap();
         }
     }
