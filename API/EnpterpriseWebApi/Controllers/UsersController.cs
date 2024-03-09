@@ -41,14 +41,14 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] CreateUserDTO userDTO)
+        public async Task<IActionResult> Add([FromBody] UsersDTO userDTO)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
             var result = _mapper.Map<Users>(userDTO);
             await _unitOfWorks.Users.AddUserWithFaculityId(result, userDTO.FaculityId);
             await _unitOfWorks.CompleteAsync();
-            return CreatedAtAction(nameof(Get), new { userId = result.Id }, result); //TO DO
+            return CreatedAtAction(nameof(Gets), _mapper.Map<UsersDTO>(result)); //TO DO
         }
 
         [HttpPut("")]
