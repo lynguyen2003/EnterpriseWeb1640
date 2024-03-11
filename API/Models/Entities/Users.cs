@@ -9,7 +9,7 @@ namespace Models.Entities
 {
     public class Users : IdentityUser
     {
-        public Faculities Faculities { get; set; }
+        public Faculties Faculities { get; set; }
         public ICollection<Feedbacks> Feedbacks { get; set; }
     }
 }
