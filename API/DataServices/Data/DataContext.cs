@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Models.Entities;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataServices.Data
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -18,40 +19,26 @@ namespace DataServices.Data
         public DbSet<ClosureDates> ClosureDates { get; set; }
         public DbSet<Contributions> Contributions { get; set; }
         public DbSet<Faculities> Faculities { get; set; }
-        public DbSet<FeedBacks> FeedBacks { get; set; }
-        public DbSet<Users> Users { get; set; }
-        public DbSet<Roles> Roles { get; set; }
-        public DbSet<Permissions> Permissions { get; set; }
-        public DbSet<UserRoles> UserRoles { get; set; }
-        public DbSet<RolePermissions> RolePermissions { get; set; }
+        public DbSet<Feedbacks> Feedbacks { get; set; }
+        public DbSet<Images> Images { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserRoles>()
-                .HasKey(ur => new { ur.UserId, ur.RoleId });
+            base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<UserRoles>()
-                .HasOne(ur => ur.Users)
-                .WithMany(u => u.UserRoles)
-                .HasForeignKey(ur => ur.UserId);
+            modelBuilder.Entity<Feedbacks>()
+                .HasKey(f => new { f.UserId, f.ConId }); // Composite key
 
-            modelBuilder.Entity<UserRoles>()
-                .HasOne(ur => ur.Roles)
-                .WithMany(r => r.UserRoles)
-                .HasForeignKey(ur => ur.RoleId);
+            modelBuilder.Entity<Feedbacks>()
+                .HasOne(f => f.Users)
+                .WithMany(u => u.Feedbacks)
+                .HasForeignKey(f => f.UserId);
 
-            modelBuilder.Entity<RolePermissions>()
-                .HasKey(rp => new { rp.RoleId, rp.PermissionId });
-
-            modelBuilder.Entity<RolePermissions>()
-                .HasOne(rp => rp.Roles)
-                .WithMany(r => r.RolePermissions)
-                .HasForeignKey(rp => rp.RoleId);
-
-            modelBuilder.Entity<RolePermissions>()
-                .HasOne(rp => rp.Permissions)
-                .WithMany(p => p.RolePermissions)
-                .HasForeignKey(rp => rp.PermissionId);
+            modelBuilder.Entity<Feedbacks>()
+                .HasOne(f => f.Contributions)
+                .WithMany(c => c.Feedbacks)
+                .HasForeignKey(f => f.ConId);
         }
     }
+
 }
