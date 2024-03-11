@@ -4,6 +4,7 @@ using DataServices.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataServices.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240311103942_remove role based table")]
+    partial class removerolebasedtable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,9 +77,14 @@ namespace DataServices.Migrations
                     b.Property<DateTime>("UploadDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("UsersId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ClosureDatesId");
+
+                    b.HasIndex("UsersId");
 
                     b.ToTable("Contributions");
                 });
@@ -123,6 +131,39 @@ namespace DataServices.Migrations
                     b.ToTable("FeedBacks");
                 });
 
+            modelBuilder.Entity("Models.Entities.Users", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FaculitiesId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Phone")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FaculitiesId");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("Models.Entities.Contributions", b =>
                 {
                     b.HasOne("Models.Entities.ClosureDates", "ClosureDates")
@@ -130,6 +171,10 @@ namespace DataServices.Migrations
                         .HasForeignKey("ClosureDatesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Models.Entities.Users", null)
+                        .WithMany("Contributions")
+                        .HasForeignKey("UsersId");
 
                     b.Navigation("ClosureDates");
                 });
@@ -145,6 +190,17 @@ namespace DataServices.Migrations
                     b.Navigation("Contributions");
                 });
 
+            modelBuilder.Entity("Models.Entities.Users", b =>
+                {
+                    b.HasOne("Models.Entities.Faculities", "Faculities")
+                        .WithMany("Users")
+                        .HasForeignKey("FaculitiesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Faculities");
+                });
+
             modelBuilder.Entity("Models.Entities.ClosureDates", b =>
                 {
                     b.Navigation("Contributions");
@@ -153,6 +209,16 @@ namespace DataServices.Migrations
             modelBuilder.Entity("Models.Entities.Contributions", b =>
                 {
                     b.Navigation("FeedBacks");
+                });
+
+            modelBuilder.Entity("Models.Entities.Faculities", b =>
+                {
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("Models.Entities.Users", b =>
+                {
+                    b.Navigation("Contributions");
                 });
 #pragma warning restore 612, 618
         }

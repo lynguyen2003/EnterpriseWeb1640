@@ -12,6 +12,6 @@ namespace Models.Entities
         [Key]
         public int Id { get; set; }
         public string FacultyName { get; set; }
-        public ICollection<Users> Users { get; set; }
+        //public ICollection<Users> Users { get; set; }
     }
 }

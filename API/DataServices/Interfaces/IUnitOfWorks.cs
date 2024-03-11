@@ -8,7 +8,6 @@ namespace DataServices.Interfaces
 {
     public interface IUnitOfWorks
     {
-        IUsersRepository Users { get; }
         Task<bool> CompleteAsync();
         
     }
