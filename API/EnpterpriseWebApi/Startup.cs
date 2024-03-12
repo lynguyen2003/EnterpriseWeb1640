@@ -10,6 +10,8 @@ using DataServices;
 using DataServices.Data;
 using DataServices.Interfaces;
 using DataServices.Repositories;
+using Models.Entities;
+using DataServices.MappingProfile;
 
 public class Startup
 {
@@ -38,11 +40,15 @@ public class Startup
                 b => b.MigrationsAssembly("DataServices"));
         });
 
-        services.AddAutoMapper(typeof(Startup));
+		services.AddAutoMapper(typeof(MappingProfile));
+
+		services.AddAutoMapper(typeof(Startup));
 
         services.AddScoped<IUnitOfWorks, UnitOfWorks>();
 
-        services.AddControllers();
+		services.AddScoped<IFacultiesRepository, FacultiesRepository>();
+
+		services.AddControllers();
 
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
