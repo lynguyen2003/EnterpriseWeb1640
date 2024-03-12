@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Models.Entities
 {
-    public class Faculities
+    public class Faculties
     {
         [Key]
         public int Id { get; set; }

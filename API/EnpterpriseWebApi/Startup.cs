@@ -73,7 +73,9 @@ public class Startup
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IUnitOfWorks, UnitOfWorks>();
 
-        services.AddControllers();
+		services.AddScoped<IFacultiesRepository, FacultiesRepository>();
+
+		services.AddControllers();
 
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(c =>
