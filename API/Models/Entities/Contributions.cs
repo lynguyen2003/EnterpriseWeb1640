@@ -13,10 +13,10 @@ namespace Models.Entities
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public byte[] Content { get; set; }
-        public byte[] ImageFile {  get; set; }
+        public string FilePath { get; set; }
         public DateTime UploadDate { get; set; }
         public ClosureDates ClosureDates { get; set; }
-        public ICollection<FeedBacks> FeedBacks { get; set; }
+        public ICollection<Feedbacks> Feedbacks { get; set; }
+        public ICollection<Images> Images { get; set; }
     }
 }

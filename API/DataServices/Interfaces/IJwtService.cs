@@ -1,4 +1,4 @@
-﻿using Models.Entities;
+﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace DataServices.Interfaces
 {
-    public interface IUsersRepository : IGenericRepository<Users>
+    public interface IJwtService
     {
-        Task<bool> AddUserWithFaculityId(Users users, int faculityId);
+        string GenerateJwtToken(IdentityUser user); 
     }
 }

@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Models.Entities
 {
-    public class Permissions
+    public class Faculties
     {
         [Key]
         public int Id { get; set; }
-        public string PerName { get; set; }
-        public ICollection<RolePermissions> RolePermissions { get; set; }
+        public string FacultyName { get; set; }
+        public ICollection<Users> Users { get; set; }
     }
 }

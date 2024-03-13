@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataServices.Interfaces
+namespace DataServices.Configurations
 {
-    public interface IUnitOfWorks
+    public class JwtConfig
     {
-        Task<bool> CompleteAsync();
-        
+        public string Secret { get; set; }
     }
 }

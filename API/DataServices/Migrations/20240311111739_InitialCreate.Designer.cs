@@ -4,6 +4,7 @@ using DataServices.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataServices.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240311111739_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -283,7 +286,7 @@ namespace DataServices.Migrations
                     b.ToTable("Contributions");
                 });
 
-            modelBuilder.Entity("Models.Entities.Faculties", b =>
+            modelBuilder.Entity("Models.Entities.Faculities", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -297,7 +300,7 @@ namespace DataServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Faculties");
+                    b.ToTable("Faculities");
                 });
 
             modelBuilder.Entity("Models.Entities.Feedbacks", b =>
@@ -453,7 +456,7 @@ namespace DataServices.Migrations
 
             modelBuilder.Entity("Models.Entities.Users", b =>
                 {
-                    b.HasOne("Models.Entities.Faculties", "Faculities")
+                    b.HasOne("Models.Entities.Faculities", "Faculities")
                         .WithMany("Users")
                         .HasForeignKey("FaculitiesId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -474,7 +477,7 @@ namespace DataServices.Migrations
                     b.Navigation("Images");
                 });
 
-            modelBuilder.Entity("Models.Entities.Faculties", b =>
+            modelBuilder.Entity("Models.Entities.Faculities", b =>
                 {
                     b.Navigation("Users");
                 });

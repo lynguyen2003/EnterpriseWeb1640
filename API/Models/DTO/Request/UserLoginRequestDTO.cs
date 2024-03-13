@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Models.DTO.Request
 {
-    public class CreateUserDTO
+    public class UserLoginRequestDTO
     {
-        public string UserName { get; set; }
-        public string Password { get; set; }
+        [Required]
         public string Email { get; set; }
-        public int Phone { get; set; }
-        public int FaculityId { get; set; }
+        [Required]
+        public string Password { get; set; }
     }
 }
