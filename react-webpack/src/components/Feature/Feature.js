@@ -3,7 +3,7 @@ import './Feature.css';
 
 function Feature () {
     return (
-        <div className="row m-2">
+        <div className="row m-2 col">
             <div className="features col">
                 <p className="text">“Students at the University of Greenwich will not only focus on the key theoretical and practical aspects of their studies but they will also develop a range of those general skills that are essential in any career.
                 </p>

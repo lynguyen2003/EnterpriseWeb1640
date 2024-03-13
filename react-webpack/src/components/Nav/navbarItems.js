@@ -6,21 +6,15 @@ export const navbarItems = [
         icon: "fa-solid fa-house",
     },
     {
-        title: " Magazine",
-        url: "/magazine",
+        title: " Contributions",
+        url: "/contributions",
         cName: "nav-link",
-        icon: "fa-solid fa-book",
+        icon: "fa-solid fa-book-open",
     },
     {
-        title: " Item1",
-        url: "/",
+        title: " About",
+        url: "/about",
         cName: "nav-link",
-        icon: "fa-solid fa-spinner",
-    },
-    {
-        title: " Item2",
-        url: "/",
-        cName: "nav-link",
-        icon: "fa-solid fa-spinner",
-    },
+        icon: "fa-solid fa-circle-info",
+    }
 ]

@@ -48,7 +48,7 @@ function Login() {
             <div class="card text-black">
               <div class="card-body p-5">
                 <div class="my-5 mt-1">
-                  <h1 className="imgLogin mt-1 mb-5">
+                  <h1 className="imgLogin mt-1 mb-4">
                     <img
                       src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Logo-Truong-Dai-hoc-Greenwich-Viet-Nam.png"
                       height="80"
