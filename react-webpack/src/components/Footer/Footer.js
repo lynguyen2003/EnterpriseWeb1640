@@ -42,6 +42,9 @@ function Footer() {
                                             <li><a className="text-white text-opacity-75" href="#">Memaybeo</a></li>
                                         </ul>
                                     </div>
+                                    <div className="">
+                                    <div class="fb-page" data-href="https://www.facebook.com/GreenwichVietnam" data-tabs="timeline" data-width="" data-height="70" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="https://www.facebook.com/GreenwichVietnam" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/GreenwichVietnam">Greenwich Việt Nam</a></blockquote></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

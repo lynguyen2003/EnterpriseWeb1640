@@ -12,4 +12,14 @@
   text-align: center;
 }
 
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100;
+}
+
+#root {
+  margin-bottom: -16px; /* Điều chỉnh giảm margin để xóa khoảng trống phía dưới */
+}
+
 
