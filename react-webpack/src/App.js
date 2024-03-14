@@ -9,15 +9,15 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 function App() {
     return (
         <Router>
-            <div>
+            <div style={{height:"0"}}>
                 <Routes>
                     <Route path="/" element={
                         <>
-                            {/* <Nav />
+                            <Nav />
                             <Hero />
                             <Feature />
-                            <Footer /> */}
-                            <Login />
+                            <Footer />
+                            {/* <Login /> */}
                         </>
                     } />
                     <Route path="/login" element={<Login />} />

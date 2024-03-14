@@ -1,20 +1,30 @@
 .gradient-custom {
   /* fallback for old browsers */
-  background: #6a11cb;
+  background: #99B6FF;
 
   /* Chrome 10-25, Safari 5.1-6 */
   background: -webkit-linear-gradient(
-    to right,
-    rgba(106, 17, 203, 1),
-    rgba(37, 117, 252, 1)
+    to bottom,
+    rgba(153, 182, 255),
+    rgba(102, 117, 255)
   );
 
   /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   background: linear-gradient(
-    to right,
-    rgba(106, 17, 203, 1),
-    rgba(37, 117, 252, 1)
+    to bottom,
+    rgba(153, 182, 255),
+    rgba(102, 117, 255)
   );
+}
+
+.body{
+  margin: 0;
+  padding: 0;
+  height: 100;
+}
+
+#root {
+  margin-bottom: -16px; /* Điều chỉnh giảm margin để xóa khoảng trống phía dưới */
 }
 
 .btn {
@@ -49,7 +59,7 @@
   width: 100%;
   padding: 0 5px;
   height: 40px;
-  font-size: 20px;
+  font-size: 15px;
   border: none;
   background: none;
   outline: none;
@@ -61,7 +71,7 @@
   left: 5px;
   color: #000000;
   transform: translateY(-50%);
-  font-size: 20px;
+  font-size: 17px;
   pointer-events: none;
   transition: 0.5s;
 }
@@ -72,14 +82,13 @@
   color: #2691d9;
 }
 
-.pass {
+.pass a{
   margin: -5px 0 20px 5px;
-  font-size: 15px;
+  font-size: 13px;
   color: #000000;
   cursor: pointer;
   }
 
-  .pass a:hover {
-  /* text-decoration: underline; */
+.pass a:hover {
   color: #2691d9;
-  }
+}
