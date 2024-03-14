@@ -6,9 +6,13 @@ using AutoMapper;
 using Models.DTO.Response;
 using Models.DTO.Request;
 using Models.DTO;
+using DataServices.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-namespace YourNamespace.Controllers
+namespace EnpterpriseWebApi.Controllers
 {
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "AppUser")]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class FacultiesController : ControllerBase

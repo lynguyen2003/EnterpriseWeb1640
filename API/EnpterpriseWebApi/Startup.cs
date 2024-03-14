@@ -29,12 +29,28 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        // Configure Identity
         services.AddDbContext<DataContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
         services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
 
+        var key = Encoding.ASCII.GetBytes(Configuration.GetSection("JwtConfig:Secret").Value);
+
+        var tokenValidationParameter = new TokenValidationParameters()
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateIssuer = false, // private
+            ValidateAudience = false, // private too
+            RequireExpirationTime = false,
+            ValidateLifetime = true
+        };
+        // Configure other services
+        services.AddDbContext<DataContext>(options =>
+        {
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                b => b.MigrationsAssembly("DataServices"));
+        });
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -43,35 +59,21 @@ public class Startup
         })
         .AddJwtBearer(jwt =>
         {
-            var key = Encoding.ASCII.GetBytes(Configuration.GetSection("JwtConfig:Secret").Value);
-
             jwt.SaveToken = true;
-            jwt.TokenValidationParameters = new TokenValidationParameters()
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = false, // private
-                ValidateAudience = false, // private too
-                RequireExpirationTime = false,
-                ValidateLifetime = true
-            };
+            jwt.TokenValidationParameters = tokenValidationParameter;
         });
 
 
+        services.AddSingleton(tokenValidationParameter);
         services.AddIdentity<IdentityUser, IdentityRole>()
             .AddEntityFrameworkStores<DataContext>()
             .AddDefaultTokenProviders();
 
-        // Configure other services
-        services.AddDbContext<DataContext>(options =>
-        {
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
-                b => b.MigrationsAssembly("DataServices"));
-        });
+        services.AddScoped<IJwtService, JwtService>();
 
         services.AddAutoMapper(typeof(Startup));
-        services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IUnitOfWorks, UnitOfWorks>();
+
 
 		services.AddScoped<IFacultiesRepository, FacultiesRepository>();
 
@@ -104,6 +106,12 @@ public class Startup
                     }
                 });
         });
+
+        //services.AddAuthorization(options =>
+        //{
+        //    options.AddPolicy("DepartmentPolicy",
+        //        policy => policy.RequireClaim("department"));
+        //});
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
