@@ -16,6 +16,8 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using DataServices.JwtServices;
 using Microsoft.OpenApi.Models;
+using Models.Entities;
+using DataServices.MappingProfile;
 
 public class Startup
 {
@@ -71,7 +73,9 @@ public class Startup
 
         services.AddScoped<IJwtService, JwtService>();
 
+        services.AddAutoMapper(typeof(MappingProfile));
         services.AddAutoMapper(typeof(Startup));
+        services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IUnitOfWorks, UnitOfWorks>();
 
 
