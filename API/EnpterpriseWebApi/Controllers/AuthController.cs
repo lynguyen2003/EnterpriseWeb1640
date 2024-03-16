@@ -1,12 +1,18 @@
 ﻿using DataServices.Configurations;
+using DataServices.Data;
 using DataServices.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Models.DTO.Request;
 using Models.Entities;
+using DataServices.JwtServices;
+using RestSharp;
+using RestSharp.Authenticators;
 using System.ComponentModel;
 
 namespace EnpterpriseWebApi.Controllers
@@ -18,7 +24,9 @@ namespace EnpterpriseWebApi.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IJwtService _jwtService;
 
-        public AuthController(UserManager<IdentityUser> userManager, IJwtService jwtService)
+
+        public AuthController(UserManager<IdentityUser> userManager, 
+                              IJwtService jwtService)
         {
             _userManager = userManager;
             _jwtService = jwtService;
@@ -32,9 +40,9 @@ namespace EnpterpriseWebApi.Controllers
             if(ModelState.IsValid)
             {
                 // Check if the email already exist
-                var user_exist = await _userManager.FindByEmailAsync(requestDTO.Email);
+                var existingUser = await _userManager.FindByEmailAsync(requestDTO.Email);
 
-                if(user_exist != null)
+                if(existingUser != null)
                 {
                     return BadRequest(new AuthResult()
                     {
@@ -47,23 +55,21 @@ namespace EnpterpriseWebApi.Controllers
                 }
 
                 //create new user
-                var new_user = new IdentityUser()
+                var newUser = new IdentityUser()
                 {
                     Email = requestDTO.Email,
-                    UserName = requestDTO.Email,
+                    UserName = requestDTO.Email
                 };
 
-                var is_created = await _userManager.CreateAsync(new_user, requestDTO.Password);
+                var is_created = await _userManager.CreateAsync(newUser, requestDTO.Password);
 
                 if (is_created.Succeeded)
                 {
-                    var token = _jwtService.GenerateJwtToken(new_user);
+                    await _userManager.AddToRoleAsync(newUser, "AppUser");
 
-                    return Ok(new AuthResult()
-                    {
-                        Result = true,
-                        Token = token
-                    });
+                    var token = _jwtService.GenerateJwtToken(newUser);
+
+                    return Ok(token);
                 }
 
                 return BadRequest(new AuthResult()
@@ -118,10 +124,7 @@ namespace EnpterpriseWebApi.Controllers
                 // if correct
                 var jwtToken = _jwtService.GenerateJwtToken(existing_user);
 
-                return Ok(new AuthResult(){
-                    Token = jwtToken,
-                    Result = true
-                });
+                return Ok(jwtToken);
             }
 
             return BadRequest(new AuthResult()
@@ -134,5 +137,36 @@ namespace EnpterpriseWebApi.Controllers
             });
         }
 
+        [HttpPost("RefreshToken")]
+        public async Task<IActionResult> RefreshToken([FromBody] TokenRequest tokenRequest)
+        {
+            if(ModelState.IsValid)
+            {
+                var result = await _jwtService.VerifyAndGenerateToken(tokenRequest);
+
+                if(result == null)
+                {
+                    return BadRequest(new AuthResult()
+                    {
+                        Errors = new List<string>()
+                        {
+                            "Invalid tokens"
+                        },
+                        Result = false
+                    });
+                }
+                return Ok(result); 
+            }
+
+            return BadRequest(new AuthResult()
+            {
+                Errors = new List<string>()
+                {
+                    "Invalid parameter"
+                },
+                Result = false
+            });
+        }
+        
     }
 }

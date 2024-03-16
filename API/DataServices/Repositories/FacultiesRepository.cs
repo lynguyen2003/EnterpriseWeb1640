@@ -1,10 +1,12 @@
 ﻿using DataServices.Data;
+using DataServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Models.Entities;
 
-namespace Models.Entities
+namespace DataServices.Repositories
 {
 	public class FacultiesRepository : IFacultiesRepository
 	{
