@@ -19,6 +19,10 @@ namespace DataServices.MappingProfile
             CreateMap<ContributionsRequestCreateDTO, Contributions>()
 				.ForMember(dest => dest.Id, opt => opt.Ignore())
 				.ForMember(dest => dest.UploadDate, opt => opt.MapFrom(src => DateTime.Now));
+
+			CreateMap<Images, ImagesResponseDTO>();
+			CreateMap<ImagesRequestCreateDTO, Images>();
+			CreateMap<ImagesRequestUpdateDTO, Images>();
         }
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Models.Entities;
 
-namespace Models.Entities
+namespace DataServices.Interfaces
 {
 	public interface IFacultiesRepository
 	{
