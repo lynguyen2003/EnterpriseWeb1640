@@ -54,7 +54,9 @@ namespace DataServices.JwtServices
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.Add(TimeSpan.Parse(_configuration.GetSection("JwtConfig:ExpiryTimeFrame").Value)),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
+                Issuer = _configuration.GetSection("JwtConfig:Issuer").Value,
+                Audience = _configuration.GetSection("JwtConfig:Audience").Value,
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);
@@ -118,7 +120,6 @@ namespace DataServices.JwtServices
                     }
                 }
             }
-
             return claims; 
         }
 

@@ -31,8 +31,12 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+        // Configure other services
         services.AddDbContext<DataContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+        {
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                b => b.MigrationsAssembly("DataServices"));
+        });
 
         services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
 
@@ -45,14 +49,11 @@ public class Startup
             ValidateIssuer = false, // private
             ValidateAudience = false, // private too
             RequireExpirationTime = false,
-            ValidateLifetime = true
+            ValidateLifetime = true,
+            ValidIssuer = Configuration.GetSection("JwtConfig:Issuer").Value,
+            ValidAudience= Configuration.GetSection("JwtConfig:Audience").Value
         };
-        // Configure other services
-        services.AddDbContext<DataContext>(options =>
-        {
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
-                b => b.MigrationsAssembly("DataServices"));
-        });
+        
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
