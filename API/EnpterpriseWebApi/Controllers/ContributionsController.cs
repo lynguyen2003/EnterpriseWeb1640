@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using DataServices.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.DTO.Request;
@@ -9,6 +11,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EnpterpriseWebApi.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "MarketingManager")]
     [Route("api/[controller]")]
     [ApiController]
     public class ContributionsController : BaseController

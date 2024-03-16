@@ -66,10 +66,9 @@ namespace EnpterpriseWebApi.Controllers
                 if (is_created.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(newUser, "AppUser");
+               
 
-                    var token = _jwtService.GenerateJwtToken(newUser);
-
-                    return Ok(token);
+                    return Ok(_jwtService.GenerateJwtToken(newUser).Result);
                 }
 
                 return BadRequest(new AuthResult()
@@ -122,9 +121,8 @@ namespace EnpterpriseWebApi.Controllers
                     });
 
                 // if correct
-                var jwtToken = _jwtService.GenerateJwtToken(existing_user);
 
-                return Ok(jwtToken);
+                return Ok(_jwtService.GenerateJwtToken(existing_user).Result);
             }
 
             return BadRequest(new AuthResult()
