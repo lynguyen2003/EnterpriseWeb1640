@@ -11,7 +11,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EnpterpriseWebApi.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "MarketingManager")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "AppUser")]
     [Route("api/[controller]")]
     [ApiController]
     public class ContributionsController : BaseController
@@ -22,6 +22,7 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "MarketingManager,Admin")]
         public async Task<IActionResult> Gets()
         {
             var users = await _unitOfWorks.Contributions.GetAll();
@@ -33,6 +34,7 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "MarketingCoordinator,Student,Admin")]
         public async Task<IActionResult> Get(int id)
         {
             var user = await _unitOfWorks.Contributions.GetById(id);
@@ -46,6 +48,7 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Student,Admin")]
         public async Task<IActionResult> Add(ContributionsRequestCreateDTO contributions)
         {
             if (!ModelState.IsValid)
@@ -57,6 +60,7 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpPut("")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "MarketingCoordinator,Admin")]
         public async Task<IActionResult> Update(ContributionsRequestUpdateDTO contributions)
         {
             if (!ModelState.IsValid)
@@ -72,6 +76,7 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Student,Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var user = await _unitOfWorks.Contributions.GetById(id);

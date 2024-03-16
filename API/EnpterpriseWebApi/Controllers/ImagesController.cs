@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using DataServices.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.DTO.Request;
@@ -8,6 +10,7 @@ using Models.Entities;
 
 namespace EnpterpriseWebApi.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class ImagesController : BaseController

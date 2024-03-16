@@ -18,6 +18,7 @@ using DataServices.JwtServices;
 using Microsoft.OpenApi.Models;
 using Models.Entities;
 using DataServices.MappingProfile;
+using EnpterpriseWebApi;
 
 public class Startup
 {
@@ -53,7 +54,9 @@ public class Startup
             ValidIssuer = Configuration.GetSection("JwtConfig:Issuer").Value,
             ValidAudience= Configuration.GetSection("JwtConfig:Audience").Value
         };
-        
+
+        services.AddScoped<SeedData>();
+
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -125,6 +128,12 @@ public class Startup
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                SeedData.InitializeAsync(userManager, roleManager).Wait();
+            }
             app.UseSwagger();
             app.UseSwaggerUI();
         }
