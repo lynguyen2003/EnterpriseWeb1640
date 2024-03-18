@@ -115,11 +115,17 @@ public class Startup
                 });
         });
 
-        //services.AddAuthorization(options =>
-        //{
-        //    options.AddPolicy("DepartmentPolicy",
-        //        policy => policy.RequireClaim("department"));
-        //});
+        services.AddCors(options =>
+        {
+            options.AddPolicy("AllowReactFrontend",
+                builder =>
+                {
+                    builder.WithOrigins("http://localhost:3000")
+                           .AllowAnyHeader()
+                           .AllowAnyMethod()
+                           .AllowCredentials(); // Allow credentials
+                });
+        });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -141,6 +147,7 @@ public class Startup
         app.UseHttpsRedirection();
 
         app.UseRouting();
+        app.UseCors("AllowReactFrontend");
 
         app.UseAuthentication(); // Add authentication middleware
         app.UseAuthorization();
