@@ -1,28 +1,66 @@
-import { Routes, Route } from 'react-router-dom'
-import Layout from './components/Layout'
-import Public from './components/Public'
-import Login from './features/auth/Login'
-import Welcome from './features/auth/Welcome'
-import RequireAuth from './features/auth/RequireAuth'
-import Contributions from './features/contributions/Contributions'
+import { useSelector } from 'react-redux';
+import { Fragment } from 'react';
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Navigate,
+} from 'react-router-dom';
+import { DefaultLayout } from './layouts';
+import { publicRoutes, privateRoutes } from './routes';
+import { selectIsAuthenticated } from './feature/auth/authSlice';
+
+function PrivateRoute({ element, path }) {
+    const isAuthenticated = useSelector(selectIsAuthenticated);
+
+    return isAuthenticated ? (
+        element
+    ) : (
+        <Navigate to="/login" replace state={{ from: path }} />
+    );
+}
 
 function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        {/* public routes */}
-        <Route index element={<Public />} />
-        <Route path="login" element={<Login />} />
+    return (
+        <Router>
+            <Routes>
+                {publicRoutes.map((route, index) => {
+                    const Page = route.component;
+                    let Layout = DefaultLayout;
 
-        {/* protected routes */}
-        <Route element={<RequireAuth />}>
-          <Route path="welcome" element={<Welcome />} />
-          <Route path="contributions" element={<Contributions />} />
-        </Route>
+                    if (route.layout) {
+                        Layout = route.layout;
+                    } else if (route.layout === null) {
+                        Layout = Fragment;
+                    }
 
-      </Route>
-    </Routes>
-  )
+                    return (
+                        <Route
+                            key={index}
+                            path={route.path}
+                            element={
+                                <Layout>
+                                    <Page />
+                                </Layout>
+                            }
+                        />
+                    );
+                })}
+                {privateRoutes.map((route, index) => (
+                    <Route
+                        key={index}
+                        path={route.path}
+                        element={
+                            <PrivateRoute
+                                element={<route.component />}
+                                path={route.path}
+                            />
+                        }
+                    />
+                ))}
+            </Routes>
+        </Router>
+    );
 }
 
 export default App;

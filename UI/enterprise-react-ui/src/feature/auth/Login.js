@@ -1,38 +1,38 @@
-import { useRef, useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useRef, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { useDispatch } from 'react-redux'
-import { setCredentials } from './authSlice'
-import { useLoginMutation } from './authApiSlice'
+import { useDispatch } from 'react-redux';
+import { setCredentials } from './authSlice';
+import { useLoginMutation } from './authApiSlice';
 
 const Login = () => {
-    const userRef = useRef()
-    const errRef = useRef()
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [errMsg, setErrMsg] = useState('')
-    const navigate = useNavigate()
+    const userRef = useRef();
+    const errRef = useRef();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [errMsg, setErrMsg] = useState('');
+    const navigate = useNavigate();
 
-    const [login, { isLoading }] = useLoginMutation()
-    const dispatch = useDispatch()
-
-    useEffect(() => {
-        userRef.current.focus()
-    }, [])
+    const [login, { isLoading }] = useLoginMutation();
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        setErrMsg('')
-    }, [email, password])
+        userRef.current.focus();
+    }, []);
+
+    useEffect(() => {
+        setErrMsg('');
+    }, [email, password]);
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
 
         try {
-            const userData = await login({ email, password }).unwrap()
-            dispatch(setCredentials({ ...userData, email }))
-            setEmail('')
-            setPassword('')
-            navigate('/welcome')
+            const userData = await login({ email, password }).unwrap();
+            dispatch(setCredentials({ ...userData, email }));
+            setEmail('');
+            setPassword('');
+            navigate('/');
         } catch (err) {
             if (!err?.originalStatus) {
                 // isLoading: true until timeout occurs
@@ -46,15 +46,23 @@ const Login = () => {
             }
             errRef.current.focus();
         }
-    }
+    };
 
-    const handleUserInput = (e) => setEmail(e.target.value)
+    const handleUserInput = (e) => setEmail(e.target.value);
 
-    const handlePwdInput = (e) => setPassword(e.target.value)
+    const handlePwdInput = (e) => setPassword(e.target.value);
 
-    const content = isLoading ? <h1>Loading...</h1> : (
+    const content = isLoading ? (
+        <h1>Loading...</h1>
+    ) : (
         <section className="login">
-            <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
+            <p
+                ref={errRef}
+                className={errMsg ? 'errmsg' : 'offscreen'}
+                aria-live="assertive"
+            >
+                {errMsg}
+            </p>
 
             <h1>Login</h1>
 
@@ -81,8 +89,8 @@ const Login = () => {
                 <button>Sign In</button>
             </form>
         </section>
-    )
+    );
 
-    return content
-}
-export default Login
+    return content;
+};
+export default Login;
