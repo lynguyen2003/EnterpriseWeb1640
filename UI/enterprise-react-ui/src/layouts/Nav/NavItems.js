@@ -7,7 +7,7 @@ export const navbarItems = [
     },
     {
         title: ' Contributions',
-        url: '/Contribution',
+        url: '/contribution',
         cName: 'nav-link',
         icon: 'fa-solid fa-book-open',
     },
@@ -17,4 +17,10 @@ export const navbarItems = [
         cName: 'nav-link',
         icon: 'fa-solid fa-circle-info',
     },
+    {
+        title:' Login',
+        url: '/login',
+        cName: 'nav-login',
+        icon: 'fa-solid fa-right-to-bracket',
+    }
 ];

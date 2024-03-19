@@ -1,5 +1,11 @@
+import Nav from "~/layouts/Nav";
+
 function Contribution() {
-    return <h2>Contribution Pages</h2>;
+    return (
+        <>
+            <Nav></Nav>
+        </>
+    );
 }
 
 export default Contribution;
