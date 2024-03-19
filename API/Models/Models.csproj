@@ -21,9 +21,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTO\Request\" />
-    <Folder Include="DTO\Response\" />
-  </ItemGroup>
-
 </Project>

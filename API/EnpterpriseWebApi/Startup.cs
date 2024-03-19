@@ -10,6 +10,7 @@ using DataServices;
 using DataServices.Data;
 using DataServices.Interfaces;
 using DataServices.Repositories;
+using Models.Interfaces;
 
 public class Startup
 {
@@ -41,7 +42,7 @@ public class Startup
         services.AddAutoMapper(typeof(Startup));
 
         services.AddScoped<IUnitOfWorks, UnitOfWorks>();
-
+        services.AddScoped<IClosureDates, ClosureDatesRepository>();
         services.AddControllers();
 
         services.AddEndpointsApiExplorer();
