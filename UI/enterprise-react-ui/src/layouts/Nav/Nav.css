@@ -47,11 +47,11 @@
     /* display: block; */
 }
 
-.btn-login {
+.btn-login.btn {
     text-align: center;
-    width: 140px;
+    width: 150px;
     padding: 0 20px;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
     color: #fff;
     cursor: pointer;
@@ -151,7 +151,7 @@
         letter-spacing: 2px;
     }
 
-    .btn-login {
+    .btn-login.btn {
         display: none;
     }
 

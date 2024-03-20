@@ -5,6 +5,7 @@ import Contribution from '~/pages/Contribution';
 const privateRoutes = [{ path: '/contribution', component: Contribution }];
 
 const publicRoutes = [
+    // { path: '/contribution', component: Contribution },
     { path: '/', component: Home },
     { path: '/login', component: Login, layout: null },
 ];

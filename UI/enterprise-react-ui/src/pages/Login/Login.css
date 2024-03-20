@@ -1,0 +1,125 @@
+.gradient-custom {
+    /* fallback for old browsers */
+    background: #99B6FF;
+  
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(
+      to bottom,
+      rgba(153, 182, 255),
+      rgba(102, 117, 255)
+    );
+  
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(
+      to bottom,
+      rgba(153, 182, 255),
+      rgba(102, 117, 255)
+    );
+  }
+  
+  .login{
+    margin: 0;
+    padding: 0;
+    height: 100;
+  }
+  
+
+  .offscreen {
+    display:none;
+  }
+  
+  .imgLogin {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .card {
+    height: 100%;
+    width: 550px;
+    border-radius: 2rem;
+  }
+  
+  
+  .txt_field {
+    position: relative;
+    border-bottom: 2px solid #adadad;
+    margin: 30px 0;
+  }
+  
+  .txt_field input {
+    width: 100%;
+    padding: 0 5px;
+    height: 40px;
+    font-size: 15px;
+    border: none;
+    background: none;
+    outline: none;
+  }
+  
+  .txt_field label {
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    color: #000000;
+    transform: translateY(-50%);
+    font-size: 17px;
+    pointer-events: none;
+    transition: 0.5s;
+  }
+  
+  .txt_field input:focus ~ label,
+  .txt_field input:valid ~ label {
+    top: -9px;
+    color: #2691d9;
+  }
+  
+  .pass a{
+    margin: -5px 0 20px 5px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #000000;
+    cursor: pointer;
+    }
+  
+  .pass a:hover {
+    color: #2691d9;
+  }
+
+  .btn-signin {
+    text-align: center;
+    width: 170px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    height: 50px;
+    border: none;
+    background-size: 300% 100%;
+    border-radius: 50px;
+    moz-transition: all 0.4s ease-in-out;
+    -o-transition: all 0.4s ease-in-out;
+    -webkit-transition: all 0.4s ease-in-out;
+    transition: all 0.4s ease-in-out;
+    background-image: linear-gradient(
+        to right,
+        #25aae1,
+        #4481eb,
+        #04befe,
+        #3f86ed
+    );
+    box-shadow: 0 4px 15px 0 rgba(65, 132, 234, 0.75);
+}
+
+.btn-signin:hover {
+    background-position: 100% 0;
+    moz-transition: all 0.4s ease-in-out;
+    -o-transition: all 0.4s ease-in-out;
+    -webkit-transition: all 0.4s ease-in-out;
+    transition: all 0.4s ease-in-out;
+}
+
+.btn-signin-hover:focus {
+    outline: none;
+}
+  
