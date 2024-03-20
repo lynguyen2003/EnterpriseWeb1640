@@ -1,17 +1,28 @@
 ﻿using AutoMapper;
 using Models.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Models.DTO.Request;
+using Models.DTO.Response;
+using Models.DTO;
 
 namespace DataServices.MappingProfile
 {
-    public class MappingProfile : Profile
+	public class MappingProfile : Profile
+	{
+		public MappingProfile()
+		{
+			CreateMap<Faculties, FacultiesDTO>();
+			CreateMap<CreateFacultyDTO, Faculties>();
+			CreateMap<UpdateFacultyDTO, Faculties>();
 
-    {
-        public MappingProfile() {
+            CreateMap<Contributions, ContributionsResponseDTO>();
+            CreateMap<ContributionsRequestUpdateDTO, Contributions>();
+            CreateMap<ContributionsRequestCreateDTO, Contributions>()
+				.ForMember(dest => dest.Id, opt => opt.Ignore())
+				.ForMember(dest => dest.UploadDate, opt => opt.MapFrom(src => DateTime.Now));
+
+			CreateMap<Images, ImagesResponseDTO>();
+			CreateMap<ImagesRequestCreateDTO, Images>();
+			CreateMap<ImagesRequestUpdateDTO, Images>();
         }
-    }
+	}
 }

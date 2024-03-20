@@ -20,6 +20,14 @@
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7136;http://localhost:5077"
     },
+    "EnterpriseWebAPI": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:7136;http://localhost:5077"
+    },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,

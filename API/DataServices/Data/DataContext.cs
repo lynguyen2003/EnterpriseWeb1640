@@ -11,14 +11,16 @@ namespace DataServices.Data
 {
     public class DataContext : IdentityDbContext
     {
+
+
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
 
         }
-
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<ClosureDates> ClosureDates { get; set; }
         public DbSet<Contributions> Contributions { get; set; }
-        public DbSet<Faculities> Faculities { get; set; }
+        public DbSet<Faculties> Faculties { get; set; }
         public DbSet<Feedbacks> Feedbacks { get; set; }
         public DbSet<Images> Images { get; set; }
 

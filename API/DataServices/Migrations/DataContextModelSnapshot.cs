@@ -283,7 +283,7 @@ namespace DataServices.Migrations
                     b.ToTable("Contributions");
                 });
 
-            modelBuilder.Entity("Models.Entities.Faculities", b =>
+            modelBuilder.Entity("Models.Entities.Faculties", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -297,7 +297,7 @@ namespace DataServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Faculities");
+                    b.ToTable("Faculties");
                 });
 
             modelBuilder.Entity("Models.Entities.Feedbacks", b =>
@@ -345,6 +345,43 @@ namespace DataServices.Migrations
                     b.HasIndex("ContributionsId");
 
                     b.ToTable("Images");
+                });
+
+            modelBuilder.Entity("Models.Entities.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRevoked")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("JwtId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("Models.Entities.Users", b =>
@@ -453,7 +490,7 @@ namespace DataServices.Migrations
 
             modelBuilder.Entity("Models.Entities.Users", b =>
                 {
-                    b.HasOne("Models.Entities.Faculities", "Faculities")
+                    b.HasOne("Models.Entities.Faculties", "Faculities")
                         .WithMany("Users")
                         .HasForeignKey("FaculitiesId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -474,7 +511,7 @@ namespace DataServices.Migrations
                     b.Navigation("Images");
                 });
 
-            modelBuilder.Entity("Models.Entities.Faculities", b =>
+            modelBuilder.Entity("Models.Entities.Faculties", b =>
                 {
                     b.Navigation("Users");
                 });
