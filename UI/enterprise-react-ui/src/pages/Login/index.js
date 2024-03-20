@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '~/feature/auth/authSlice';
 import { useLoginMutation } from '~/feature/auth/authApiSlice';
-import { privateRoutes } from '~/routes/routes';
 
 import './Login.css';
 
@@ -34,21 +33,7 @@ const Login = () => {
             dispatch(setCredentials({ ...userData, email }));
             setEmail('');
             setPassword('');
-
-            // Redirect to a private route upon successful login
-            const navigateToPrivateRoute = () => {
-                const privateRoute = privateRoutes.find(
-                    (route) => route.isPrivate,
-                );
-                if (privateRoute) {
-                    navigate(privateRoute.path);
-                } else {
-                    // If no private route is defined, redirect to home
-                    navigate('/');
-                }
-            };
-
-            navigateToPrivateRoute();
+            navigate('/');
         } catch (err) {
             if (!err?.originalStatus) {
                 // isLoading: true until timeout occurs
