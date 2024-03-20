@@ -1,10 +1,13 @@
 .NavbarItems {
+    margin: auto;
+    max-width: 120rem;
+    background-color: #ffffff;
     height: 80px;
     justify-content: space-between;
     display: flex;
     align-items: center;
     padding: 0 30px;
-    box-shadow: 0 5px 15px 0 rgba(0, 0, 0, .15);
+    box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.038);
     width: 95%;
     border-radius: 13px;
     position: fixed;
@@ -24,14 +27,14 @@
     grid-gap: 15px;
     list-style: none;
     align-items: center;
-    margin-left: 80px;
-    padding-top: 10px;
+    margin-top: auto;
 }
 
-.nav-link, .nav-login {
+.nav-link,
+.nav-login {
     text-decoration: none;
     color: #222;
-    font-size: 2rem;
+    font-size: 1rem;
     font-weight: 600;
     padding: 0.7rem 1rem;
     white-space: nowrap;
@@ -71,7 +74,6 @@
         #3f86ed
     );
     box-shadow: 0 4px 15px 0 rgba(65, 132, 234, 0.75);
-    
 }
 
 .btn-login:hover {
@@ -124,19 +126,19 @@
         border-radius: 13px;
     }
 
-    .nav-link{
+    .nav-link {
         display: block;
         width: 100%;
         font-size: 1.5rem;
         padding: 2rem 0;
     }
 
-    .nav-link:hover{
+    .nav-link:hover {
         background: rgb(126, 236, 227);
         transition: none;
     }
 
-    .nav-login{
+    .nav-login {
         display: block;
         text-align: center;
         padding: 1.7rem;
@@ -160,7 +162,7 @@
         cursor: pointer;
     }
 
-    .menu-icons i{
+    .menu-icons i {
         font-size: 2rem;
         color: #222;
     }

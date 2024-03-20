@@ -1,9 +1,12 @@
-import './Home.module.css';
-import Fearture from './components/Feature';
+import './Home.css';
+import Footer from './components/Footer/Footer';
+import Content from './components/Content/Content';
 
 function Home() {
     return (
-        <div className="test">
+        <div className="home">
+            <Content />
+            <Footer />
         </div>
     );
 }

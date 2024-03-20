@@ -7,27 +7,28 @@ import './Nav.css';
 function Nav() {
     const [clicked, setClicked] = useState(false);
     return (
-        <nav className='NavbarItems'>
-            <img className='navbar-logo' src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Logo-Truong-Dai-hoc-Greenwich-Viet-Nam.png"
+        <nav className="NavbarItems">
+            <img
+                className="navbar-logo"
+                src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Logo-Truong-Dai-hoc-Greenwich-Viet-Nam.png"
                 height="60"
                 alt=""
                 loading="lazy"
             />
 
-            
-            <ul className={clicked ? "nav-menu active" : "nav-menu"}>
+            <ul className={clicked ? 'nav-menu active' : 'nav-menu'}>
                 {navbarItems.map((item, index) => {
                     return (
-                        <li key={index} >
+                        <li key={index}>
                             <Link to={item.url} className={item.cName}>
                                 <i className={item.icon}></i>
-                                    {item.title}
+                                {item.title}
                             </Link>
                         </li>
-                    )
+                    );
                 })}
             </ul>
-            <ul className='navbar-nav ms-auto'>
+            <ul className="navbar-nav ms-auto">
                 <Link to="/login">
                     <button
                         type="button"
@@ -37,8 +38,11 @@ function Nav() {
                     </button>
                 </Link>
             </ul>
-            <div className='menu-icons'>
-                <i className={clicked ? "fas fa-times" : "fas fa-bars"} onClick={() => setClicked(!clicked)}></i>
+            <div className="menu-icons">
+                <i
+                    className={clicked ? 'fas fa-times' : 'fas fa-bars'}
+                    onClick={() => setClicked(!clicked)}
+                ></i>
             </div>
         </nav>
         // <div className="container">
@@ -66,14 +70,14 @@ function Nav() {
         //             </ul>
         //         </div>
         //         <div className="col">
-                    // <Link to="/login">
-                    //     <button
-                    //         type="button"
-                    //         className="btn btn-outline-primary"
-                    //     >
-                    //         Login
-                    //     </button>
-                    // </Link>
+        // <Link to="/login">
+        //     <button
+        //         type="button"
+        //         className="btn btn-outline-primary"
+        //     >
+        //         Login
+        //     </button>
+        // </Link>
         //         </div>
         //     </nav>
         // </div>

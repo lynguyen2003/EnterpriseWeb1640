@@ -1,53 +1,45 @@
 .gradient-custom {
     /* fallback for old browsers */
-    background: #99B6FF;
-  
+    background: #99b6ff;
+
     /* Chrome 10-25, Safari 5.1-6 */
     background: -webkit-linear-gradient(
-      to bottom,
-      rgba(153, 182, 255),
-      rgba(102, 117, 255)
+        to bottom,
+        rgba(153, 182, 255),
+        rgba(102, 117, 255)
     );
-  
+
     /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     background: linear-gradient(
-      to bottom,
-      rgba(153, 182, 255),
-      rgba(102, 117, 255)
+        to bottom,
+        rgba(153, 182, 255),
+        rgba(102, 117, 255)
     );
-  }
-  
-  .login{
-    margin: 0;
-    padding: 0;
-    height: 100;
-  }
-  
+}
 
-  .offscreen {
-    display:none;
-  }
-  
-  .imgLogin {
+.offscreen {
+    display: none;
+}
+
+.imgLogin {
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-  
-  .card {
+}
+
+.card {
     height: 100%;
     width: 550px;
     border-radius: 2rem;
-  }
-  
-  
-  .txt_field {
+}
+
+.txt_field {
     position: relative;
     border-bottom: 2px solid #adadad;
     margin: 30px 0;
-  }
-  
-  .txt_field input {
+}
+
+.txt_field input {
     width: 100%;
     padding: 0 5px;
     height: 40px;
@@ -55,9 +47,9 @@
     border: none;
     background: none;
     outline: none;
-  }
-  
-  .txt_field label {
+}
+
+.txt_field label {
     position: absolute;
     top: 50%;
     left: 5px;
@@ -66,27 +58,27 @@
     font-size: 17px;
     pointer-events: none;
     transition: 0.5s;
-  }
-  
-  .txt_field input:focus ~ label,
-  .txt_field input:valid ~ label {
+}
+
+.txt_field input:focus ~ label,
+.txt_field input:valid ~ label {
     top: -9px;
     color: #2691d9;
-  }
-  
-  .pass a{
+}
+
+.pass a {
     margin: -5px 0 20px 5px;
     font-size: 16px;
     font-weight: 500;
     color: #000000;
     cursor: pointer;
-    }
-  
-  .pass a:hover {
-    color: #2691d9;
-  }
+}
 
-  .btn-signin {
+.pass a:hover {
+    color: #2691d9;
+}
+
+.btn-signin {
     text-align: center;
     width: 170px;
     font-size: 18px;
@@ -122,4 +114,3 @@
 .btn-signin-hover:focus {
     outline: none;
 }
-  

@@ -81,93 +81,100 @@ const Login = () => {
             >
                 {errMsg}
             </p>
-            <div className="body login vh-100 gradient-custom">
-                <div className="container h-100">
-                    <div className="row d-flex justify-content-center align-items-center h-100">
-                        <div className="col-12 col-md-8 col-lg-6 col-xl-5">
-                            <div className="card text-black">
-                                <div className="card-body p-5">
-                                    <div className="my-5 mt-1">
-                                        <h1 className="imgLogin mt-1 mb-4">
-                                            <img
-                                                src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Logo-Truong-Dai-hoc-Greenwich-Viet-Nam.png"
-                                                height="80"
-                                            />
-                                        </h1>
-                                        <h2 className="fw-bold mb-3 text-center fs-1">
-                                            Login
-                                        </h2>
-                                        <p className="mb-5 text-center">
-                                            Please enter your login and
-                                            password!
-                                        </p>
-                                        <form onSubmit={handleSubmit}>
-                                            <div className="form-outline form-white mb-5 txt_field">
-                                                <input
-                                                    type="text"
-                                                    id="email"
-                                                    className=""
-                                                    ref={userRef}
-                                                    value={email}
-                                                    onChange={handleUserInput}
-                                                    autoComplete="off"
-                                                    required
+            <div>
+                <div className="gradient-custom">
+                    <div className="container h-100">
+                        <div className="row d-flex justify-content-center align-items-center h-100">
+                            <div className="col-12 col-md-8 col-lg-6 col-xl-5">
+                                <div className="card text-black m-2">
+                                    <div className="card-body p-5">
+                                        <div className="my-5 mt-1">
+                                            <h1 className="imgLogin mt-1 mb-4">
+                                                <img
+                                                    alt="logo"
+                                                    src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Logo-Truong-Dai-hoc-Greenwich-Viet-Nam.png"
+                                                    height="80"
                                                 />
-                                                <label
-                                                    className="form-label"
-                                                    htmlFor="email"
-                                                >
-                                                    Email
-                                                </label>
-                                            </div>
-
-                                            <div className="form-outline form-white mb-5 txt_field">
-                                                <input
-                                                    type="password"
-                                                    id="password"
-                                                    className=""
-                                                    onChange={handlePwdInput}
-                                                    value={password}
-                                                    required
-                                                />
-                                                <label
-                                                    className="form-label"
-                                                    htmlFor="password"
-                                                >
-                                                    Password
-                                                </label>
-                                            </div>
-
-                                            <p className="small mb-5 pb-lg-2 text-end pass ">
-                                                <a className="" href="#!">
-                                                    Forgot password?
-                                                </a>
+                                            </h1>
+                                            <h2 className="fw-bold mb-3 text-center fs-1">
+                                                Login
+                                            </h2>
+                                            <p className="mb-5 text-center">
+                                                Please enter your login and
+                                                password!
                                             </p>
-                                            <div className="d-flex justify-content-center">
-                                                <button
-                                                    className="btn-signin btn btn-outline-light btn-lg px-5"
-                                                    type="submit"
-                                                >
-                                                    Login
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
+                                            <form onSubmit={handleSubmit}>
+                                                <div className="form-outline form-white mb-5 txt_field">
+                                                    <input
+                                                        type="text"
+                                                        id="email"
+                                                        className=""
+                                                        ref={userRef}
+                                                        value={email}
+                                                        onChange={
+                                                            handleUserInput
+                                                        }
+                                                        autoComplete="off"
+                                                        required
+                                                    />
+                                                    <label
+                                                        className="form-label"
+                                                        htmlFor="email"
+                                                    >
+                                                        Email
+                                                    </label>
+                                                </div>
 
-                                    <div>
-                                        <p className="mb-0 text-center">
-                                            <i class="fa-regular fa-copyright"></i>{' '}
-                                            Powered by{' '}
-                                            <u>
-                                                <a
-                                                    href="https://greenwich.edu.vn/"
-                                                    class="text-decoration-underline"
-                                                    target="_blank"
-                                                >
-                                                    Greenwich Việt Nam{' '}
-                                                </a>
-                                            </u>
-                                        </p>
+                                                <div className="form-outline form-white mb-5 txt_field">
+                                                    <input
+                                                        type="password"
+                                                        id="password"
+                                                        className=""
+                                                        onChange={
+                                                            handlePwdInput
+                                                        }
+                                                        value={password}
+                                                        required
+                                                    />
+                                                    <label
+                                                        className="form-label"
+                                                        htmlFor="password"
+                                                    >
+                                                        Password
+                                                    </label>
+                                                </div>
+
+                                                <p className="small mb-5 pb-lg-2 text-end pass ">
+                                                    <a className="" href="#!">
+                                                        Forgot password?
+                                                    </a>
+                                                </p>
+                                                <div className="d-flex justify-content-center">
+                                                    <button
+                                                        className="btn-signin btn btn-outline-light btn-lg px-5"
+                                                        type="submit"
+                                                    >
+                                                        Login
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                        <div>
+                                            <p className="mb-0 text-center">
+                                                <i class="fa-regular fa-copyright"></i>{' '}
+                                                Powered by{' '}
+                                                <u>
+                                                    <a
+                                                        href="https://greenwich.edu.vn/"
+                                                        class="text-decoration-underline"
+                                                        target="#"
+                                                    >
+                                                        Greenwich Việt Nam{' '}
+                                                    </a>
+                                                </u>
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
