@@ -68,13 +68,12 @@ const Login = () => {
 
     const handlePwdInput = (e) => setPassword(e.target.value);
 
-
     const content = isLoading ? (
-        <h1>Loading...</h1>
-    ) : 
-    (
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    ) : (
         <section className="login">
-
             <p
                 ref={errRef}
                 className={errMsg ? 'errmsg' : 'offscreen'}
@@ -158,7 +157,7 @@ const Login = () => {
                                     <div>
                                         <p className="mb-0 text-center">
                                             <i class="fa-regular fa-copyright"></i>{' '}
-                                                Powered by{' '}
+                                            Powered by{' '}
                                             <u>
                                                 <a
                                                     href="https://greenwich.edu.vn/"
