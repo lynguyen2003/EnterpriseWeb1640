@@ -1,4 +1,5 @@
 import './Content.css';
+import { Link } from 'react-router-dom';
 
 function Content() {
     return (
@@ -6,8 +7,17 @@ function Content() {
             <img
                 className="img-fluid"
                 alt="banner"
-                src="https://greenwich.edu.vn/wp-content/uploads/2024/01/web-1.jpg"
+                src="https://images.unsplash.com/photo-1509470689623-172815263c57"
             />
+
+            <div className="hero-text">
+                <h1>Greenwich University</h1>
+                <p>Choose Your Feature</p>
+
+                <Link className="Join" to="">
+                    Join Us
+                </Link>
+            </div>
         </div>
     );
 }

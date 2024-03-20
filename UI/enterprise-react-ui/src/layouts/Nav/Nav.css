@@ -96,6 +96,15 @@
     display: none;
 }
 
+.profile-icons {
+    padding: 4px 10px;
+    font-size: 1.6rem;
+    margin-right: 10px;
+    cursor: pointer;
+    border: black 1px solid;
+    border-radius: 50%;
+}
+
 @media screen and (max-width: 850px) {
     .NavbarItems {
         z-index: 99;
@@ -129,7 +138,7 @@
     .nav-link {
         display: block;
         width: 100%;
-        font-size: 1.5rem;
+        font-size: 1.3rem;
         padding: 2rem 0;
     }
 
@@ -141,7 +150,7 @@
     .nav-login {
         display: block;
         text-align: center;
-        padding: 1.7rem;
+        padding: 1.5rem;
         margin: auto;
         border-radius: 4px;
         width: 80%;
