@@ -8,7 +8,7 @@ import './Nav.css';
 
 function Nav() {
     const [clicked, setClicked] = useState(false);
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
     const isLoggedIn = useSelector(selectIsAuthenticated);
     const dispatch = useDispatch();
 
@@ -16,9 +16,6 @@ function Nav() {
     const handleLogout = () => {
         // Dispatch the logOut action to clear user authentication information
         dispatch(logOut());
-    };
-    const toggleDropdown = () => {
-        setIsDropdownOpen(!isDropdownOpen);
     };
 
     return (
@@ -45,6 +42,14 @@ function Nav() {
             </ul>
             <ul className="navbar-nav ms-auto">
                 {isLoggedIn ? ( // Conditional rendering for login/logout button
+                    <button
+                        type="button"
+                        className="btn-login btn btn-outline-primary"
+                        onClick={handleLogout}
+                    >
+                        Logout
+                    </button>
+                ) : (
                     <Link to="/login">
                         <button
                             type="button"
@@ -53,46 +58,8 @@ function Nav() {
                             Login
                         </button>
                     </Link>
-                ) : (
-                    <div>
-                        <div className="profile-icons" onClick={toggleDropdown}>
-                            <i className="fa-solid fa-user"></i>
-                            {isDropdownOpen && (
-                                <ul className="dropdown-menu">
-                                    <li>
-                                        <Link to="/">Profile</Link>
-                                    </li>
-                                    <li>
-                                        <Link to="/">Settings</Link>
-                                    </li>
-                                    <li>
-                                        <button
-                                            type="button"
-                                            className="btn-login btn btn-outline-primary"
-                                            onClick={handleLogout}
-                                        >
-                                            Logout
-                                        </button>
-                                    </li>
-                                </ul>
-                            )}
-                            {/* <li>
-                                Profile
-                            </li>
-                            <li>
-                                <button
-                                    type="button"
-                                    className="btn-login btn btn-outline-primary"
-                                    onClick={handleLogout}
-                                >
-                                    Logout
-                                </button>
-                            </li> */}
-                        </div>
-                    </div>
                 )}
             </ul>
-
             <div className="menu-icons">
                 <i
                     className={clicked ? 'fas fa-times' : 'fas fa-bars'}
