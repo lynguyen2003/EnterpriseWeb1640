@@ -10,6 +10,7 @@ using DataServices;
 using DataServices.Data;
 using DataServices.Interfaces;
 using DataServices.Repositories;
+using Models.Interfaces;
 using DataServices.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
@@ -81,11 +82,9 @@ public class Startup
         services.AddAutoMapper(typeof(Startup));
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IUnitOfWorks, UnitOfWorks>();
-
-
-		services.AddScoped<IFacultiesRepository, FacultiesRepository>();
-
-		services.AddControllers();
+        services.AddScoped<IClosureDates, ClosureDatesRepository>();
+        services.AddScoped<IFacultiesRepository, FacultiesRepository>();
+        services.AddControllers();
 
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(c =>
