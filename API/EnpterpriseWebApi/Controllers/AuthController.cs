@@ -14,6 +14,7 @@ using DataServices.JwtServices;
 using RestSharp;
 using RestSharp.Authenticators;
 using System.ComponentModel;
+using Models.DTO;
 
 namespace EnpterpriseWebApi.Controllers
 {

@@ -23,6 +23,10 @@ namespace DataServices.MappingProfile
 			CreateMap<Images, ImagesResponseDTO>();
 			CreateMap<ImagesRequestCreateDTO, Images>();
 			CreateMap<ImagesRequestUpdateDTO, Images>();
+
+            CreateMap<Magazines, MagazinesResponseDTO>();
+            CreateMap<MagazinesRequestCreateDTO, Magazines>();
+            CreateMap<MagazinesRequestUpdateDTO, Magazines>();
         }
 	}
 }

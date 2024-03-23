@@ -31,6 +31,11 @@ namespace DataServices.Repositories
             }
         }
 
+        public virtual async Task<IEnumerable<Contributions>> GetByUserId(string userId)
+        {
+            return await _dbSet.Where(c => c.UsersId == userId).ToListAsync();
+        }
+
         public virtual async Task<bool> Update(Contributions contributions)
         {
             try
@@ -43,6 +48,8 @@ namespace DataServices.Repositories
                     existingContributions.FilePath = contributions.FilePath;
                     existingContributions.UploadDate = contributions.UploadDate = DateTime.UtcNow;
                     existingContributions.ClosureDatesId = contributions.ClosureDatesId;
+                    existingContributions.UsersId = contributions.UsersId;
+                    existingContributions.MagazinesId = contributions.MagazinesId;
                     //TO DO:
 
                     await _context.SaveChangesAsync();

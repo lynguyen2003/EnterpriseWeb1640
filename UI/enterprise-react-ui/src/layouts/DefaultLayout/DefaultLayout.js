@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
+import './DefaultLayout.css';
 import Nav from '../Nav';
 
 function DefaultLayout({ children }) {
     return (
         <>
             <Nav />
-            <div>{children}</div>
+            <div className="content">{children}</div>
         </>
     );
 }

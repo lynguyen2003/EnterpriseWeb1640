@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataServices.Interfaces
 {
-    public interface IContributionsRepository : IGenericRepository<Contributions>
+    public interface IMagazinesRepository : IGenericRepository<Magazines>
     {
-        Task<IEnumerable<Contributions>> GetByUserId(string userId);
     }
 }

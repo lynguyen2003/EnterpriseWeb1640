@@ -1,12 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { navbarItems } from './NavItems';
 import {
     selectIsAuthenticated,
     selectCurrentToken,
-    selectCurrentEmail,
     logOut,
 } from '~/feature/auth/authSlice';
 import axios from 'axios';
@@ -14,41 +12,29 @@ import './Nav.css';
 
 function Nav() {
     const [clicked, setClicked] = useState(false);
-    const [userRoles, setUserRoles] = useState([]);
+    const [isAuthorized, setAuthorized] = useState(); // Changed default state to false
 
-    const email = useSelector(selectCurrentEmail);
     const token = useSelector(selectCurrentToken);
     const isLoggedIn = useSelector(selectIsAuthenticated);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const fetchUserRoles = async () => {
+        const fetchArticles = async () => {
             try {
-                const response = await axios.get(
-                    `https://localhost:7136/api/SetupRole/GetUserRoles?email=${email}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
+                await axios.get('https://localhost:7136/api/Contributions', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
                     },
-                );
-                setUserRoles(response.data);
+                });
+                setAuthorized(false);
             } catch (error) {
-                console.error('Error fetching user roles:', error);
+                console.error('Error fetching articles:', error);
+                setAuthorized(true); // Set isAuthorized to false if there's an error
             }
         };
 
-        fetchUserRoles();
-    }, [token, email]);
-
-    const hasRequiredRole = () => {
-        // Check if user has one of the required roles: ADMIN, MARKETINGCOORDINATOR, MARKETINGMANAGER
-        return (
-            userRoles.includes('Admin') ||
-            userRoles.includes('MarketingCoordinator') ||
-            userRoles.includes('MarketingManager')
-        );
-    };
+        fetchArticles();
+    }, [token]);
 
     // Function to handle logout
     const handleLogout = () => {
@@ -68,9 +54,8 @@ function Nav() {
 
             <ul className={clicked ? 'nav-menu active' : 'nav-menu'}>
                 {navbarItems.map((item, index) => {
-                    // Conditionally render Contributions item based on user roles
-                    if (item.title === ' Contributions' && !hasRequiredRole()) {
-                        return null; // Hide Contributions item if user doesn't have required roles
+                    if (item.title === ' Contributions' && isAuthorized) {
+                        return null;
                     }
                     return (
                         <li key={index}>

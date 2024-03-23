@@ -47,6 +47,18 @@ namespace EnpterpriseWebApi.Controllers
             return Ok(result);
         }
 
+        [HttpGet("user/{userId}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "MarketingCoordinator,Student,Admin")]
+        public async Task<IActionResult> GetByUserId(string userId)
+        {
+            var user = await _unitOfWorks.Contributions.GetByUserId(userId);
+
+            if (user == null)
+                return NotFound();
+
+            return Ok(user);
+        }
+
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Student,Admin")]
         public async Task<IActionResult> Add(ContributionsRequestCreateDTO contributions)

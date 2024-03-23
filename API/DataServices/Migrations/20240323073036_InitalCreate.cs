@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DataServices.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitalCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -41,7 +41,7 @@ namespace DataServices.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Faculities",
+                name: "Faculties",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -50,7 +50,41 @@ namespace DataServices.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Faculities", x => x.Id);
+                    table.PrimaryKey("PK_Faculties", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Magazines",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CoverImagePath = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Magazines", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RefreshTokens",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JwtId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsUsed = table.Column<bool>(type: "bit", nullable: false),
+                    IsRevoked = table.Column<bool>(type: "bit", nullable: false),
+                    AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokens", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -70,29 +104,6 @@ namespace DataServices.Migrations
                         name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Contributions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UploadDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ClosureDatesId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Contributions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Contributions_ClosureDates_ClosureDatesId",
-                        column: x => x.ClosureDatesId,
-                        principalTable: "ClosureDates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -123,29 +134,9 @@ namespace DataServices.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetUsers_Faculities_FaculitiesId",
+                        name: "FK_AspNetUsers_Faculties_FaculitiesId",
                         column: x => x.FaculitiesId,
-                        principalTable: "Faculities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Images",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ContributionsId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Images", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Images_Contributions_ContributionsId",
-                        column: x => x.ContributionsId,
-                        principalTable: "Contributions",
+                        principalTable: "Faculties",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -236,27 +227,78 @@ namespace DataServices.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Feedbacks",
+                name: "Contributions",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ConId = table.Column<int>(type: "int", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CommentDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UploadDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ClosureDatesId = table.Column<int>(type: "int", nullable: false),
+                    UsersId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    MagazinesId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Feedbacks", x => new { x.UserId, x.ConId });
+                    table.PrimaryKey("PK_Contributions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Contributions_AspNetUsers_UsersId",
+                        column: x => x.UsersId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Contributions_ClosureDates_ClosureDatesId",
+                        column: x => x.ClosureDatesId,
+                        principalTable: "ClosureDates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Contributions_Magazines_MagazinesId",
+                        column: x => x.MagazinesId,
+                        principalTable: "Magazines",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Feedbacks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CommentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Feedbacks", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Feedbacks_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Images",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ContributionsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Images", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Feedbacks_Contributions_ConId",
-                        column: x => x.ConId,
+                        name: "FK_Images_Contributions_ContributionsId",
+                        column: x => x.ContributionsId,
                         principalTable: "Contributions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -312,9 +354,19 @@ namespace DataServices.Migrations
                 column: "ClosureDatesId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Feedbacks_ConId",
+                name: "IX_Contributions_MagazinesId",
+                table: "Contributions",
+                column: "MagazinesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Contributions_UsersId",
+                table: "Contributions",
+                column: "UsersId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Feedbacks_UserId",
                 table: "Feedbacks",
-                column: "ConId");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Images_ContributionsId",
@@ -347,19 +399,25 @@ namespace DataServices.Migrations
                 name: "Images");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "RefreshTokens");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Contributions");
 
             migrationBuilder.DropTable(
-                name: "Faculities");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "ClosureDates");
+
+            migrationBuilder.DropTable(
+                name: "Magazines");
+
+            migrationBuilder.DropTable(
+                name: "Faculties");
         }
     }
 }

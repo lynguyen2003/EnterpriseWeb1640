@@ -11,9 +11,6 @@ namespace Models.Entities
         public int Id { get; set; }
         public string Comment { get; set; }
         public DateTime CommentDate { get; set; }
-        public string UserId { get; set; }
-        public int ConId { get; set; }
-        public Users Users { get; set; }
-        public Contributions Contributions { get; set; }
+        public Users User { get; set; }
     }
 }

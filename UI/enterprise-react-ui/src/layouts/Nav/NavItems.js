@@ -18,9 +18,9 @@ export const navbarItems = [
         icon: 'fa-solid fa-circle-info',
     },
     {
-        title:' Login',
+        title: ' Login',
         url: '/login',
         cName: 'nav-login',
         icon: 'fa-solid fa-right-to-bracket',
-    }
+    },
 ];

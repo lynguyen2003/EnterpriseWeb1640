@@ -13,6 +13,7 @@ namespace DataServices.Repositories
     public class UnitOfWorks : IUnitOfWorks
     {
         public IContributionsRepository Contributions { get; }
+        public IMagazinesRepository Magazines { get; }
         public IImagesRepository Images { get; }
         private readonly DataContext _context;
 
@@ -22,6 +23,7 @@ namespace DataServices.Repositories
             var logger = loggerFactory.CreateLogger("log");
 
             Contributions = new ContributionsRepository(logger, _context);
+            Magazines = new MagazinesRepository(logger, _context);
             Images = new ImagesRepository(logger, _context);
         }
 

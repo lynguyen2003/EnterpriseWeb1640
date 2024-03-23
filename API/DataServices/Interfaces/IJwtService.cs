@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +7,7 @@ using System.Threading.Tasks;
 using DataServices.JwtServices;
 using Models.DTO.Request;
 using System.Security.Claims;
+using Models.DTO;
 
 namespace DataServices.Interfaces
 {

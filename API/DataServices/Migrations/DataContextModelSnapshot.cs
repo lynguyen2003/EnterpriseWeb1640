@@ -269,6 +269,9 @@ namespace DataServices.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("MagazinesId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -276,9 +279,17 @@ namespace DataServices.Migrations
                     b.Property<DateTime>("UploadDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("UsersId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ClosureDatesId");
+
+                    b.HasIndex("MagazinesId");
+
+                    b.HasIndex("UsersId");
 
                     b.ToTable("Contributions");
                 });
@@ -302,11 +313,11 @@ namespace DataServices.Migrations
 
             modelBuilder.Entity("Models.Entities.Feedbacks", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("ConId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Comment")
                         .IsRequired()
@@ -315,12 +326,13 @@ namespace DataServices.Migrations
                     b.Property<DateTime>("CommentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("UserId", "ConId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("ConId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Feedbacks");
                 });
@@ -345,6 +357,31 @@ namespace DataServices.Migrations
                     b.HasIndex("ContributionsId");
 
                     b.ToTable("Images");
+                });
+
+            modelBuilder.Entity("Models.Entities.Magazines", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CoverImagePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Magazines");
                 });
 
             modelBuilder.Entity("Models.Entities.RefreshToken", b =>
@@ -455,26 +492,34 @@ namespace DataServices.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ClosureDates");
-                });
-
-            modelBuilder.Entity("Models.Entities.Feedbacks", b =>
-                {
-                    b.HasOne("Models.Entities.Contributions", "Contributions")
-                        .WithMany("Feedbacks")
-                        .HasForeignKey("ConId")
+                    b.HasOne("Models.Entities.Magazines", "Magazines")
+                        .WithMany("Contributions")
+                        .HasForeignKey("MagazinesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Models.Entities.Users", "Users")
+                        .WithMany("Contributions")
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ClosureDates");
+
+                    b.Navigation("Magazines");
+
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("Models.Entities.Feedbacks", b =>
+                {
+                    b.HasOne("Models.Entities.Users", "User")
                         .WithMany("Feedbacks")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Contributions");
-
-                    b.Navigation("Users");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Models.Entities.Images", b =>
@@ -506,8 +551,6 @@ namespace DataServices.Migrations
 
             modelBuilder.Entity("Models.Entities.Contributions", b =>
                 {
-                    b.Navigation("Feedbacks");
-
                     b.Navigation("Images");
                 });
 
@@ -516,8 +559,15 @@ namespace DataServices.Migrations
                     b.Navigation("Users");
                 });
 
+            modelBuilder.Entity("Models.Entities.Magazines", b =>
+                {
+                    b.Navigation("Contributions");
+                });
+
             modelBuilder.Entity("Models.Entities.Users", b =>
                 {
+                    b.Navigation("Contributions");
+
                     b.Navigation("Feedbacks");
                 });
 #pragma warning restore 612, 618

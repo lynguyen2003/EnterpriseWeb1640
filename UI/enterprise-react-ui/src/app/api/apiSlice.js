@@ -3,8 +3,8 @@ import { setCredentials, logOut } from '~/feature/auth/authSlice';
 
 const baseQuery = fetchBaseQuery({
     baseUrl: 'https://localhost:7136/api',
-    prepareHeaders: (headers, { getState }) => {
-        const token = getState().auth.token;
+    prepareHeaders: (headers) => {
+        const token = localStorage.getItem('token');
         if (token) {
             headers.set('authorization', `Bearer ${token}`);
         }

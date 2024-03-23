@@ -14,6 +14,8 @@ namespace Models.DTO.Response
         public string Description { get; set; }
         public string FilePath { get; set; }
         public DateTime UploadDate { get; set; }
-        public string ClosureDatesId { get; set; }
+        public int ClosureDatesId { get; set; }
+        public string UsersId { get; set; }
+        public int MagazinesId { get; set; }
     }
 }
