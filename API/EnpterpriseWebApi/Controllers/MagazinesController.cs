@@ -10,6 +10,7 @@ using Models.Entities;
 
 namespace EnpterpriseWebApi.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class MagazinesController : BaseController
@@ -19,7 +20,6 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "MarketingManager,Admin")]
         public async Task<IActionResult> Gets()
         {
             var magazines = await _unitOfWorks.Magazines.GetAll();
@@ -31,7 +31,6 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "MarketingCoordinator,Student,Admin")]
         public async Task<IActionResult> Get(int id)
         {
             var magazines = await _unitOfWorks.Magazines.GetById(id);
