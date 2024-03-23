@@ -47,7 +47,7 @@ namespace EnpterpriseWebApi.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{userId}")]
+        [HttpGet("user/{userId}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "MarketingCoordinator,Student,Admin")]
         public async Task<IActionResult> GetByUserId(string userId)
         {
@@ -56,9 +56,7 @@ namespace EnpterpriseWebApi.Controllers
             if (user == null)
                 return NotFound();
 
-            var result = _mapper.Map<ContributionsResponseDTO>(user);
-
-            return Ok(result);
+            return Ok(user);
         }
 
         [HttpPost]

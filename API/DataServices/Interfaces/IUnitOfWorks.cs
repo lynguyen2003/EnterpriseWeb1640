@@ -9,6 +9,7 @@ namespace DataServices.Interfaces
     public interface IUnitOfWorks
     {
         IContributionsRepository Contributions { get; }
+        IMagazinesRepository Magazines { get; }
         IImagesRepository Images { get; }
         Task<bool> CompleteAsync();
         
