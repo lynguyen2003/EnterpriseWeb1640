@@ -19,7 +19,11 @@ namespace Models.Entities
         [ForeignKey("ClosureDates")]
         public int ClosureDatesId { get; set; }
         public ClosureDates ClosureDates { get; set; }
+        [ForeignKey("Users")]
+        public string UsersId { get; set; }
         public Users Users { get; set; }
+        [ForeignKey("Magazines")]
+        public int MagazinesId { get; set; }
         public Magazines Magazines { get; set; }
         public ICollection<Images> Images { get; set; }
     }

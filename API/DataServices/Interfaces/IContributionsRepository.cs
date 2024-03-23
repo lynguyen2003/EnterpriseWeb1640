@@ -9,6 +9,6 @@ namespace DataServices.Interfaces
 {
     public interface IContributionsRepository : IGenericRepository<Contributions>
     {
-
+        Task<IEnumerable<Contributions>> GetByUserId(string userId);
     }
 }

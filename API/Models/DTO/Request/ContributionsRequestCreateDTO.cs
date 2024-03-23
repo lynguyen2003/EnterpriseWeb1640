@@ -24,6 +24,13 @@ namespace Models.DTO.Request
 
         [Required(ErrorMessage = "ClosureDatesId is required")]
         [RegularExpression(@"^\d+$", ErrorMessage = "ClosureDatesId must be a numeric value")]
-        public string ClosureDatesId { get; set; }
+        public int ClosureDatesId { get; set; }
+
+        [Required(ErrorMessage = "UsersId is required")]
+        public string UsersId { get; set; }
+
+        [Required(ErrorMessage = "MagazinesId is required")]
+        [RegularExpression(@"^\d+$", ErrorMessage = "MagazinesId must be a numeric value")]
+        public int MagazinesId { get; set; }
     }
 }
