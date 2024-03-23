@@ -19,7 +19,8 @@ namespace Models.Entities
         [ForeignKey("ClosureDates")]
         public int ClosureDatesId { get; set; }
         public ClosureDates ClosureDates { get; set; }
-        public ICollection<Feedbacks> Feedbacks { get; set; }
+        public Users Users { get; set; }
+        public Magazines Magazines { get; set; }
         public ICollection<Images> Images { get; set; }
     }
 }

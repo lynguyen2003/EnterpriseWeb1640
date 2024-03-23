@@ -23,24 +23,7 @@ namespace DataServices.Data
         public DbSet<Faculties> Faculties { get; set; }
         public DbSet<Feedbacks> Feedbacks { get; set; }
         public DbSet<Images> Images { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<Feedbacks>()
-                .HasKey(f => new { f.UserId, f.ConId }); // Composite key
-
-            modelBuilder.Entity<Feedbacks>()
-                .HasOne(f => f.Users)
-                .WithMany(u => u.Feedbacks)
-                .HasForeignKey(f => f.UserId);
-
-            modelBuilder.Entity<Feedbacks>()
-                .HasOne(f => f.Contributions)
-                .WithMany(c => c.Feedbacks)
-                .HasForeignKey(f => f.ConId);
-        }
+        public DbSet<Magazines> Magazines { get; set; }
     }
 
 }
