@@ -54,8 +54,8 @@ const Login = () => {
     const handlePwdInput = (e) => setPassword(e.target.value);
 
     const content = isLoading ? (
-        <div class="spinner-border" role="status">
-            <span class="sr-only">Loading...</span>
+        <div className="spinner-border" role="status">
+            <span className="sr-only">Loading...</span>
         </div>
     ) : (
         <section className="login">
@@ -147,12 +147,12 @@ const Login = () => {
 
                                         <div>
                                             <p className="mb-0 text-center">
-                                                <i class="fa-regular fa-copyright"></i>{' '}
+                                                <i className="fa-regular fa-copyright"></i>{' '}
                                                 Powered by{' '}
                                                 <u>
                                                     <a
                                                         href="https://greenwich.edu.vn/"
-                                                        class="text-decoration-underline"
+                                                        className="text-decoration-underline"
                                                         target="#"
                                                     >
                                                         Greenwich Việt Nam{' '}

@@ -172,7 +172,7 @@ function Footer() {
                     </div>
                     <div className="mt-4">
                         <h6 className="text-white text-center">
-                            <i class="fa-regular fa-copyright"></i>2023
+                            <i className="fa-regular fa-copyright"></i>2023
                             Greenwich.edu.vn. All Right Reserved
                         </h6>
                     </div>

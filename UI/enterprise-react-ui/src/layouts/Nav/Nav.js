@@ -12,7 +12,7 @@ import './Nav.css';
 
 function Nav() {
     const [clicked, setClicked] = useState(false);
-    const [isAuthorized, setAuthorized] = useState(false); // Changed default state to false
+    const [isAuthorized, setAuthorized] = useState(); // Changed default state to false
 
     const token = useSelector(selectCurrentToken);
     const isLoggedIn = useSelector(selectIsAuthenticated);
