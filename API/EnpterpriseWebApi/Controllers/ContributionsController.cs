@@ -11,7 +11,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EnpterpriseWebApi.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "AppUser")]
     [Route("api/[controller]")]
     [ApiController]
     public class ContributionsController : BaseController
