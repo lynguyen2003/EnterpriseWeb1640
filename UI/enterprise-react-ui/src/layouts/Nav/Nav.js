@@ -1,44 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { navbarItems } from './NavItems';
-import {
-    selectIsAuthenticated,
-    selectCurrentToken,
-    logOut,
-} from '~/feature/auth/authSlice';
-import axios from 'axios';
+import { selectIsAuthenticated, logOut } from '~/feature/auth/authSlice';
+import { useGetAllContributionQuery } from '~/feature/contribution/contributionApiSlice';
 import './Nav.css';
 
 function Nav() {
     const [clicked, setClicked] = useState(false);
-    const [isAuthorized, setAuthorized] = useState(); // Changed default state to false
-
-    const token = useSelector(selectCurrentToken);
-    const isLoggedIn = useSelector(selectIsAuthenticated);
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        const fetchArticles = async () => {
-            try {
-                await axios.get('https://localhost:7136/api/Contributions', {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                setAuthorized(false);
-            } catch (error) {
-                console.error('Error fetching articles:', error);
-                setAuthorized(true); // Set isAuthorized to false if there's an error
-            }
-        };
+    const isLoggedIn = useSelector(selectIsAuthenticated);
+    const data = useGetAllContributionQuery();
 
-        fetchArticles();
-    }, [token]);
-
-    // Function to handle logout
     const handleLogout = () => {
-        // Dispatch the logOut action to clear user authentication information
         dispatch(logOut());
     };
 
@@ -54,7 +29,10 @@ function Nav() {
 
             <ul className={clicked ? 'nav-menu active' : 'nav-menu'}>
                 {navbarItems.map((item, index) => {
-                    if (item.title === ' Contributions' && isAuthorized) {
+                    if (
+                        item.title === ' Contributions' &&
+                        (!isLoggedIn || data.isError)
+                    ) {
                         return null;
                     }
                     return (
@@ -68,7 +46,7 @@ function Nav() {
                 })}
             </ul>
             <ul className="navbar-nav ms-auto">
-                {isLoggedIn ? ( // Conditional rendering for login/logout button
+                {isLoggedIn ? (
                     <button
                         type="button"
                         className="btn-login btn btn-outline-primary"

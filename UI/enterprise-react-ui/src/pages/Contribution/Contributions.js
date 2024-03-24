@@ -65,7 +65,7 @@ const Contribution = () => {
                         className="form-select"
                         aria-label="Default select example"
                     >
-                        <option selected>Select magazine</option>
+                        <option defaultValue>Select magazine</option>
                         {magazinesLoading ? (
                             <option>Loading...</option>
                         ) : magazinesError ? (
