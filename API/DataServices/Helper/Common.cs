@@ -2,6 +2,22 @@
 {
     public static class Common
     {
+        public static string GetFileNameFromUploadsDirectory(string fileName)
+        {
+            var uploadsDirectory = GetStaticContentDirectory();
+            var filePath = Path.Combine(uploadsDirectory, fileName);
+
+            if (File.Exists(filePath))
+            {
+                return fileName;
+            }
+            else
+            {
+                // File not found in the Uploads directory
+                return null;
+            }
+        }
+
         public static string GetCurrentDirectory()
         {
             var result = Directory.GetCurrentDirectory();

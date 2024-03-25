@@ -152,6 +152,36 @@ const ViewRecent = () => {
                         <button className="btn" onClick={() => handleFeedbackToggle(contribution.id)}>
                             {showFeedback[contribution.id] ? 'Feedback' : 'Feedback'}
                         </button>
+
+                        {isUpdating && selectedContributionId === contribution.id && (
+                            <form onSubmit={handleSubmitUpdate}>
+                                <div className="mb-3">
+                                    <label className="form-label">Title:</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        name="title"
+                                        value={formData.title}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Description:</label>
+                                    <textarea
+                                        className="form-control"
+                                        name="description"
+                                        value={formData.description}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Upload File:</label>
+                                    <input type="file" />
+                                </div>
+                                <button type="submit">Submit Update</button>
+                            </form>
+                        )}
+
                         {showFeedback[contribution.id] && ( // Display feedback if toggled
                             <div>
                                 <div className="row">
@@ -198,34 +228,6 @@ const ViewRecent = () => {
                                     </div>
                                 </div>
                             </div>
-                        )}
-                        {isUpdating && selectedContributionId === contribution.id && (
-                            <form onSubmit={handleSubmitUpdate}>
-                                <div className="mb-3">
-                                    <label className="form-label">Title:</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        name="title"
-                                        value={formData.title}
-                                        onChange={handleInputChange}
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    <label className="form-label">Description:</label>
-                                    <textarea
-                                        className="form-control"
-                                        name="description"
-                                        value={formData.description}
-                                        onChange={handleInputChange}
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    <label className="form-label">Upload File:</label>
-                                    <input type="file" />
-                                </div>
-                                <button type="submit">Submit Update</button>
-                            </form>
                         )}
                         {successMessage && <div className="success">{successMessage}</div>}
                         {errorMessage && <div className="error">{errorMessage}</div>}

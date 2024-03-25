@@ -5,12 +5,16 @@ import { useGetAllMagazineQuery } from '~/feature/magazine/magazineApiSlice';
 import { usePostContributionMutation } from '~/feature/contribution/contributionApiSlice';
 import { useGetUserByEmailQuery } from '~/feature/user/userApiSlice';
 import { addContribution } from '~/feature/contribution/contributionSlice';
+import { usePostFileMutation } from '~/feature/file/fileApiSlice';
+import { addFile } from '~/feature/file/fileSlice';
 
 const Upload = () => {
     const [successMessage, setSuccessMessage] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
+    const [file, setFile] = useState(null);
     const dispatch = useDispatch();
     const [post, { isLoading }] = usePostContributionMutation();
+    const [postFile] = usePostFileMutation();
 
     const { data: closureDate, isLoading: closureDateLoading, error: closureDateError } = useGetClosureDateByIdQuery(1);
     const { data: magazines, isLoading: magazinesLoading, error: magazinesError } = useGetAllMagazineQuery();
@@ -20,7 +24,7 @@ const Upload = () => {
     const [formData, setFormData] = useState({
         title: '',
         description: '',
-        filePath: 'https://chat.openai.com/',
+        filePath: '',
         closureDatesId: '',
         usersId: '',
         magazinesId: '',
@@ -59,9 +63,10 @@ const Upload = () => {
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
+        setFile(file);
         setFormData({
             ...formData,
-            filePath: file,
+            filePath: file.name,
         });
     };
 
@@ -78,19 +83,22 @@ const Upload = () => {
         try {
             const contributionData = await post(formData).unwrap();
             dispatch(addContribution(contributionData));
+            const fileData = await postFile(file).unwrap();
+            dispatch(addFile(fileData));
             setFormData({
                 title: '',
                 description: '',
-                filePath: 'https://chat.openai.com/',
+                filePath: '',
                 closureDatesId: '',
                 usersId: '',
                 magazinesId: '',
             });
             setSuccessMessage('Submitted successfully!');
         } catch (error) {
-            // Handle error
-            console.error('Error submitting:', error);
-            setErrorMessage('An error occurred while submitting the form. Please try again later.');
+            if (error.status !== 'PARSING_ERROR') {
+                console.error('Error:', error);
+                setErrorMessage('An error occurred while submitting the form. Please try again later.');
+            } else setSuccessMessage('Submitted successfully!');
         }
     };
     return (
