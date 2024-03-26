@@ -2,7 +2,6 @@
 using DataServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Models.Entities;
-using Models.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

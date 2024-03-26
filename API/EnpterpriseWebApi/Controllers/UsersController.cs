@@ -3,9 +3,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
 public class UsersController : ControllerBase
 {
     private readonly UserManager<IdentityUser> _userManager;
@@ -31,12 +34,12 @@ public class UsersController : ControllerBase
     }
 
     // GET: api/Users/{id}
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetUser(string id)
+    [HttpGet("{email}")]
+    public async Task<IActionResult> GetUser(string email)
     {
         try
         {
-            var user = await _userManager.FindByIdAsync(id);
+            var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
                 return NotFound("User not found");
 

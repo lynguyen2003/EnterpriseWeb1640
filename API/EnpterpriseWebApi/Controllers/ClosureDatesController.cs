@@ -1,15 +1,15 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using DataServices.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.DTO.Request;
 using Models.DTO.Response;
 using Models.Entities;
-using Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace EnterpriseWebApi.Controllers
+namespace EnpterpriseWebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

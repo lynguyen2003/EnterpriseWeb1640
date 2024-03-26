@@ -19,7 +19,6 @@ namespace Models.DTO.Request
         public string Description { get; set; }
 
         [Required(ErrorMessage = "FilePath is required")]
-        [Url(ErrorMessage = "FilePath must be a valid URL")]
         public string FilePath { get; set; }
 
         [Required(ErrorMessage = "ClosureDatesId is required")]

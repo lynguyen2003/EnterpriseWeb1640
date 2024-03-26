@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Models.Interfaces
+namespace DataServices.Interfaces
 {
     public interface IClosureDates
     {
