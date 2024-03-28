@@ -8,15 +8,39 @@ export const contributionApiSlice = apiSlice.injectEndpoints({
                 method: 'GET',
             }),
         }),
-        post: builder.mutation({
+        getContributionByUserId: builder.query({
+            query: (userId) => ({
+                url: `/Contributions/user/${userId}`,
+                method: 'GET',
+            }),
+        }),
+        postContribution: builder.mutation({
             query: (credentials) => ({
                 url: '/Contributions',
                 method: 'POST',
                 body: { ...credentials },
             }),
         }),
+        putContribution: builder.mutation({
+            query: (credentials) => ({
+                url: '/Contributions',
+                method: 'PUT',
+                body: { ...credentials },
+            }),
+        }),
+        deleteContribution: builder.mutation({
+            query: (id) => ({
+                url: `/Contributions/${id}`,
+                method: 'DELETE',
+            }),
+        }),
     }),
 });
 
-export const { useGetAllContributionQuery, usePostMutation } =
-    contributionApiSlice;
+export const {
+    useGetAllContributionQuery,
+    useGetContributionByUserIdQuery,
+    usePutContributionMutation,
+    usePostContributionMutation,
+    useDeleteContributionMutation,
+} = contributionApiSlice;

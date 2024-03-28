@@ -46,10 +46,6 @@ namespace DataServices.Repositories
                     existingContributions.Title = contributions.Title;
                     existingContributions.Description = contributions.Description;
                     existingContributions.FilePath = contributions.FilePath;
-                    existingContributions.UploadDate = contributions.UploadDate = DateTime.UtcNow;
-                    existingContributions.ClosureDatesId = contributions.ClosureDatesId;
-                    existingContributions.UsersId = contributions.UsersId;
-                    existingContributions.MagazinesId = contributions.MagazinesId;
                     //TO DO:
 
                     await _context.SaveChangesAsync();

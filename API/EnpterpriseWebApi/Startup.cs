@@ -10,7 +10,6 @@ using DataServices;
 using DataServices.Data;
 using DataServices.Interfaces;
 using DataServices.Repositories;
-using Models.Interfaces;
 using DataServices.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
@@ -20,6 +19,7 @@ using Microsoft.OpenApi.Models;
 using Models.Entities;
 using DataServices.MappingProfile;
 using EnpterpriseWebApi;
+using DataServices.Service;
 
 public class Startup
 {
@@ -77,6 +77,8 @@ public class Startup
             .AddDefaultTokenProviders();
 
         services.AddScoped<IJwtService, JwtService>();
+
+        services.AddTransient<IManageImage, ManageImage>();
 
         services.AddAutoMapper(typeof(MappingProfile));
         services.AddAutoMapper(typeof(Startup));

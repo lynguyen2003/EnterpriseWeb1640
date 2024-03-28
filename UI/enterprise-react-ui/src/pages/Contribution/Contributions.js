@@ -1,5 +1,7 @@
-
+  
 import React, { useState } from 'react';
+import ViewRecent from './components/ViewRecentUpload/ViewRecentUpload';
+import Upload from './components/Upload/Upload';
 import './Contributions.css';
 
 const Contribution = () => {
@@ -116,7 +118,17 @@ const Contribution = () => {
                     }}
                 ></div>
             </div>
-        </div>
+//             <div className="button row">
+//                 <button className="btn col-sm" onClick={handleUploadClick}>
+//                     Upload articles
+//                 </button>
+//                 <button className="btn col-sm" onClick={handleViewRecentClick}>
+//                     View recent uploads
+//                 </button>
+//             </div>
+//             {showUpload && <Upload />}
+//             {showViewRecent && <ViewRecent />}
+//        </div>
     );
 };
 
