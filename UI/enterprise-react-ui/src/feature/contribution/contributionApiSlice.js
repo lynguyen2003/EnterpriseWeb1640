@@ -8,7 +8,15 @@ export const contributionApiSlice = apiSlice.injectEndpoints({
                 method: 'GET',
             }),
         }),
+        post: builder.mutation({
+            query: (credentials) => ({
+                url: '/Contributions',
+                method: 'POST',
+                body: { ...credentials },
+            }),
+        }),
     }),
 });
 
-export const { useGetAllContributionQuery } = contributionApiSlice;
+export const { useGetAllContributionQuery, usePostMutation } =
+    contributionApiSlice;

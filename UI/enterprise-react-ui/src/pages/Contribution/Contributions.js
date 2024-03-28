@@ -1,26 +1,8 @@
+
 import React, { useState } from 'react';
-import { useGetClosureDateByIdQuery } from '~/feature/closureDates/dateApiSlice';
-import { useGetAllMagazineQuery } from '~/feature/magazine/magazineApiSlice';
 import './Contributions.css';
 
 const Contribution = () => {
-    const {
-        data: closureDate,
-        isLoading: closureDateLoading,
-        error: closureDateError,
-    } = useGetClosureDateByIdQuery(1);
-
-    const {
-        data: magazines,
-        isLoading: magazinesLoading,
-        error: magazinesError,
-    } = useGetAllMagazineQuery();
-
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US');
-    };
-
     const [selectedOption, setSelectedOption] = useState('upload'); // Sử dụng useState để lưu trữ trạng thái của lựa chọn
 
     const handleOptionChange = (option) => {
@@ -91,16 +73,6 @@ const Contribution = () => {
                             <label className="form-label">
                                 Submission date :
                             </label>
-                            {/* Assuming you want to display the first closure date */}
-                            {closureDateLoading ? (
-                                <span>Loading...</span>
-                            ) : closureDateError ? (
-                                <span>Error loading submission data.</span>
-                            ) : (
-                                <span>
-                                    {formatDate(closureDate.closureDate)}
-                                </span>
-                            )}
                         </div>
                         <div className="mb-3">
                             <select
@@ -108,20 +80,6 @@ const Contribution = () => {
                                 aria-label="Default select example"
                             >
                                 <option defaultValue>Select magazine</option>
-                                {magazinesLoading ? (
-                                    <option>Loading...</option>
-                                ) : magazinesError ? (
-                                    <option>Error loading magazines.</option>
-                                ) : (
-                                    magazines.map((magazine) => (
-                                        <option
-                                            key={magazine.id}
-                                            value={magazine.id}
-                                        >
-                                            {magazine.title}
-                                        </option>
-                                    ))
-                                )}
                             </select>
                         </div>
                         <div className="form-check">
