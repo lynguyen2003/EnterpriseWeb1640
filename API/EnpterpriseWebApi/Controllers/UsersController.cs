@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+[Authorize]
 public class UsersController : ControllerBase
 {
     private readonly UserManager<IdentityUser> _userManager;
@@ -53,6 +53,7 @@ public class UsersController : ControllerBase
 
     // POST: api/Users
     [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
     public async Task<IActionResult> CreateUser([FromBody] IdentityUser model)
     {
         try
@@ -71,6 +72,7 @@ public class UsersController : ControllerBase
 
     // PUT: api/Users/{id}
     [HttpPut("{id}")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
     public async Task<IActionResult> UpdateUser(string id, [FromBody] IdentityUser model)
     {
         try
@@ -99,6 +101,7 @@ public class UsersController : ControllerBase
 
     // DELETE: api/Users/{id}
     [HttpDelete("{id}")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
     public async Task<IActionResult> DeleteUser(string id)
     {
         try

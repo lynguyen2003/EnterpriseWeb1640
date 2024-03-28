@@ -13,7 +13,7 @@ namespace EnpterpriseWebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+    [Authorize]
     public class ClosureDatesController : ControllerBase
     {
         private readonly IClosureDates _closureDatesRepository;
@@ -74,6 +74,7 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult<ClosureDatesDTO>> AddClosureDate([FromBody] CreateClosureDateDTO closureDate)
         {
             try
@@ -101,6 +102,7 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult> UpdateClosureDate(int id, [FromBody] UpdateClosureDateDTO closureDate)
         {
             try
@@ -123,6 +125,7 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult> RemoveClosureDate(int id)
         {
             try

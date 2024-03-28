@@ -46,6 +46,7 @@ namespace DataServices.Repositories
                     existingContributions.Title = contributions.Title;
                     existingContributions.Description = contributions.Description;
                     existingContributions.FilePath = contributions.FilePath;
+                    existingContributions.ImgPath = contributions.ImgPath;
                     //TO DO:
 
                     await _context.SaveChangesAsync();

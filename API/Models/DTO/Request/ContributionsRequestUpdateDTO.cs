@@ -16,8 +16,7 @@ namespace Models.DTO.Request
 
         [StringLength(500, MinimumLength = 10, ErrorMessage = "Description must be between 10 and 500 characters")]
         public string Description { get; set; }
-
-        [Url(ErrorMessage = "FilePath must be a valid URL")]
         public string FilePath { get; set; }
+        public string ImgPath { get; set; }
     }
 }

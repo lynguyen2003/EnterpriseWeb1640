@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataServices.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240323073036_InitalCreate")]
-    partial class InitalCreate
+    [Migration("20240327162726_InitialCreateDatabase")]
+    partial class InitialCreateDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -272,6 +272,10 @@ namespace DataServices.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImgPath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("MagazinesId")
                         .HasColumnType("int");
 
@@ -348,16 +352,11 @@ namespace DataServices.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ContributionsId")
-                        .HasColumnType("int");
-
                     b.Property<string>("FilePath")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ContributionsId");
 
                     b.ToTable("Images");
                 });
@@ -525,17 +524,6 @@ namespace DataServices.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Models.Entities.Images", b =>
-                {
-                    b.HasOne("Models.Entities.Contributions", "Contributions")
-                        .WithMany("Images")
-                        .HasForeignKey("ContributionsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Contributions");
-                });
-
             modelBuilder.Entity("Models.Entities.Users", b =>
                 {
                     b.HasOne("Models.Entities.Faculties", "Faculities")
@@ -550,11 +538,6 @@ namespace DataServices.Migrations
             modelBuilder.Entity("Models.Entities.ClosureDates", b =>
                 {
                     b.Navigation("Contributions");
-                });
-
-            modelBuilder.Entity("Models.Entities.Contributions", b =>
-                {
-                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("Models.Entities.Faculties", b =>
