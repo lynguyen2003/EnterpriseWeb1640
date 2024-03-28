@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataServices.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240327162726_InitialCreateDatabase")]
-    partial class InitialCreateDatabase
+    [Migration("20240328173651_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,6 +50,38 @@ namespace DataServices.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "f44b9203-e976-4a19-a1f4-e3b11c21f7c1",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "203c2c5b-f8b7-4580-b869-21d14af6abe1",
+                            Name = "MarketingManager",
+                            NormalizedName = "MARKETINGMANAGER"
+                        },
+                        new
+                        {
+                            Id = "ea16a4f6-1522-4e33-a54c-d358941cb0f3",
+                            Name = "MarketingCoordinator",
+                            NormalizedName = "MARKETINGCOORDINATOR"
+                        },
+                        new
+                        {
+                            Id = "666c348e-602a-4f1c-abcc-a1d7eb52b5fe",
+                            Name = "Student",
+                            NormalizedName = "STUDENT"
+                        },
+                        new
+                        {
+                            Id = "461fcd83-16ec-4745-9ae0-2da77ddadb3c",
+                            Name = "Guest",
+                            NormalizedName = "GUEST"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -251,6 +283,15 @@ namespace DataServices.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ClosureDates");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AcademicYear = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ClosureDate = new DateTime(2023, 5, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FinalClosureDate = new DateTime(2023, 6, 30, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("Models.Entities.Contributions", b =>
@@ -316,6 +357,33 @@ namespace DataServices.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Faculties");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            FacultyName = "Greenwich University"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            FacultyName = "Faculty of Education, Health and Human Sciences"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            FacultyName = "Faculty of Engineering and Science"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            FacultyName = "Faculty of Liberal Arts and Sciences"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            FacultyName = "Faculty of Information Technology"
+                        });
                 });
 
             modelBuilder.Entity("Models.Entities.Feedbacks", b =>
@@ -326,11 +394,11 @@ namespace DataServices.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Comment")
+                    b.Property<string>("Feedback")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CommentDate")
+                    b.Property<DateTime>("UploadDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
@@ -342,23 +410,6 @@ namespace DataServices.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Feedbacks");
-                });
-
-            modelBuilder.Entity("Models.Entities.Images", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FilePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("Models.Entities.Magazines", b =>
@@ -384,6 +435,43 @@ namespace DataServices.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Magazines");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CoverImagePath = "image1.jpg",
+                            Description = "Description for Magazine 1",
+                            Title = "Greenwich Gazette: Exploring Campus Life and Beyond"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CoverImagePath = "image2.jpg",
+                            Description = "Description for Magazine 2",
+                            Title = "Academic Insights: Greenwich University's Research & Scholarship Digest"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CoverImagePath = "image3.jpg",
+                            Description = "Description for Magazine 3",
+                            Title = "The Greenwich Pioneer: Celebrating Innovation and Leadership on Campus"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CoverImagePath = "image4.jpg",
+                            Description = "Description for Magazine 4",
+                            Title = "Campus Chronicles: Stories, Events, and Perspectives from Greenwich University"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CoverImagePath = "image5.jpg",
+                            Description = "Description for Magazine 5",
+                            Title = "Greenwich Perspectives: Diverse Voices, Shared Experiences in our University Community"
+                        });
                 });
 
             modelBuilder.Entity("Models.Entities.RefreshToken", b =>

@@ -9,7 +9,6 @@ namespace Models.Entities
 {
     public class Faculties
     {
-        [Key]
         public int Id { get; set; }
         public string FacultyName { get; set; }
         public ICollection<Users> Users { get; set; }

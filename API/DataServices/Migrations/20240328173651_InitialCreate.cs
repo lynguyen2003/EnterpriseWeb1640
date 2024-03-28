@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace DataServices.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreateDatabase : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,19 +53,6 @@ namespace DataServices.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Faculties", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Images",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Images", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -283,8 +272,8 @@ namespace DataServices.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CommentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Feedback = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UploadDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
@@ -296,6 +285,47 @@ namespace DataServices.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "203c2c5b-f8b7-4580-b869-21d14af6abe1", null, "MarketingManager", "MARKETINGMANAGER" },
+                    { "461fcd83-16ec-4745-9ae0-2da77ddadb3c", null, "Guest", "GUEST" },
+                    { "666c348e-602a-4f1c-abcc-a1d7eb52b5fe", null, "Student", "STUDENT" },
+                    { "ea16a4f6-1522-4e33-a54c-d358941cb0f3", null, "MarketingCoordinator", "MARKETINGCOORDINATOR" },
+                    { "f44b9203-e976-4a19-a1f4-e3b11c21f7c1", null, "Admin", "ADMIN" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ClosureDates",
+                columns: new[] { "Id", "AcademicYear", "ClosureDate", "FinalClosureDate" },
+                values: new object[] { 1, new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 5, 31, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 6, 30, 0, 0, 0, 0, DateTimeKind.Unspecified) });
+
+            migrationBuilder.InsertData(
+                table: "Faculties",
+                columns: new[] { "Id", "FacultyName" },
+                values: new object[,]
+                {
+                    { 1, "Greenwich University" },
+                    { 2, "Faculty of Education, Health and Human Sciences" },
+                    { 3, "Faculty of Engineering and Science" },
+                    { 4, "Faculty of Liberal Arts and Sciences" },
+                    { 5, "Faculty of Information Technology" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Magazines",
+                columns: new[] { "Id", "CoverImagePath", "Description", "Title" },
+                values: new object[,]
+                {
+                    { 1, "image1.jpg", "Description for Magazine 1", "Greenwich Gazette: Exploring Campus Life and Beyond" },
+                    { 2, "image2.jpg", "Description for Magazine 2", "Academic Insights: Greenwich University's Research & Scholarship Digest" },
+                    { 3, "image3.jpg", "Description for Magazine 3", "The Greenwich Pioneer: Celebrating Innovation and Leadership on Campus" },
+                    { 4, "image4.jpg", "Description for Magazine 4", "Campus Chronicles: Stories, Events, and Perspectives from Greenwich University" },
+                    { 5, "image5.jpg", "Description for Magazine 5", "Greenwich Perspectives: Diverse Voices, Shared Experiences in our University Community" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -386,9 +416,6 @@ namespace DataServices.Migrations
 
             migrationBuilder.DropTable(
                 name: "Feedbacks");
-
-            migrationBuilder.DropTable(
-                name: "Images");
 
             migrationBuilder.DropTable(
                 name: "RefreshTokens");
