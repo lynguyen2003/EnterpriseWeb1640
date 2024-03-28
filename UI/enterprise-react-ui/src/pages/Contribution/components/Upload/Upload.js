@@ -5,16 +5,17 @@ import { useGetAllMagazineQuery } from '~/feature/magazine/magazineApiSlice';
 import { usePostContributionMutation } from '~/feature/contribution/contributionApiSlice';
 import { useGetUserByEmailQuery } from '~/feature/user/userApiSlice';
 import { addContribution } from '~/feature/contribution/contributionSlice';
-import { usePostFileMutation } from '~/feature/file/fileApiSlice';
-import { addFile } from '~/feature/file/fileSlice';
+
+import { fileDb } from '~/Config';
+import { ref, uploadBytes } from 'firebase/storage';
 
 const Upload = () => {
     const [successMessage, setSuccessMessage] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
     const [file, setFile] = useState(null);
+    const [img, setImg] = useState(null);
     const dispatch = useDispatch();
     const [post, { isLoading }] = usePostContributionMutation();
-    const [postFile] = usePostFileMutation();
 
     const { data: closureDate, isLoading: closureDateLoading, error: closureDateError } = useGetClosureDateByIdQuery(1);
     const { data: magazines, isLoading: magazinesLoading, error: magazinesError } = useGetAllMagazineQuery();
@@ -25,6 +26,7 @@ const Upload = () => {
         title: '',
         description: '',
         filePath: '',
+        imgPath: '',
         closureDatesId: '',
         usersId: '',
         magazinesId: '',
@@ -48,6 +50,16 @@ const Upload = () => {
         }
     }, [users, usersLoading, usersError]);
 
+    useEffect(() => {
+        if (successMessage || errorMessage) {
+            const timeout = setTimeout(() => {
+                setSuccessMessage(null);
+                setErrorMessage(null);
+            }, 5000);
+            return () => clearTimeout(timeout);
+        }
+    }, [successMessage, errorMessage]);
+
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         return date.toLocaleDateString('vi-VN');
@@ -70,6 +82,15 @@ const Upload = () => {
         });
     };
 
+    const handleImgChange = (e) => {
+        const img = e.target.files[0];
+        setImg(img);
+        setFormData({
+            ...formData,
+            imgPath: img.name,
+        });
+    };
+
     const handleMagazineSelect = (e) => {
         const selectedMagazineId = e.target.value;
         setFormData({
@@ -83,12 +104,18 @@ const Upload = () => {
         try {
             const contributionData = await post(formData).unwrap();
             dispatch(addContribution(contributionData));
-            const fileData = await postFile(file).unwrap();
-            dispatch(addFile(fileData));
+
+            const fileRef = ref(fileDb, `files/${file.name}`);
+            uploadBytes(fileRef, file);
+
+            const imgRef = ref(fileDb, `images/${img.name}`);
+            uploadBytes(imgRef, img);
+
             setFormData({
                 title: '',
                 description: '',
                 filePath: '',
+                imgPath: '',
                 closureDatesId: '',
                 usersId: '',
                 magazinesId: '',
@@ -128,7 +155,7 @@ const Upload = () => {
             </div>
             <div className="mb-3">
                 <label className="form-label">Upload Image:</label>
-                <input type="file" />
+                <input type="file" onChange={handleImgChange} />
             </div>
             <div className="mb-3">
                 <label className="form-label">Submission date :</label>
