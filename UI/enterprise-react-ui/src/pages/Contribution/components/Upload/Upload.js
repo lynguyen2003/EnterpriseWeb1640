@@ -129,7 +129,88 @@ const Upload = () => {
         }
     };
     return (
-        <form onSubmit={handleSubmitUpdate}>
+        <form className="formArticle" onSubmit={handleSubmitUpdate}>
+            <div className="mb-3 field">
+                <label className="form-label">Title</label>
+                <input
+                    placeholder="Type your title here"
+                    type="text"
+                    className="form-control"
+                    name="title"
+                    value={formData.title}
+                    onChange={handleInputChange}
+                />
+            </div>
+            <div className="mb-3 fileUpload">
+                <label className="form-label">Upload File:</label>
+                <br />
+                <input type="file" onChange={handleFileChange} />
+            </div>
+            <div className="mb-3 field">
+                <label className="form-label">Description</label>
+                <input
+                    placeholder="Type your description here"
+                    className="form-control"
+                    name="description"
+                    value={formData.description}
+                    onChange={handleInputChange}
+                />
+            </div>
+            <div className="mb-3 fileUpload">
+                <label className="form-label">Upload Image:</label>
+                <br />
+                <input type="file" onChange={handleImgChange} />
+            </div>
+            <div className="mb-3">
+                <label className="form-label">Submission date :</label>
+                {closureDateLoading ? (
+                    <span>Loading...</span>
+                ) : closureDateError ? (
+                    <span>Error loading submission data.</span>
+                ) : (
+                    <span>{formatDate(closureDate.closureDate)}</span>
+                )}
+            </div>
+            <div className="mb-3">
+                <select
+                    className="form-select"
+                    aria-label="Default select example"
+                    value={formData.magazinesId}
+                    onChange={handleMagazineSelect}
+                >
+                    <option defaultValue>Select magazine</option>
+                    {magazinesLoading ? (
+                        <option>Loading...</option>
+                    ) : magazinesError ? (
+                        <option>Error loading magazines.</option>
+                    ) : (
+                        magazines.map((magazine) => (
+                            <option key={magazine.id} value={magazine.id}>
+                                {magazine.title}
+                            </option>
+                        ))
+                    )}
+                </select>
+            </div>
+            <div className="form-check">
+                <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                <label className="form-check-label" htmlFor="flexCheckDefault">
+                    I have read and agree to the terms and conditions
+                </label>
+            </div>
+            <div className="upload">
+                {isLoading ? (
+                    <span>Loading...</span>
+                ) : (
+                    <button type="submit" className="submit btn btn-primary">
+                        Submit
+                    </button>
+                )}
+            </div>
+            {successMessage && <div className="success">{successMessage}</div>}
+            {errorMessage && <div className="error">{errorMessage}</div>}
+        </form>
+        /* <form onSubmit={handleSubmitUpdate}>
             <div className="mb-3">
                 <label className="form-label">Title:</label>
                 <input
@@ -159,7 +240,6 @@ const Upload = () => {
             </div>
             <div className="mb-3">
                 <label className="form-label">Submission date :</label>
-                {/* Assuming you want to display the first closure date */}
                 {closureDateLoading ? (
                     <span>Loading...</span>
                 ) : closureDateError ? (
@@ -205,7 +285,7 @@ const Upload = () => {
             )}
             {successMessage && <div className="success">{successMessage}</div>}
             {errorMessage && <div className="error">{errorMessage}</div>}
-        </form>
+        </form> */
     );
 };
 

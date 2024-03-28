@@ -56,7 +56,6 @@ public class Startup
             ValidAudience= Configuration.GetSection("JwtConfig:Audience").Value
         };
 
-        services.AddScoped<SeedData>();
 
         services.AddAuthentication(options =>
         {
@@ -135,12 +134,6 @@ public class Startup
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                SeedData.InitializeAsync(userManager, roleManager).Wait();
-            }
             app.UseSwagger();
             app.UseSwaggerUI();
         }
