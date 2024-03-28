@@ -14,6 +14,7 @@ function Nav() {
     const data = useGetAllContributionQuery();
 
     const handleLogout = () => {
+        alert('You have been logged out')
         dispatch(logOut());
     };
 
