@@ -12,8 +12,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace EnpterpriseWebApi.Controllers
 {
-	[Authorize]
-	[Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Route("api/[controller]")]
 	[ApiController]
 	public class FacultiesController : ControllerBase
 	{

@@ -13,7 +13,7 @@ namespace EnpterpriseWebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ClosureDatesController : ControllerBase
     {
         private readonly IClosureDates _closureDatesRepository;

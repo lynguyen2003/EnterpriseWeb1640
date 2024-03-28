@@ -10,7 +10,7 @@ using Models.Entities;
 
 namespace EnpterpriseWebApi.Controllers
 {
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class MagazinesController : BaseController

@@ -13,7 +13,7 @@ namespace EnpterpriseWebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ContributionsController : BaseController
     {
         public ContributionsController(IUnitOfWorks unitOfWorks, IMapper mapper) : base(unitOfWorks, mapper)
