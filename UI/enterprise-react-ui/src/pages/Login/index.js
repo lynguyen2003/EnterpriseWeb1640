@@ -30,7 +30,8 @@ const Login = () => {
 
         try {
             const userData = await login({ email, password }).unwrap();
-            dispatch(setCredentials({ ...userData, email }));
+            const token = userData.token;
+            dispatch(setCredentials({ token, email }));
             setEmail('');
             setPassword('');
             navigate('/');
@@ -59,11 +60,7 @@ const Login = () => {
         </div>
     ) : (
         <section className="login">
-            <p
-                ref={errRef}
-                className={errMsg ? 'errmsg' : 'offscreen'}
-                aria-live="assertive"
-            >
+            <p ref={errRef} className={errMsg ? 'errmsg' : 'offscreen'} aria-live="assertive">
                 {errMsg}
             </p>
             <div>
@@ -81,13 +78,8 @@ const Login = () => {
                                                     height="80"
                                                 />
                                             </h1>
-                                            <h2 className="fw-bold mb-3 text-center fs-1">
-                                                Login
-                                            </h2>
-                                            <p className="mb-5 text-center">
-                                                Please enter your login and
-                                                password!
-                                            </p>
+                                            <h2 className="fw-bold mb-3 text-center fs-1">Login</h2>
+                                            <p className="mb-5 text-center">Please enter your login and password!</p>
                                             <form onSubmit={handleSubmit}>
                                                 <div className="form-outline form-white mb-5 txt_field">
                                                     <input
@@ -96,16 +88,11 @@ const Login = () => {
                                                         className=""
                                                         ref={userRef}
                                                         value={email}
-                                                        onChange={
-                                                            handleUserInput
-                                                        }
+                                                        onChange={handleUserInput}
                                                         autoComplete="off"
                                                         required
                                                     />
-                                                    <label
-                                                        className="form-label"
-                                                        htmlFor="email"
-                                                    >
+                                                    <label className="form-label" htmlFor="email">
                                                         Email
                                                     </label>
                                                 </div>
@@ -115,16 +102,11 @@ const Login = () => {
                                                         type="password"
                                                         id="password"
                                                         className=""
-                                                        onChange={
-                                                            handlePwdInput
-                                                        }
+                                                        onChange={handlePwdInput}
                                                         value={password}
                                                         required
                                                     />
-                                                    <label
-                                                        className="form-label"
-                                                        htmlFor="password"
-                                                    >
+                                                    <label className="form-label" htmlFor="password">
                                                         Password
                                                     </label>
                                                 </div>
@@ -147,8 +129,7 @@ const Login = () => {
 
                                         <div>
                                             <p className="mb-0 text-center">
-                                                <i className="fa-regular fa-copyright"></i>{' '}
-                                                Powered by{' '}
+                                                <i className="fa-regular fa-copyright"></i> Powered by{' '}
                                                 <u>
                                                     <a
                                                         href="https://greenwich.edu.vn/"

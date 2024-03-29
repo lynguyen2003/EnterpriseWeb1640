@@ -3,18 +3,20 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { navbarItems } from './NavItems';
 import { selectIsAuthenticated, logOut } from '~/feature/auth/authSlice';
-import { useGetAllContributionQuery } from '~/feature/contribution/contributionApiSlice';
+import { selectCurrentToken } from '~/feature/auth/authSlice';
 import './Nav.css';
+import { jwtDecode } from 'jwt-decode';
 
 function Nav() {
     const [clicked, setClicked] = useState(false);
+    const currentToken = useSelector(selectCurrentToken);
     const dispatch = useDispatch();
 
     const isLoggedIn = useSelector(selectIsAuthenticated);
-    const data = useGetAllContributionQuery();
+    const userObject = currentToken ? jwtDecode(currentToken) : { role: null };
 
     const handleLogout = () => {
-        alert('You have been logged out')
+        alert('You have been logged out');
         dispatch(logOut());
     };
 
@@ -32,8 +34,11 @@ function Nav() {
                 {navbarItems.map((item, index) => {
                     if (
                         item.title === ' Contributions' &&
-                        (!isLoggedIn || data.isError)
+                        (!isLoggedIn || !isLoggedIn || (userObject.role !== 'Student' && userObject.role !== 'Admin'))
                     ) {
+                        return null;
+                    }
+                    if (item.title === ' Dashboard' && (!isLoggedIn || !isLoggedIn || userObject.role !== 'Admin')) {
                         return null;
                     }
                     return (
@@ -48,29 +53,19 @@ function Nav() {
             </ul>
             <ul className="navbar-nav ms-auto">
                 {isLoggedIn ? (
-                    <button
-                        type="button"
-                        className="btn-login btn btn-outline-primary"
-                        onClick={handleLogout}
-                    >
+                    <button type="button" className="btn-login btn btn-outline-primary" onClick={handleLogout}>
                         Logout
                     </button>
                 ) : (
                     <Link to="/login">
-                        <button
-                            type="button"
-                            className="btn-login btn btn-outline-primary"
-                        >
+                        <button type="button" className="btn-login btn btn-outline-primary">
                             Login
                         </button>
                     </Link>
                 )}
             </ul>
             <div className="menu-icons">
-                <i
-                    className={clicked ? 'fas fa-times' : 'fas fa-bars'}
-                    onClick={() => setClicked(!clicked)}
-                ></i>
+                <i className={clicked ? 'fas fa-times' : 'fas fa-bars'} onClick={() => setClicked(!clicked)}></i>
             </div>
         </nav>
     );

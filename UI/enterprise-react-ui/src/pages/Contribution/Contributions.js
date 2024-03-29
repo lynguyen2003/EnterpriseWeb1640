@@ -18,10 +18,6 @@ const Contribution = () => {
     };
     const [selectedOption, setSelectedOption] = useState('upload'); // Sử dụng useState để lưu trữ trạng thái của lựa chọn
 
-    const handleOptionChange = (option) => {
-        setSelectedOption(option);
-    };
-
     return (
         <div className="contributions">
             <div className="uvArticle">

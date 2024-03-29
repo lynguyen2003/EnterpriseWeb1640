@@ -6,17 +6,23 @@ export const navbarItems = [
         icon: 'fa-solid fa-house',
     },
     {
+        title: ' Dashboard',
+        url: '/admin',
+        cName: 'nav-link',
+        icon: 'fa-solid fa-address-book',
+    },
+    {
         title: ' Contributions',
         url: '/contribution',
         cName: 'nav-link',
         icon: 'fa-solid fa-book-open',
     },
-    {
+    /* {
         title: ' About',
         url: '/',
         cName: 'nav-link',
         icon: 'fa-solid fa-circle-info',
-    },
+    }, */
     {
         title: ' Login',
         url: '/login',
