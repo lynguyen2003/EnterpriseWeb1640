@@ -27,6 +27,11 @@ namespace DataServices.MappingProfile
             CreateMap<Magazines, MagazinesResponseDTO>();
             CreateMap<MagazinesRequestCreateDTO, Magazines>();
             CreateMap<MagazinesRequestUpdateDTO, Magazines>();
+
+            CreateMap<Feedbacks, FeedbacksResponseDTO>();
+            CreateMap<FeedbacksRequestCreateDTO, Feedbacks>()
+                .ForMember(dest => dest.UploadDate, opt => opt.MapFrom(src => DateTime.Now));
+            CreateMap<FeedbacksRequestUpdateDTO, Feedbacks>();
         }
 	}
 }

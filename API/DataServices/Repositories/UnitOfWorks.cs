@@ -15,6 +15,7 @@ namespace DataServices.Repositories
         public IContributionsRepository Contributions { get; }
         public IMagazinesRepository Magazines { get; }
         public IImagesRepository Images { get; }
+        public IFeedbacksRepository Feedbacks { get; }
         private readonly DataContext _context;
 
         public UnitOfWorks(DataContext context, ILoggerFactory loggerFactory) 
@@ -25,6 +26,7 @@ namespace DataServices.Repositories
             Contributions = new ContributionsRepository(logger, _context);
             Magazines = new MagazinesRepository(logger, _context);
             Images = new ImagesRepository(logger, _context);
+            Feedbacks = new FeedbacksRepository(logger, _context);
         }
 
 

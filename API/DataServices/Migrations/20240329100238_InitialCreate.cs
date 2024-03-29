@@ -274,14 +274,14 @@ namespace DataServices.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Feedback = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UploadDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UsersId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Feedbacks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Feedbacks_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Feedbacks_AspNetUsers_UsersId",
+                        column: x => x.UsersId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -292,17 +292,17 @@ namespace DataServices.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "203c2c5b-f8b7-4580-b869-21d14af6abe1", null, "MarketingManager", "MARKETINGMANAGER" },
-                    { "461fcd83-16ec-4745-9ae0-2da77ddadb3c", null, "Guest", "GUEST" },
-                    { "666c348e-602a-4f1c-abcc-a1d7eb52b5fe", null, "Student", "STUDENT" },
-                    { "ea16a4f6-1522-4e33-a54c-d358941cb0f3", null, "MarketingCoordinator", "MARKETINGCOORDINATOR" },
-                    { "f44b9203-e976-4a19-a1f4-e3b11c21f7c1", null, "Admin", "ADMIN" }
+                    { "274ced50-646b-44b4-a7b6-7c1a161c2029", null, "Student", "STUDENT" },
+                    { "39c5748f-fd3d-4f20-8a1e-137ef4d95280", null, "Admin", "ADMIN" },
+                    { "5ec0b89b-5b75-4b95-a8b4-14de416e5b09", null, "Guest", "GUEST" },
+                    { "b35dcbb4-63e3-4c8d-aa72-3fa54b17d9af", null, "MarketingManager", "MARKETINGMANAGER" },
+                    { "f3087c46-7758-47d6-9fa4-fb3fa2a0612b", null, "MarketingCoordinator", "MARKETINGCOORDINATOR" }
                 });
 
             migrationBuilder.InsertData(
                 table: "ClosureDates",
                 columns: new[] { "Id", "AcademicYear", "ClosureDate", "FinalClosureDate" },
-                values: new object[] { 1, new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 5, 31, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 6, 30, 0, 0, 0, 0, DateTimeKind.Unspecified) });
+                values: new object[] { 1, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 4, 25, 11, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) });
 
             migrationBuilder.InsertData(
                 table: "Faculties",
@@ -388,9 +388,9 @@ namespace DataServices.Migrations
                 column: "UsersId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Feedbacks_UserId",
+                name: "IX_Feedbacks_UsersId",
                 table: "Feedbacks",
-                column: "UserId");
+                column: "UsersId");
         }
 
         /// <inheritdoc />

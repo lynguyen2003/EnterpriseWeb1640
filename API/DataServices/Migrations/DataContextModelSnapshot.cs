@@ -51,31 +51,31 @@ namespace DataServices.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f44b9203-e976-4a19-a1f4-e3b11c21f7c1",
+                            Id = "39c5748f-fd3d-4f20-8a1e-137ef4d95280",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "203c2c5b-f8b7-4580-b869-21d14af6abe1",
+                            Id = "b35dcbb4-63e3-4c8d-aa72-3fa54b17d9af",
                             Name = "MarketingManager",
                             NormalizedName = "MARKETINGMANAGER"
                         },
                         new
                         {
-                            Id = "ea16a4f6-1522-4e33-a54c-d358941cb0f3",
+                            Id = "f3087c46-7758-47d6-9fa4-fb3fa2a0612b",
                             Name = "MarketingCoordinator",
                             NormalizedName = "MARKETINGCOORDINATOR"
                         },
                         new
                         {
-                            Id = "666c348e-602a-4f1c-abcc-a1d7eb52b5fe",
+                            Id = "274ced50-646b-44b4-a7b6-7c1a161c2029",
                             Name = "Student",
                             NormalizedName = "STUDENT"
                         },
                         new
                         {
-                            Id = "461fcd83-16ec-4745-9ae0-2da77ddadb3c",
+                            Id = "5ec0b89b-5b75-4b95-a8b4-14de416e5b09",
                             Name = "Guest",
                             NormalizedName = "GUEST"
                         });
@@ -285,9 +285,9 @@ namespace DataServices.Migrations
                         new
                         {
                             Id = 1,
-                            AcademicYear = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ClosureDate = new DateTime(2023, 5, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FinalClosureDate = new DateTime(2023, 6, 30, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            AcademicYear = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ClosureDate = new DateTime(2024, 4, 25, 11, 0, 0, 0, DateTimeKind.Unspecified),
+                            FinalClosureDate = new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -398,13 +398,13 @@ namespace DataServices.Migrations
                     b.Property<DateTime>("UploadDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("UsersId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UsersId");
 
                     b.ToTable("Feedbacks");
                 });
@@ -602,7 +602,7 @@ namespace DataServices.Migrations
                 {
                     b.HasOne("Models.Entities.Users", "User")
                         .WithMany("Feedbacks")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

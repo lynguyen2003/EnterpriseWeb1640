@@ -11,6 +11,7 @@ namespace DataServices.Interfaces
         IContributionsRepository Contributions { get; }
         IMagazinesRepository Magazines { get; }
         IImagesRepository Images { get; }
+        IFeedbacksRepository Feedbacks { get; }
         Task<bool> CompleteAsync();
         
     }

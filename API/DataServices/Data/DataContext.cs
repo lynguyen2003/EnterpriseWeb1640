@@ -32,9 +32,9 @@ namespace DataServices.Data
                 new ClosureDates
                 {
                     Id = 1,
-                    AcademicYear = new DateTime(2023, 1, 1),
-                    ClosureDate = new DateTime(2023, 5, 31),
-                    FinalClosureDate = new DateTime(2023, 6, 30)
+                    AcademicYear = new DateTime(2024, 1, 1),
+                    ClosureDate = new DateTime(2024, 4, 25, 11, 00, 00),
+                    FinalClosureDate = new DateTime(2024, 5, 1)
                 }
             );
 
