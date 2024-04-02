@@ -116,7 +116,7 @@ namespace DataServices.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FaculitiesId = table.Column<int>(type: "int", nullable: true),
+                    FacultiesId = table.Column<int>(type: "int", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -136,8 +136,8 @@ namespace DataServices.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetUsers_Faculties_FaculitiesId",
-                        column: x => x.FaculitiesId,
+                        name: "FK_AspNetUsers_Faculties_FacultiesId",
+                        column: x => x.FacultiesId,
                         principalTable: "Faculties",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -292,11 +292,11 @@ namespace DataServices.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "274ced50-646b-44b4-a7b6-7c1a161c2029", null, "Student", "STUDENT" },
-                    { "39c5748f-fd3d-4f20-8a1e-137ef4d95280", null, "Admin", "ADMIN" },
-                    { "5ec0b89b-5b75-4b95-a8b4-14de416e5b09", null, "Guest", "GUEST" },
-                    { "b35dcbb4-63e3-4c8d-aa72-3fa54b17d9af", null, "MarketingManager", "MARKETINGMANAGER" },
-                    { "f3087c46-7758-47d6-9fa4-fb3fa2a0612b", null, "MarketingCoordinator", "MARKETINGCOORDINATOR" }
+                    { "1528ec0e-986f-422b-8cb1-41edd729311d", null, "Student", "STUDENT" },
+                    { "6dac4041-a2c9-487f-92d4-e9ffc953579c", null, "MarketingManager", "MARKETINGMANAGER" },
+                    { "6df8a542-c22c-415b-ad62-74043acc1aa8", null, "Admin", "ADMIN" },
+                    { "8d92f0d7-7ec1-4d72-b142-a7370f40b6ae", null, "MarketingCoordinator", "MARKETINGCOORDINATOR" },
+                    { "de84815c-55e6-499e-a0a7-3e58a2727cd7", null, "Guest", "GUEST" }
                 });
 
             migrationBuilder.InsertData(
@@ -361,9 +361,9 @@ namespace DataServices.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_FaculitiesId",
+                name: "IX_AspNetUsers_FacultiesId",
                 table: "AspNetUsers",
-                column: "FaculitiesId");
+                column: "FacultiesId");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",

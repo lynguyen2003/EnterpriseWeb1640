@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Models.Entities;
 
 namespace EnpterpriseWebApi
 {
@@ -8,21 +9,16 @@ namespace EnpterpriseWebApi
         {
             string adminEmail = "admin@example.com";
             string adminPassword = "Admin@123";
-            string adminUsername = "admin";
-
-            // Ensure Admin role exists
-            if (!await roleManager.RoleExistsAsync("Admin"))
-            {
-                await roleManager.CreateAsync(new IdentityRole("Admin"));
-            }
+            string adminUsername = "Admin";
 
             // Create Admin user if not exists
             if (userManager.FindByEmailAsync(adminEmail).Result == null)
             {
-                var adminUser = new IdentityUser
+                var adminUser = new Users
                 {
                     UserName = adminUsername,
-                    Email = adminEmail
+                    Email = adminEmail,
+                    FacultiesId = 1
                 };
 
                 var result = await userManager.CreateAsync(adminUser, adminPassword);
@@ -49,10 +45,11 @@ namespace EnpterpriseWebApi
                 // Create user if not exists
                 if (userManager.FindByEmailAsync(emails[i]).Result == null)
                 {
-                    var user = new IdentityUser
+                    var user = new Users
                     {
                         UserName = usernames[i],
-                        Email = emails[i]
+                        Email = emails[i],
+                        FacultiesId = 1
                     };
 
                     var result = await userManager.CreateAsync(user, commonPassword);

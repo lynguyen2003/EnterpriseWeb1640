@@ -36,7 +36,7 @@ namespace DataServices.Repositories
             return await _dbSet.Where(c => c.UsersId == userId).ToListAsync();
         }
 
-        public virtual async Task<bool> Update(Contributions contributions)
+        public override async Task<bool> Update(Contributions contributions)
         {
             try
             {

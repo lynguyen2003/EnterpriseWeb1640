@@ -3,6 +3,7 @@ using Models.Entities;
 using Models.DTO.Request;
 using Models.DTO.Response;
 using Models.DTO;
+using Microsoft.AspNetCore.Identity;
 
 namespace DataServices.MappingProfile
 {
@@ -32,6 +33,10 @@ namespace DataServices.MappingProfile
             CreateMap<FeedbacksRequestCreateDTO, Feedbacks>()
                 .ForMember(dest => dest.UploadDate, opt => opt.MapFrom(src => DateTime.Now));
             CreateMap<FeedbacksRequestUpdateDTO, Feedbacks>();
+
+            CreateMap<Users, UsersResponseDTO>();
+            CreateMap<UsersRequestCreateDTO, Users>();
+            CreateMap<UsersRequestUpdateDTO, Users>();
         }
 	}
 }

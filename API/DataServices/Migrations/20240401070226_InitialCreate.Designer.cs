@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataServices.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240329100238_InitialCreate")]
+    [Migration("20240401070226_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -54,31 +54,31 @@ namespace DataServices.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "39c5748f-fd3d-4f20-8a1e-137ef4d95280",
+                            Id = "6df8a542-c22c-415b-ad62-74043acc1aa8",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "b35dcbb4-63e3-4c8d-aa72-3fa54b17d9af",
+                            Id = "6dac4041-a2c9-487f-92d4-e9ffc953579c",
                             Name = "MarketingManager",
                             NormalizedName = "MARKETINGMANAGER"
                         },
                         new
                         {
-                            Id = "f3087c46-7758-47d6-9fa4-fb3fa2a0612b",
+                            Id = "8d92f0d7-7ec1-4d72-b142-a7370f40b6ae",
                             Name = "MarketingCoordinator",
                             NormalizedName = "MARKETINGCOORDINATOR"
                         },
                         new
                         {
-                            Id = "274ced50-646b-44b4-a7b6-7c1a161c2029",
+                            Id = "1528ec0e-986f-422b-8cb1-41edd729311d",
                             Name = "Student",
                             NormalizedName = "STUDENT"
                         },
                         new
                         {
-                            Id = "5ec0b89b-5b75-4b95-a8b4-14de416e5b09",
+                            Id = "de84815c-55e6-499e-a0a7-3e58a2727cd7",
                             Name = "Guest",
                             NormalizedName = "GUEST"
                         });
@@ -515,10 +515,10 @@ namespace DataServices.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.Property<int>("FaculitiesId")
+                    b.Property<int>("FacultiesId")
                         .HasColumnType("int");
 
-                    b.HasIndex("FaculitiesId");
+                    b.HasIndex("FacultiesId");
 
                     b.HasDiscriminator().HasValue("Users");
                 });
@@ -614,13 +614,13 @@ namespace DataServices.Migrations
 
             modelBuilder.Entity("Models.Entities.Users", b =>
                 {
-                    b.HasOne("Models.Entities.Faculties", "Faculities")
+                    b.HasOne("Models.Entities.Faculties", "Faculties")
                         .WithMany("Users")
-                        .HasForeignKey("FaculitiesId")
+                        .HasForeignKey("FacultiesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Faculities");
+                    b.Navigation("Faculties");
                 });
 
             modelBuilder.Entity("Models.Entities.ClosureDates", b =>

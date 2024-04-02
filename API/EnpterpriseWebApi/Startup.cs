@@ -76,7 +76,6 @@ public class Startup
             .AddDefaultTokenProviders();
 
         services.AddScoped<IJwtService, JwtService>();
-        services.AddScoped<SeedData>();
 
         services.AddTransient<IManageImage, ManageImage>();
 
@@ -135,12 +134,6 @@ public class Startup
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                SeedData.InitializeAsync(userManager, roleManager).Wait();
-            }
             app.UseSwagger();
             app.UseSwaggerUI();
         }
