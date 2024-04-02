@@ -16,7 +16,7 @@ const Contribution = () => {
         setShowUpload(false);
         setShowViewRecent(true);
     };
-    const [selectedOption, setSelectedOption] = useState('upload'); // Sử dụng useState để lưu trữ trạng thái của lựa chọn
+    const selectedOption = useState('upload'); // Sử dụng useState để lưu trữ trạng thái của lựa chọn
 
     return (
         <div className="contributions">

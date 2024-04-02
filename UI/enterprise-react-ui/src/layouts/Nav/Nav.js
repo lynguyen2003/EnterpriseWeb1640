@@ -6,6 +6,7 @@ import { selectIsAuthenticated, logOut } from '~/feature/auth/authSlice';
 import { selectCurrentToken } from '~/feature/auth/authSlice';
 import './Nav.css';
 import { jwtDecode } from 'jwt-decode';
+import { ToastContainer, toast } from 'react-toastify';
 
 function Nav() {
     const [clicked, setClicked] = useState(false);
@@ -16,7 +17,7 @@ function Nav() {
     const userObject = currentToken ? jwtDecode(currentToken) : { role: null };
 
     const handleLogout = () => {
-        alert('You have been logged out');
+        toast.success('Logout successfully');
         dispatch(logOut());
     };
 
@@ -33,12 +34,12 @@ function Nav() {
             <ul className={clicked ? 'nav-menu active' : 'nav-menu'}>
                 {navbarItems.map((item, index) => {
                     if (
-                        item.title === ' Contributions' &&
-                        (!isLoggedIn || !isLoggedIn || (userObject.role !== 'Student' && userObject.role !== 'Admin'))
+                        (item.title === ' Contributions' && (!isLoggedIn || userObject.role !== 'Student')) ||
+                        (item.title === ' Dashboard' && (!isLoggedIn || userObject.role !== 'Admin')) ||
+                        (item.title === ' Manage Dashboard' &&
+                            (!isLoggedIn || userObject.role !== 'MarketingManager')) ||
+                        (item.title === ' About' && isLoggedIn)
                     ) {
-                        return null;
-                    }
-                    if (item.title === ' Dashboard' && (!isLoggedIn || !isLoggedIn || userObject.role !== 'Admin')) {
                         return null;
                     }
                     return (
@@ -63,6 +64,7 @@ function Nav() {
                         </button>
                     </Link>
                 )}
+                <ToastContainer />
             </ul>
             <div className="menu-icons">
                 <i className={clicked ? 'fas fa-times' : 'fas fa-bars'} onClick={() => setClicked(!clicked)}></i>

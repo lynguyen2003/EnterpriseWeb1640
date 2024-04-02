@@ -1,16 +1,39 @@
 import Home from '~/pages/Home';
 import Login from '~/pages/Login';
 import Contribution from '~/pages/Contribution';
-import Admin from '~/pages/Admin';
+import { DefaultLayout } from '~/layouts';
+
+import Dashboard from '~/pages/Admin/dashboard';
+import ManagerDashboard from '~/pages/Manager/dashboard';
+import Users from '~/pages/Admin/users';
+import Form from '~/pages/Admin/form';
+import Bar from '~/scenes/bar';
+import Pie from '~/scenes/pie';
+import Line from '~/scenes/line';
+import FAQ from '~/scenes/faq';
+import Calendar from '~/scenes/calendar/calendar';
+import Geography from '~/scenes/geography';
+import AdminLayout from '~/layouts/AdminLayout/AdminLayout';
 
 const privateRoutes = [
-    { path: '/contribution', component: Contribution },
-    { path: '/admin', component: Admin, layout: null },
+    { path: '/contribution', component: Contribution, layout: DefaultLayout, requiredRoles: 'Student' },
+
+    { path: '/manage', component: ManagerDashboard, layout: AdminLayout, requiredRoles: 'MarketingManager' },
+
+    { path: '/admin', component: Dashboard, layout: AdminLayout, requiredRoles: 'Admin' },
+    { path: '/admin/users', component: Users, layout: AdminLayout, requiredRoles: 'Admin' },
+    { path: '/admin/form', component: Form, layout: AdminLayout, requiredRoles: 'Admin' },
+    { path: '/admin/bar', component: Bar, layout: AdminLayout, requiredRoles: 'Admin' },
+    { path: '/admin/pie', component: Pie, layout: AdminLayout, requiredRoles: 'Admin' },
+    { path: '/admin/line', component: Line, layout: AdminLayout, requiredRoles: 'Admin' },
+    { path: '/admin/faq', component: FAQ, layout: AdminLayout, requiredRoles: 'Admin' },
+    { path: '/admin/calendar', component: Calendar, layout: AdminLayout, requiredRoles: 'Admin' },
+    { path: '/admin/geography', component: Geography, layout: AdminLayout, requiredRoles: 'Admin' },
 ];
 
 const publicRoutes = [
     // { path: '/contribution', component: Contribution },
-    { path: '/', component: Home },
+    { path: '/', component: Home, layout: DefaultLayout },
     { path: '/login', component: Login, layout: null },
 ];
 

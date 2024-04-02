@@ -1,23 +1,19 @@
 import { useSelector } from 'react-redux';
 import { Fragment } from 'react';
-import {
-    BrowserRouter as Router,
-    Routes,
-    Route,
-    Navigate,
-} from 'react-router-dom';
-import { DefaultLayout } from './layouts';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { publicRoutes, privateRoutes } from './routes';
-import { selectIsAuthenticated } from './feature/auth/authSlice';
+import { selectCurrentToken, selectIsAuthenticated } from './feature/auth/authSlice';
+import { jwtDecode } from 'jwt-decode';
 
-function PrivateRoute({ element, path }) {
+function PrivateRoute({ element, path, requiredRoles }) {
     const isAuthenticated = useSelector(selectIsAuthenticated);
+    const currentToken = useSelector(selectCurrentToken);
+    const userObject = currentToken ? jwtDecode(currentToken) : { role: null };
 
-    return isAuthenticated ? (
-        element
-    ) : (
-        <Navigate to="/login" replace state={{ from: path }} />
-    );
+    const isAuthorized =
+        requiredRoles === null || !requiredRoles || (isAuthenticated && requiredRoles.includes(userObject.role));
+
+    return isAuthorized ? element : <Navigate to="/login" replace state={{ from: path }} />;
 }
 
 function App() {
@@ -26,7 +22,7 @@ function App() {
             <Routes>
                 {publicRoutes.map((route, index) => {
                     const Page = route.component;
-                    let Layout = DefaultLayout;
+                    let Layout = route.layout;
 
                     if (route.layout) {
                         Layout = route.layout;
@@ -48,7 +44,7 @@ function App() {
                 })}
                 {privateRoutes.map((route, index) => {
                     const Page = route.component;
-                    let Layout = DefaultLayout;
+                    let Layout = route.layout;
 
                     if (route.layout) {
                         Layout = route.layout;
@@ -67,6 +63,7 @@ function App() {
                                         </Layout>
                                     }
                                     path={route.path}
+                                    requiredRoles={route.requiredRoles}
                                 />
                             }
                         />

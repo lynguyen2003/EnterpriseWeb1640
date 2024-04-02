@@ -7,12 +7,14 @@ import {
 import { useGetUserByEmailQuery } from '~/feature/user/userApiSlice';
 import { fileDb } from '~/Config';
 import { ref, getDownloadURL, uploadBytes, deleteObject } from 'firebase/storage';
+import { useSelector } from 'react-redux';
+import { selectCurrentEmail } from '~/feature/auth/authSlice';
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 const ViewRecent = () => {
-    const currentEmail = localStorage.getItem('email');
+    const currentEmail = useSelector(selectCurrentEmail);
     const { data: users } = useGetUserByEmailQuery(currentEmail);
-    const userId = users?.id;
+    const userId = users[0].id;
     const [file, setFile] = useState(null);
     const [img, setImg] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
