@@ -8,7 +8,14 @@ export const dateApiSlice = apiSlice.injectEndpoints({
                 method: 'GET',
             }),
         }),
+        getAllClosureDates: builder.query({
+            // Add this endpoint
+            query: () => ({
+                url: '/ClosureDates',
+                method: 'GET',
+            }),
+        }),
     }),
 });
 
-export const { useGetClosureDateByIdQuery } = dateApiSlice;
+export const { useGetClosureDateByIdQuery, useGetAllClosureDatesQuery } = dateApiSlice;

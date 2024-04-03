@@ -16,7 +16,11 @@ const Contribution = () => {
         setShowUpload(false);
         setShowViewRecent(true);
     };
-    const selectedOption = useState('upload'); // Sử dụng useState để lưu trữ trạng thái của lựa chọn
+    const [selectedOption, setSelectedOption] = useState('upload');
+
+    const handleOptionChange = (option) => {
+        setSelectedOption(option);
+    };
 
     return (
         <div className="contributions">
@@ -25,14 +29,20 @@ const Contribution = () => {
                     <div className="cSwitch button row">
                         <button
                             className={`btn uploadArticle col-sm ${selectedOption === 'upload' ? 'bold' : ''}`}
-                            onClick={handleUploadClick}
+                            onClick={() => {
+                                handleOptionChange('upload');
+                                handleUploadClick();
+                            }}
                         >
                             Upload articles
                         </button>
 
                         <button
-                            className={`btn uploadImg col-sm ${selectedOption === 'view' ? 'bold' : ''}`}
-                            onClick={handleViewRecentClick}
+                            className={`btn viewRecent col-sm ${selectedOption === 'view' ? 'bold' : ''}`}
+                            onClick={() => {
+                                handleOptionChange('view');
+                                handleViewRecentClick();
+                            }}
                         >
                             View recent uploads
                         </button>

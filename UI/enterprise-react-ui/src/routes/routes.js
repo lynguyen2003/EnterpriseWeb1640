@@ -14,6 +14,7 @@ import FAQ from '~/scenes/faq';
 import Calendar from '~/scenes/calendar/calendar';
 import Geography from '~/scenes/geography';
 import AdminLayout from '~/layouts/AdminLayout/AdminLayout';
+import Deadlines from '~/pages/Admin/deadline';
 
 const privateRoutes = [
     { path: '/contribution', component: Contribution, layout: DefaultLayout, requiredRoles: 'Student' },
@@ -23,6 +24,8 @@ const privateRoutes = [
     { path: '/admin', component: Dashboard, layout: AdminLayout, requiredRoles: 'Admin' },
     { path: '/admin/users', component: Users, layout: AdminLayout, requiredRoles: 'Admin' },
     { path: '/admin/form', component: Form, layout: AdminLayout, requiredRoles: 'Admin' },
+    { path: '/admin/deadlines', component: Deadlines, layout: AdminLayout, requiredRoles: 'Admin' },
+
     { path: '/admin/bar', component: Bar, layout: AdminLayout, requiredRoles: 'Admin' },
     { path: '/admin/pie', component: Pie, layout: AdminLayout, requiredRoles: 'Admin' },
     { path: '/admin/line', component: Line, layout: AdminLayout, requiredRoles: 'Admin' },

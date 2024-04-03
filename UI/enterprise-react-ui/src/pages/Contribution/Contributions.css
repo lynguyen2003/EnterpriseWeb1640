@@ -15,7 +15,7 @@
     align-items: center;
     height: 100%; /* Đảm bảo có chiều cao để căn giữa nội dung */
     width: 100%; /* Phần content sẽ rộng ra toàn bộ */
-    max-width: 1100px; /* Bạn có thể thay đổi giá trị này tùy thuộc vào kích thước bạn muốn */
+    max-width: 1250px; /* Bạn có thể thay đổi giá trị này tùy thuộc vào kích thước bạn muốn */
     margin: 0 auto; /* Căn giữa content trong phần UVArticle */
 }
 
@@ -24,7 +24,7 @@
     height: 40px;
     margin: 20px auto 20px auto;
     border-radius: 2rem;
-    background-color: #3D45B2;
+    background-color: #3d45b2;
     transition: 0.5s ease-in-out;
     font-weight: 600;
 }
@@ -34,8 +34,8 @@
 }
 
 .uploadArticle:hover,
-.uploadImg:hover {
-    border: #3D45B2 1px solid;
+.viewRecent:hover {
+    border: #3d45b2 1px solid;
     border-radius: 2rem;
 }
 
@@ -64,35 +64,31 @@
     text-overflow: ellipsis;
     display: grid;
     grid-template-columns: 1fr 1fr;
-} 
+}
 
 .cSwitch.button {
     margin: 0;
-    
 }
 
 .uploadArticle:hover,
-.uploadArticle.bold
-{
+.uploadArticle.bold {
     border-radius: 2rem 0 0 2rem;
-    background-color: #3D45B2;
+    background-color: #3d45b2;
     color: #fff;
 }
 
-.uploadImg:hover,
-.uploadImg.bold {
+.viewRecent:hover,
+.viewRecent.bold {
     border-radius: 0 2rem 2rem 0;
-    background-color: #3D45B2;
+    background-color: #3d45b2;
     color: #fff;
 }
-
 
 .uploadArticle,
-.uploadImg {
+.viewRecent {
     flex: 1;
     text-align: center;
 }
-
 
 .submit:hover {
     box-shadow: 0 4px 15px 0 rgba(65, 132, 234, 0.75);
@@ -133,7 +129,6 @@
     border: none;
     background: none;
     outline: none;
-
 }
 
 .field label {
@@ -146,4 +141,37 @@
     font-size: 17px;
     pointer-events: none;
     transition: 0.5s;
+}
+
+/* ViewRececentUpload */
+
+.table-responsive {
+    width: 100%;
+}
+
+.table {
+    border-collapse: separate;
+    border-spacing: 0 1rem;
+}
+
+.table thead th {
+    padding: 20px 20px;
+}
+
+.table tbody tr td {
+    padding: 18px 20px;
+}
+
+.table tbody tr {
+    background-color: #fff;
+    box-sizing: border-box;
+    box-shadow: 0px 15px 10px -15px rgba(0, 0, 0, 0.28);
+    -webkit-box-shadow: 0px 15px 10px -15px rgba(0, 0, 0, 0.28);
+}
+
+.edit,
+.trash,
+.feedback {
+    text-align: center;
+    cursor: pointer;
 }

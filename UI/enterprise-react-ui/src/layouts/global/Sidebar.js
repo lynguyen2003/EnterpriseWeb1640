@@ -123,6 +123,7 @@ const Sidebar = () => {
                         />
                         <Item
                             title="Manage Deadlines"
+                            to="/admin/deadlines"
                             icon={<ContactsOutlinedIcon />}
                             selected={selected}
                             setSelected={setSelected}

@@ -4,8 +4,8 @@ import { tokens } from '../../../theme';
 import Header from '../../../components/Header';
 import { ToastContainer, toast } from 'react-toastify';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import Stack from '@mui/material/Stack';
-import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 
 import { selectCurrentListUsers, setUsers } from '~/feature/user/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -93,7 +93,7 @@ const Users = () => {
             renderCell: (params) => (
                 <Stack direction="row" spacing={1}>
                     <IconButton aria-label="update" size="large">
-                        <ModeEditOutlineIcon />
+                        <EditIcon />
                     </IconButton>
                     <IconButton
                         aria-label="delete"
@@ -135,7 +135,7 @@ const Users = () => {
     return (
         <Box m="20px">
             <ToastContainer />
-            <Header title="TEAM" subtitle="Managing the Team Members" />
+            <Header title="Users" subtitle="Managing the Users Account" />
             <Box
                 m="40px 0 0 0"
                 height="75vh"
