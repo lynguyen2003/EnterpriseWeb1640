@@ -69,7 +69,7 @@ public class Startup
             jwt.TokenValidationParameters = tokenValidationParameter;
         });
 
-
+        services.AddScoped<SeedData>();
         services.AddSingleton(tokenValidationParameter);
         services.AddIdentity<IdentityUser, IdentityRole>()
             .AddEntityFrameworkStores<DataContext>()
@@ -134,6 +134,12 @@ public class Startup
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                SeedData.InitializeAsync(userManager, roleManager).Wait();
+            }
             app.UseSwagger();
             app.UseSwaggerUI();
         }

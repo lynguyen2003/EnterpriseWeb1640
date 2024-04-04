@@ -1,7 +1,8 @@
 import Home from '~/pages/Home';
 import Login from '~/pages/Login';
 import Contribution from '~/pages/Contribution';
-import { DefaultLayout } from '~/layouts';
+import { DefaultLayout } from '~/layouts';  
+import ClosureDates from '~/pages/Admin/ClosureDates';
 
 import Dashboard from '~/pages/Admin/dashboard';
 import ManagerDashboard from '~/pages/Manager/dashboard';
@@ -19,6 +20,7 @@ const privateRoutes = [
     { path: '/contribution', component: Contribution, layout: DefaultLayout, requiredRoles: 'Student' },
 
     { path: '/manage', component: ManagerDashboard, layout: AdminLayout, requiredRoles: 'MarketingManager' },
+    { path: '/admin/closuredates', component: ClosureDates, layout: null, requiredRoles: 'Admin' },
 
     { path: '/admin', component: Dashboard, layout: AdminLayout, requiredRoles: 'Admin' },
     { path: '/admin/users', component: Users, layout: AdminLayout, requiredRoles: 'Admin' },
