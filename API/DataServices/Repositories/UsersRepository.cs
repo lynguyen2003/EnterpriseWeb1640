@@ -35,6 +35,11 @@ namespace DataServices.Repositories
             return await _dbSet.Where(c => c.Email == email).ToListAsync();
         }
 
+        public virtual async Task<IEnumerable<Users>> GetUserByUserId(string userId)
+        {
+            return await _dbSet.Where(c => c.Id == userId).ToListAsync();
+        }
+
         public override async Task<bool> Update(Users users)
         {
             try

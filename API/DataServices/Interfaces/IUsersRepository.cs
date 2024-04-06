@@ -10,5 +10,6 @@ namespace DataServices.Interfaces
     public interface IUsersRepository : IGenericRepository<Users>
     {
         Task<IEnumerable<Users>> GetUserByEmail(string email);
+        Task<IEnumerable<Users>> GetUserByUserId(string userId);
     }
 }

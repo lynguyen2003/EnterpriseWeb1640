@@ -42,7 +42,6 @@ public class UsersController : BaseController
         }
     }
 
-    // GET: api/Users/{id}
     [HttpGet("{email}")]
     public async Task<IActionResult> GetUser(string email)
     {
@@ -58,6 +57,21 @@ public class UsersController : BaseController
         {
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
+    }
+
+
+    // GET: api/Users/{id}
+    [HttpGet("UserId")]
+    public async Task<IActionResult> GetUserByUserId(string userId)
+    {
+        var user = await _unitOfWorks.Users.GetUserByUserId(userId);
+
+        if (user == null)
+            return NotFound();
+
+        var result = _mapper.Map<IEnumerable<UsersResponseDTO>>(user);
+
+        return Ok(result);
     }
 
     // POST: api/Users

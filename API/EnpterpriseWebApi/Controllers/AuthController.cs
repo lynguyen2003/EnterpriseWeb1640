@@ -15,22 +15,31 @@ using RestSharp;
 using RestSharp.Authenticators;
 using System.ComponentModel;
 using Models.DTO;
+using System.ComponentModel.DataAnnotations;
+using AutoMapper;
+using DataServices.Service;
+using System.Web;
 
 namespace EnpterpriseWebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthController : BaseController
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IJwtService _jwtService;
+        private readonly IEmailService _emailService;
 
-
-        public AuthController(UserManager<IdentityUser> userManager, 
-                              IJwtService jwtService)
+        public AuthController(
+            IUnitOfWorks unitOfWorks, 
+            IMapper mapper, 
+            UserManager<IdentityUser> userManager, 
+            IJwtService jwtService, 
+            IEmailService emailService) : base(unitOfWorks, mapper)
         {
             _userManager = userManager;
             _jwtService = jwtService;
+            _emailService = emailService;
         }
 
         [HttpPost]
@@ -135,6 +144,74 @@ namespace EnpterpriseWebApi.Controllers
                 Result = false
             });
         }
+
+        [HttpPost]
+        [Route("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([Required]string email)
+        {
+                var existing_user = await _userManager.FindByEmailAsync(email);
+
+                if (existing_user != null)
+                {
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(existing_user);
+                    var encodedToken = HttpUtility.UrlEncode(token);
+                    var encodedEmail = HttpUtility.UrlEncode(existing_user.Email);
+                    var forgotPasswordUrl = $"http://localhost:3000/reset-password?token={encodedToken}&email={encodedEmail}";
+                    var message = new Message(new string[] { existing_user.Email! }, "Reset password link", forgotPasswordUrl!);
+                    _emailService.SendEmail(message);
+
+                    return Ok("Change Password requrest is sent to your email. Please Open your email and click to the link.");
+                }
+                return BadRequest("Could not send link to email, please try against.");
+        }
+
+        [HttpGet("reset-password")]
+        public IActionResult ResetPassword(string token, string email)
+        {
+            if (string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(email))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            return Ok(new UserResetPasswordDTO { Token = token, Email = email });
+        }
+
+
+        [HttpPost]
+        [Route("reset-password")]
+        public async Task<IActionResult> ResetPassword(UserResetPasswordDTO model)
+        {
+            if (ModelState.IsValid)
+            {
+                var existing_user = await _userManager.FindByEmailAsync(model.Email);
+
+                if (existing_user != null)
+                {
+                    var resetPasswordResult = await _userManager.ResetPasswordAsync(existing_user, model.Token, model.Password);
+
+                    if (!resetPasswordResult.Succeeded)
+                    {
+                        foreach( var error in resetPasswordResult.Errors)
+                        {
+                            ModelState.AddModelError(error.Code, error.Description);
+                        }
+                        return Ok(ModelState);
+                    }
+                    return Ok("Password has been changed.");
+                }
+                return BadRequest();
+            }
+
+            return BadRequest(new AuthResult()
+            {
+                Errors = new List<string>()
+                {
+                    "Invalid payload"
+                },
+                Result = false
+            });
+        }
+
 
         [HttpPost("RefreshToken")]
         public async Task<IActionResult> RefreshToken([FromBody] TokenRequest tokenRequest)
