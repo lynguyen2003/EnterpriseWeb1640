@@ -13,13 +13,14 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
-import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
+import LockResetIcon from '@mui/icons-material/LockReset';
 
 import { useDispatch } from 'react-redux';
 import { logOut } from '~/feature/auth/authSlice';
 import { ToastContainer, toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 const Topbar = () => {
     const theme = useTheme();
@@ -44,6 +45,7 @@ const Topbar = () => {
 
     return (
         <Box display="flex" justifyContent="space-between" p={2}>
+            <ToastContainer />
             {/* SEARCH BAR */}
             <Box display="flex" backgroundColor={colors.primary[400]} borderRadius="3px">
                 <InputBase sx={{ ml: 2, flex: 1 }} placeholder="Search" />
@@ -107,10 +109,12 @@ const Topbar = () => {
                 </MenuItem>
                 <Divider />
                 <MenuItem onClick={handleClose}>
-                    <ListItemIcon>
-                        <PersonAdd fontSize="small" />
-                    </ListItemIcon>
-                    Add another account
+                    <Link to="/forgot-password">
+                        <ListItemIcon>
+                            <LockResetIcon fontSize="small" />
+                        </ListItemIcon>
+                        Reset Password
+                    </Link>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
                     <ListItemIcon>

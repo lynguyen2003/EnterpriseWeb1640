@@ -1,10 +1,11 @@
-import { Box, Button, Snackbar, TextField } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Header from '../../../components/Header';
 import { usePostUserMutation } from '~/feature/user/userApiSlice';
 import { useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 
 const Form = () => {
     const isNonMobile = useMediaQuery('(min-width:600px)');
@@ -14,10 +15,8 @@ const Form = () => {
         email: '',
         password: '',
         phoneNumber: '',
-        facultiesId: null,
+        facultiesId: '',
     });
-    const [successMessageOpen, setSuccessMessageOpen] = useState(false);
-    const [errorMessage, setErrorMessage] = useState(false);
 
     const handleFormSubmit = async (values) => {
         try {
@@ -27,20 +26,18 @@ const Form = () => {
                 email: '',
                 password: '',
                 phoneNumber: '',
-                facultiesId: null,
+                facultiesId: '',
             });
-            if (!isError) {
-                setSuccessMessageOpen(true);
-            } else {
-                setErrorMessage(true);
-            }
+            isError ? toast.error('Failed to create user') : toast.success('User created successfully');
         } catch (error) {
             console.error('Error:', error);
+            toast.error('Failed to create user');
         }
     };
 
     return (
         <Box m="20px">
+            <ToastContainer />
             <Header title="CREATE USER" subtitle="Create a New User Account" />
 
             <Formik onSubmit={handleFormSubmit} initialValues={formData} validationSchema={checkoutSchema}>
@@ -132,20 +129,6 @@ const Form = () => {
                     </form>
                 )}
             </Formik>
-            <Snackbar
-                open={successMessageOpen}
-                autoHideDuration={6000}
-                onClose={() => setSuccessMessageOpen(false)}
-                message="User created successfully."
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-            />
-            <Snackbar
-                open={errorMessage}
-                autoHideDuration={6000}
-                onClose={() => setErrorMessage(false)}
-                message="Failed to create user."
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-            />
         </Box>
     );
 };

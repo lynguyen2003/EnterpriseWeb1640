@@ -91,7 +91,7 @@ const Login = () => {
                                                 </div>
 
                                                 <p className="small mb-5 pb-lg-2 text-end pass ">
-                                                    <a className="" href="#!">
+                                                    <a className="" href="/forgot-password">
                                                         Forgot password?
                                                     </a>
                                                 </p>

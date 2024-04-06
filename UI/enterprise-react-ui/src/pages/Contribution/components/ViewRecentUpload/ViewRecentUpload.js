@@ -92,14 +92,6 @@ const ViewRecent = () => {
         });
     };
 
-    const handleContributionSelect = (e) => {
-        const selectedContributionId = e.target.value;
-        setFormData({
-            ...formData,
-            id: selectedContributionId,
-        });
-    };
-
     const handleUpdateClick = (contributionId, contribution) => {
         if (selectedContributionId === contributionId) {
             setIsUpdating(false);

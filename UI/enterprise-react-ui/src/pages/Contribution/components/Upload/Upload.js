@@ -21,7 +21,11 @@ const Upload = () => {
     const dispatch = useDispatch();
     const [post, { isLoading }] = usePostContributionMutation();
 
-    const { data: closureDate, isLoading: closureDateLoading, error: closureDateError } = useGetClosureDateByIdQuery(1);
+    const {
+        data: closureDate,
+        isLoading: closureDateLoading,
+        error: closureDateError,
+    } = useGetClosureDateByIdQuery(15);
     const { data: magazines, isLoading: magazinesLoading, error: magazinesError } = useGetAllMagazineQuery();
     const currentEmail = useSelector(selectCurrentEmail);
     const { data: users, isLoading: usersLoading, error: usersError } = useGetUserByEmailQuery(currentEmail);
@@ -118,12 +122,11 @@ const Upload = () => {
             uploadBytes(imgRef, img);
 
             setFormData({
+                ...formData,
                 title: '',
                 description: '',
                 filePath: '',
                 imgPath: '',
-                closureDatesId: '',
-                usersId: '',
                 magazinesId: '',
             });
             toast.success('Submitted successfully!');

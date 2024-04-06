@@ -14,11 +14,17 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 method: 'GET',
             }),
         }),
+        getUserByUserId: builder.mutation({
+            query: (userId) => ({
+                url: `/Users/UserId?userId=${userId}`,
+                method: 'GET',
+            }),
+        }),
         postUser: builder.mutation({
             query: (credentials) => ({
                 url: '/Users',
                 method: 'POST',
-                body: { ...credentials },
+                body: credentials,
             }),
         }),
         updateUser: builder.mutation({
@@ -40,6 +46,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
 export const {
     useGetAllUserQuery,
     useGetUserByEmailQuery,
+    useGetUserByUserIdMutation,
     usePostUserMutation,
     useUpdateUserMutation,
     useDeleteUserMutation,

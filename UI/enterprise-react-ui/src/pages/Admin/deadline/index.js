@@ -2,74 +2,69 @@ import { Box, IconButton, useTheme } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { tokens } from '../../../theme';
 import Header from '../../../components/Header';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { Stack } from 'react-bootstrap';
 import { TextField } from '@mui/material';
-import { useGetAllClosureDatesQuery } from '~/feature/closureDates/dateApiSlice';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import {
+    useGetAllClosureDatesQuery,
+    usePostClosureDatesMutation,
+    useUpdateClosureDatesMutation,
+    useDeleteClosureDatesMutation,
+} from '~/feature/closureDates/dateApiSlice';
 
 const Deadlines = () => {
     const theme = useTheme();
-    const [formData, setFormData] = useState({});
+    const [editRow, setEditRow] = useState(null);
+    const [postClosureDate] = usePostClosureDatesMutation();
+    const [updateClosureDate] = useUpdateClosureDatesMutation();
+    const [deleteClosureDate] = useDeleteClosureDatesMutation();
+    const [formPostData, setFormPostData] = useState({
+        academicYear: '',
+        closureDate: '',
+        finalClosureDate: '',
+    });
+    const [open, setOpen] = useState(false);
     const colors = tokens(theme.palette.mode);
-    const { data: closureDates, isLoading } = useGetAllClosureDatesQuery();
+    const { data: closureDates, isLoading, refetch } = useGetAllClosureDatesQuery();
     const [rows, setRows] = useState([]);
     const columns = [
         { field: 'id', headerName: 'ID', width: 60 },
         {
             field: 'academicYear',
             headerName: 'Academic Year',
+            type: 'date',
             width: 180,
             editable: true,
-            flex: 1,
         },
         {
             field: 'closureDate',
             headerName: 'Submission Date',
-            type: 'DateTime',
+            type: 'dateTime',
             width: 220,
             editable: true,
-            flex: 1,
         },
         {
             field: 'finalClosureDate',
             headerName: 'Final Submission Date',
-            type: 'DateTime',
+            type: 'dateTime',
             width: 220,
             editable: true,
             flex: 1,
-            renderCell: (params) => (
-                <TextField
-                    value={params.value}
-                    type="datetime-local"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                />
-            ),
-            renderEditCell: (params) => (
-                <TextField
-                    value={params.value}
-                    type="datetime-local"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    onChange={(event) => {}}
-                />
-            ),
         },
         {
             field: 'actions',
             type: 'actions',
             width: 100,
-            getActions: () => [
+            getActions: ({ id }) => [
                 <Stack direction="row" spacing={1}>
-                    <IconButton aria-label="update" size="large">
+                    <IconButton aria-label="update" size="large" onClick={() => handleUpdateClick(id)}>
                         <EditIcon />
                     </IconButton>
-                    <IconButton aria-label="delete" size="large">
+                    <IconButton aria-label="delete" size="large" onClick={() => handleDeleteClick(id)}>
                         <DeleteIcon />
                     </IconButton>
                 </Stack>,
@@ -77,26 +72,70 @@ const Deadlines = () => {
         },
     ];
 
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return date.getFullYear().toString();
+    const handleAdd = async () => {
+        try {
+            const response = await postClosureDate(formPostData);
+            if (response.error) {
+                throw response.error;
+            }
+            setFormPostData({
+                academicYear: '',
+                closureDate: '',
+                finalClosureDate: '',
+            });
+            setOpen(false);
+            refetch();
+            toast.success('Closure Date added successfully!');
+        } catch (error) {
+            console.error('Failed to post closure date:', error);
+            toast.error('Failed to add Closure Date.');
+        }
+    };
+
+    const handleUpdateClick = (id) => {
+        const row = rows.find((row) => row.id === id);
+        setEditRow(row);
+        setOpen(true);
+    };
+
+    const handleUpdate = async () => {
+        try {
+            const id = editRow.id;
+            console.log('updatedClosureDate', id);
+            const response = await updateClosureDate({ id, formPostData });
+            if (response.error) {
+                throw response.error;
+            }
+            refetch();
+            toast.success('Closure Date updated successfully!');
+        } catch (error) {
+            console.error('Failed to update closure date:', error);
+            toast.error('Failed to update Closure Date.');
+        }
+    };
+
+    const handleDeleteClick = async (id) => {
+        try {
+            const response = await deleteClosureDate(id);
+            if (response.error) {
+                throw response.error;
+            }
+            refetch();
+        } catch (error) {
+            console.error('Failed to delete closure date:', error);
+            toast.error('Failed to delete Closure Date.');
+        }
     };
 
     useEffect(() => {
-        setRows(formData);
-    }, [formData]);
-
-    useEffect(() => {
         if (closureDates) {
-            const formDataObjects = closureDates.map((date) => {
-                return {
-                    id: date.id,
-                    academicYear: formatDate(date.academicYear),
-                    closureDate: date.closureDate,
-                    finalClosureDate: date.finalClosureDate,
-                };
-            });
-            setFormData(formDataObjects);
+            const formattedClosureDates = closureDates.map((date) => ({
+                ...date,
+                academicYear: new Date(date.academicYear),
+                closureDate: new Date(date.closureDate),
+                finalClosureDate: new Date(date.finalClosureDate),
+            }));
+            setRows(formattedClosureDates);
         }
     }, [closureDates]);
 
@@ -133,6 +172,63 @@ const Deadlines = () => {
                     },
                 }}
             >
+                <Button variant="outlined" onClick={() => setOpen(true)}>
+                    Create Deadlines
+                </Button>
+                <Dialog open={open} onClose={() => setOpen(false)}>
+                    <DialogTitle>{editRow ? 'Update Closure Date' : 'Create Closure Date'}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText marginBlockEnd={2}>Please enter the form.</DialogContentText>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="academicYear"
+                            label="Academic Year"
+                            type="date"
+                            fullWidth
+                            value={formPostData.academicYear}
+                            onChange={(e) => setFormPostData({ ...formPostData, academicYear: e.target.value })}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                        <TextField
+                            margin="dense"
+                            id="closureDate"
+                            label="Closure Date"
+                            type="datetime-local"
+                            fullWidth
+                            value={formPostData.closureDate}
+                            onChange={(e) => setFormPostData({ ...formPostData, closureDate: e.target.value })}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                        <TextField
+                            margin="dense"
+                            id="finalClosureDate"
+                            label="Final Closure Date"
+                            type="datetime-local"
+                            fullWidth
+                            value={formPostData.finalClosureDate}
+                            onChange={(e) => setFormPostData({ ...formPostData, finalClosureDate: e.target.value })}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button
+                            onClick={() => {
+                                setOpen(false);
+                                setEditRow(null);
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button onClick={editRow ? handleUpdate : handleAdd}>{editRow ? 'Update' : 'Add'}</Button>
+                    </DialogActions>
+                </Dialog>
                 <DataGrid
                     checkboxSelection
                     disableRowSelectionOnClick

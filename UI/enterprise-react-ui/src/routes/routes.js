@@ -15,11 +15,17 @@ import Calendar from '~/scenes/calendar/calendar';
 import Geography from '~/scenes/geography';
 import AdminLayout from '~/layouts/AdminLayout/AdminLayout';
 import Deadlines from '~/pages/Admin/deadline';
+import Coordinator from '~/pages/Coordinator';
+import ForgotPwd from '~/pages/Password/ForgotPwd';
+import ResetPwd from '~/pages/Password/ResetPwd';
 
 const privateRoutes = [
     { path: '/contribution', component: Contribution, layout: DefaultLayout, requiredRoles: 'Student' },
 
-    { path: '/manage', component: ManagerDashboard, layout: AdminLayout, requiredRoles: 'MarketingManager' },
+    { path: '/forgot-password', component: ForgotPwd, layout: null, requiredRoles: null },
+    { path: '/reset-password', component: ResetPwd, layout: null, requiredRoles: null },
+
+    { path: '/manager', component: ManagerDashboard, layout: AdminLayout, requiredRoles: 'MarketingManager' },
 
     { path: '/admin', component: Dashboard, layout: AdminLayout, requiredRoles: 'Admin' },
     { path: '/admin/users', component: Users, layout: AdminLayout, requiredRoles: 'Admin' },
@@ -29,9 +35,21 @@ const privateRoutes = [
     { path: '/admin/bar', component: Bar, layout: AdminLayout, requiredRoles: 'Admin' },
     { path: '/admin/pie', component: Pie, layout: AdminLayout, requiredRoles: 'Admin' },
     { path: '/admin/line', component: Line, layout: AdminLayout, requiredRoles: 'Admin' },
-    { path: '/admin/faq', component: FAQ, layout: AdminLayout, requiredRoles: 'Admin' },
-    { path: '/admin/calendar', component: Calendar, layout: AdminLayout, requiredRoles: 'Admin' },
+    {
+        path: '/faq',
+        component: FAQ,
+        layout: AdminLayout,
+        requiredRoles: ['Admin', 'MarketingManager', 'MarketingCoordinator'],
+    },
+    {
+        path: '/calendar',
+        component: Calendar,
+        layout: AdminLayout,
+        requiredRoles: ['Admin', 'MarketingManager', 'MarketingCoordinator'],
+    },
     { path: '/admin/geography', component: Geography, layout: AdminLayout, requiredRoles: 'Admin' },
+
+    { path: '/coordinator', component: Coordinator, layout: AdminLayout, requiredRoles: 'MarketingCoordinator' },
 ];
 
 const publicRoutes = [
