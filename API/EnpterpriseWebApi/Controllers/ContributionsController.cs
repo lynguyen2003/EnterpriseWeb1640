@@ -13,6 +13,7 @@ namespace EnpterpriseWebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ContributionsController : BaseController
     {
         public ContributionsController(IUnitOfWorks unitOfWorks, IMapper mapper) : base(unitOfWorks, mapper)
@@ -21,7 +22,6 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "MarketingManager,Admin")]
         public async Task<IActionResult> Gets()
         {
             var users = await _unitOfWorks.Contributions.GetAll();
@@ -33,7 +33,6 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "MarketingCoordinator,Student,Admin")]
         public async Task<IActionResult> Get(int id)
         {
             var user = await _unitOfWorks.Contributions.GetById(id);
@@ -47,7 +46,6 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpGet("user/{userId}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "MarketingCoordinator,Student,Admin")]
         public async Task<IActionResult> GetByUserId(string userId)
         {
             var user = await _unitOfWorks.Contributions.GetByUserId(userId);
@@ -71,7 +69,7 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpPut("")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "MarketingCoordinator,Admin")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Student,Admin")]
         public async Task<IActionResult> Update(ContributionsRequestUpdateDTO contributions)
         {
             if (!ModelState.IsValid)

@@ -10,7 +10,9 @@ namespace Models.Entities
 {
     public class Users : IdentityUser
     {
-        public Faculties Faculities { get; set; }
+        [ForeignKey("Faculties")]
+        public int FacultiesId { get; set; }
+        public Faculties Faculties { get; set; }
         public ICollection<Feedbacks> Feedbacks { get; set; }
         public ICollection<Contributions> Contributions { get; set; }
     }

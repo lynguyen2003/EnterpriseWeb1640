@@ -10,7 +10,7 @@ using Models.Entities;
 
 namespace EnpterpriseWebApi.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class MagazinesController : BaseController
@@ -44,6 +44,7 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<IActionResult> Add(MagazinesRequestCreateDTO magazines)
         {
             if (!ModelState.IsValid)
@@ -55,6 +56,7 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpPut("")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<IActionResult> Update(MagazinesRequestUpdateDTO magazines)
         {
             if (!ModelState.IsValid)
@@ -70,6 +72,7 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var magazines = await _unitOfWorks.Magazines.GetById(id);

@@ -36,7 +36,7 @@ namespace DataServices.Repositories
             return await _dbSet.Where(c => c.UsersId == userId).ToListAsync();
         }
 
-        public virtual async Task<bool> Update(Contributions contributions)
+        public override async Task<bool> Update(Contributions contributions)
         {
             try
             {
@@ -46,6 +46,7 @@ namespace DataServices.Repositories
                     existingContributions.Title = contributions.Title;
                     existingContributions.Description = contributions.Description;
                     existingContributions.FilePath = contributions.FilePath;
+                    existingContributions.ImgPath = contributions.ImgPath;
                     //TO DO:
 
                     await _context.SaveChangesAsync();

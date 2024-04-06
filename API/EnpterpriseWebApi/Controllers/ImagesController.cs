@@ -10,7 +10,7 @@ using Models.Entities;
 
 namespace EnpterpriseWebApi.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class ImagesController : BaseController
@@ -44,6 +44,7 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Student,Admin")]
         public async Task<IActionResult> Add(ImagesRequestCreateDTO images)
         {
             if (!ModelState.IsValid)
@@ -55,6 +56,7 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpPut("")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Student,Admin")]
         public async Task<IActionResult> Update(ImagesRequestUpdateDTO images)
         {
             if (!ModelState.IsValid)
@@ -70,6 +72,7 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Student,Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var user = await _unitOfWorks.Images.GetById(id);

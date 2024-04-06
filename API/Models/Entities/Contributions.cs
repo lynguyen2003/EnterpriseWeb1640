@@ -15,6 +15,7 @@ namespace Models.Entities
         public string Title { get; set; }
         public string Description { get; set; }
         public string FilePath { get; set; }
+        public string ImgPath { get; set; }
         public DateTime UploadDate { get; set; }
         [ForeignKey("ClosureDates")]
         public int ClosureDatesId { get; set; }
@@ -25,6 +26,5 @@ namespace Models.Entities
         [ForeignKey("Magazines")]
         public int MagazinesId { get; set; }
         public Magazines Magazines { get; set; }
-        public ICollection<Images> Images { get; set; }
     }
 }

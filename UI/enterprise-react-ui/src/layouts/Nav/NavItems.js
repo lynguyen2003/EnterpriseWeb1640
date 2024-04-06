@@ -1,3 +1,5 @@
+import { Link } from 'react-scroll';
+
 export const navbarItems = [
     {
         title: ' Home',
@@ -6,13 +8,41 @@ export const navbarItems = [
         icon: 'fa-solid fa-house',
     },
     {
+        title: ' Dashboard',
+        url: '/admin',
+        cName: 'nav-link',
+        icon: 'fa-solid fa-address-book',
+    },
+    {
+        title: ' Manage Dashboard',
+        url: '/manager',
+        cName: 'nav-link',
+        icon: 'fa-solid fa-address-book',
+    },
+    {
+        title: ' Coordinator Dashboard',
+        url: '/coordinator',
+        cName: 'nav-link',
+        icon: 'fa-solid fa-address-book',
+    },
+    {
         title: ' Contributions',
         url: '/contribution',
         cName: 'nav-link',
         icon: 'fa-solid fa-book-open',
     },
     {
-        title: ' About',
+        title: ' Contribution List',
+        url: '/guest/contribution-list',
+        cName: 'nav-link',
+        icon: 'fa-solid fa-book-open',
+    },
+    {
+        title: (
+            <Link to="footer" smooth={true} duration={150}>
+                About
+            </Link>
+        ),
         url: '/',
         cName: 'nav-link',
         icon: 'fa-solid fa-circle-info',

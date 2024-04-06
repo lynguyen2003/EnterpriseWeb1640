@@ -20,6 +20,7 @@ using Models.Entities;
 using DataServices.MappingProfile;
 using EnpterpriseWebApi;
 using DataServices.Service;
+using Models.DTO;
 
 public class Startup
 {
@@ -56,7 +57,6 @@ public class Startup
             ValidAudience= Configuration.GetSection("JwtConfig:Audience").Value
         };
 
-        services.AddScoped<SeedData>();
 
         services.AddAuthentication(options =>
         {
@@ -76,13 +76,16 @@ public class Startup
             .AddEntityFrameworkStores<DataContext>()
             .AddDefaultTokenProviders();
 
-        services.AddScoped<IJwtService, JwtService>();
+        services.Configure<DataProtectionTokenProviderOptions>(opts => opts.TokenLifespan = TimeSpan.FromHours(2));
+
+        var emailConfig = Configuration.GetSection("EmailConfig").Get<EmailConfiguration>();
+        services.AddSingleton(emailConfig);
 
         services.AddTransient<IManageImage, ManageImage>();
-
         services.AddAutoMapper(typeof(MappingProfile));
         services.AddAutoMapper(typeof(Startup));
         services.AddScoped<IJwtService, JwtService>();
+        services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IUnitOfWorks, UnitOfWorks>();
         services.AddScoped<IClosureDates, ClosureDatesRepository>();
         services.AddScoped<IFacultiesRepository, FacultiesRepository>();
@@ -135,15 +138,10 @@ public class Startup
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                SeedData.InitializeAsync(userManager, roleManager).Wait();
-            }
-            app.UseSwagger();
-            app.UseSwaggerUI();
         }
+
+        app.UseSwagger();
+        app.UseSwaggerUI();
 
         app.UseHttpsRedirection();
 

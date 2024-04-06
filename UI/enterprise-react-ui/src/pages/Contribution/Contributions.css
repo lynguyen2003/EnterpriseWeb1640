@@ -2,13 +2,176 @@
     width: 1440px;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 130px;
+    /* display: grid; */
+    justify-content: center;
+
+    /* grid-template-rows: auto 1fr auto; */
 }
 
-.button {
-    width: 500px;
-    height: 50px;
+.contents {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Đảm bảo có chiều cao để căn giữa nội dung */
+    width: 100%; /* Phần content sẽ rộng ra toàn bộ */
+    max-width: 1250px; /* Bạn có thể thay đổi giá trị này tùy thuộc vào kích thước bạn muốn */
+    margin: 0 auto; /* Căn giữa content trong phần UVArticle */
+}
+
+.submit {
+    width: 150px;
+    height: 40px;
     margin: 20px auto 20px auto;
+    border-radius: 2rem;
+    background-color: #3d45b2;
+    transition: 0.5s ease-in-out;
+    font-weight: 600;
 }
 
-.feature {
+.bold {
+    font-weight: bold;
+}
+
+.uploadArticle:hover,
+.viewRecent:hover {
+    border: #3d45b2 1px solid;
+    border-radius: 2rem;
+}
+
+.cSwitch {
+    border: #000000 1px solid;
+    border-radius: 2rem;
+    transition: border-color 0.3s ease-in-out; /* Hiệu ứng transition */
+    box-sizing: border-box; /* Chiều rộng và chiều cao tính cả padding và border */
+}
+
+.head {
+    margin-bottom: 20px;
+}
+
+.uvArticle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Đảm bảo có chiều cao để căn giữa nội dung */
+}
+
+.cSwitch.button.row {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.cSwitch.button {
+    margin: 0;
+}
+
+.uploadArticle:hover,
+.uploadArticle.bold {
+    border-radius: 2rem 0 0 2rem;
+    background-color: #3d45b2;
+    color: #fff;
+}
+
+.viewRecent:hover,
+.viewRecent.bold {
+    border-radius: 0 2rem 2rem 0;
+    background-color: #3d45b2;
+    color: #fff;
+}
+
+.uploadArticle,
+.viewRecent {
+    flex: 1;
+    text-align: center;
+}
+
+.submit:hover {
+    box-shadow: 0 4px 15px 0 rgba(65, 132, 234, 0.75);
+}
+
+.fileUpload {
+    padding: 30px 20px;
+}
+
+.formArticle {
+    width: 100%;
+    height: 580px;
+    padding: 30px 30px 30px 30px;
+    display: grid;
+    grid-template: 1fr 1fr / 1fr 1fr;
+    gap: 30px;
+    border: 1px solid;
+    border-radius: 1.4rem;
+}
+
+.upload {
+    display: flex;
+    justify-content: center;
+}
+
+.field {
+    top: 40%;
+    position: relative;
+    border-bottom: 2px solid #adadad;
+    height: 33%;
+}
+
+.field input {
+    width: 100%;
+    padding: 0 20px;
+    height: 60px;
+    font-size: 17px;
+    border: none;
+    background: none;
+    outline: none;
+}
+
+.field label {
+    top: -13%;
+    font-weight: 600;
+    position: absolute;
+    left: 5px;
+    color: #000000;
+    transform: translateY(-50%);
+    font-size: 17px;
+    pointer-events: none;
+    transition: 0.5s;
+}
+
+/* ViewRececentUpload */
+
+.table-responsive {
+    width: 100%;
+}
+
+.table {
+    border-collapse: separate;
+    border-spacing: 0 1rem;
+}
+
+.table thead th {
+    padding: 20px 20px;
+}
+
+.table tbody tr td {
+    padding: 18px 20px;
+}
+
+.table tbody tr {
+    background-color: #fff;
+    box-sizing: border-box;
+    box-shadow: 0px 15px 10px -15px rgba(0, 0, 0, 0.28);
+    -webkit-box-shadow: 0px 15px 10px -15px rgba(0, 0, 0, 0.28);
+}
+
+.edit,
+.trash,
+.feedback {
+    text-align: center;
+    cursor: pointer;
 }

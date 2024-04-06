@@ -16,10 +16,48 @@ const Contribution = () => {
         setShowUpload(false);
         setShowViewRecent(true);
     };
+    const [selectedOption, setSelectedOption] = useState('upload');
+
+    const handleOptionChange = (option) => {
+        setSelectedOption(option);
+    };
 
     return (
         <div className="contributions">
-            <div className="button row">
+            <div className="uvArticle">
+                <div className="head">
+                    <div className="cSwitch button row">
+                        <button
+                            className={`btn uploadArticle col-sm ${selectedOption === 'upload' ? 'bold' : ''}`}
+                            onClick={() => {
+                                handleOptionChange('upload');
+                                handleUploadClick();
+                            }}
+                        >
+                            Upload articles
+                        </button>
+
+                        <button
+                            className={`btn viewRecent col-sm ${selectedOption === 'view' ? 'bold' : ''}`}
+                            onClick={() => {
+                                handleOptionChange('view');
+                                handleViewRecentClick();
+                            }}
+                        >
+                            View recent uploads
+                        </button>
+                    </div>
+                </div>
+
+                <div id="uploadArticlesContent" className="contents">
+                    {showUpload && <Upload />}
+                </div>
+
+                <div id="viewUploadsContent" className="contents">
+                    {showViewRecent && <ViewRecent />}
+                </div>
+            </div>
+            {/* <div className="button row">
                 <button className="btn col-sm" onClick={handleUploadClick}>
                     Upload articles
                 </button>
@@ -27,9 +65,8 @@ const Contribution = () => {
                     View recent uploads
                 </button>
             </div>
-
             {showUpload && <Upload />}
-            {showViewRecent && <ViewRecent />}
+            {showViewRecent && <ViewRecent />} */}
         </div>
     );
 };

@@ -8,7 +8,41 @@ export const dateApiSlice = apiSlice.injectEndpoints({
                 method: 'GET',
             }),
         }),
+        getAllClosureDates: builder.query({
+            // Add this endpoint
+            query: () => ({
+                url: '/ClosureDates',
+                method: 'GET',
+            }),
+        }),
+
+        postClosureDates: builder.mutation({
+            query: (credentials) => ({
+                url: `/ClosureDates`,
+                method: 'POST',
+                body: { ...credentials },
+            }),
+        }),
+        updateClosureDates: builder.mutation({
+            query: (id, credentials) => ({
+                url: `/ClosureDates/${id}`,
+                method: 'PUT',
+                body: { ...credentials },
+            }),
+        }),
+        deleteClosureDates: builder.mutation({
+            query: (id) => ({
+                url: `/ClosureDates/${id}`,
+                method: 'DELETE',
+            }),
+        }),
     }),
 });
 
-export const { useGetClosureDateByIdQuery } = dateApiSlice;
+export const {
+    useGetClosureDateByIdQuery,
+    useGetAllClosureDatesQuery,
+    usePostClosureDatesMutation,
+    useUpdateClosureDatesMutation,
+    useDeleteClosureDatesMutation,
+} = dateApiSlice;

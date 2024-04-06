@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Models.Entities;
 
 namespace EnpterpriseWebApi
 {
@@ -6,37 +7,60 @@ namespace EnpterpriseWebApi
     {
         public static async Task InitializeAsync(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            // Seed roles
-            string[] roles = { "Admin", "MarketingManager", "MarketingCoordinator", "Student", "Guest", "AppUser" };
+            string adminEmail = "admin@example.com";
+            string adminPassword = "Admin@123";
+            string adminUsername = "Admin";
 
-            foreach (var roleName in roles)
+            // Create Admin user if not exists
+            if (userManager.FindByEmailAsync(adminEmail).Result == null)
             {
-                if (!await roleManager.RoleExistsAsync(roleName))
+                var adminUser = new Users
                 {
-                    var role = new IdentityRole { Name = roleName };
-                    await roleManager.CreateAsync(role);
+                    UserName = adminUsername,
+                    Email = adminEmail,
+                    FacultiesId = 1
+                };
+
+                var result = await userManager.CreateAsync(adminUser, adminPassword);
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(adminUser, "Admin");
                 }
             }
 
-            // Seed default Admin account
-            string adminEmail = "admin@example.com";
-            string adminPassword = "Admin@123";
+            // Create and assign users to other roles
+            string[] roles = { "MarketingManager", "Guest", "Student", "MarketingCoordinator" };
+            string[] emails = { "marketingmanager@example.com", "guest@example.com", "student@example.com", "marketingcoordinator@example.com" };
+            string[] usernames = { "marketingmanager", "guest", "student", "marketingcoordinator" };
+            string commonPassword = "Password@123";
 
-            if (userManager.FindByEmailAsync(adminEmail).Result == null)
+            for (int i = 0; i < roles.Length; i++)
             {
-                var user = new IdentityUser
+                // Ensure role exists
+                if (!await roleManager.RoleExistsAsync(roles[i]))
                 {
-                    UserName = adminEmail,
-                    Email = adminEmail
-                };
+                    await roleManager.CreateAsync(new IdentityRole(roles[i]));
+                }
 
-                var result = await userManager.CreateAsync(user, adminPassword);
-
-                if (result.Succeeded)
+                // Create user if not exists
+                if (userManager.FindByEmailAsync(emails[i]).Result == null)
                 {
-                    await userManager.AddToRoleAsync(user, "Admin");
+                    var user = new Users
+                    {
+                        UserName = usernames[i],
+                        Email = emails[i],
+                        FacultiesId = 1
+                    };
+
+                    var result = await userManager.CreateAsync(user, commonPassword);
+                    if (result.Succeeded)
+                    {
+                        await userManager.AddToRoleAsync(user, roles[i]);
+                    }
                 }
             }
         }
     }
+
+
 }

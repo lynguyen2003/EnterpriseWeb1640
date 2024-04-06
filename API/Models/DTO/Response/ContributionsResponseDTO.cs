@@ -13,6 +13,7 @@ namespace Models.DTO.Response
         public string Title { get; set; }
         public string Description { get; set; }
         public string FilePath { get; set; }
+        public string ImgPath { get; set; }
         public DateTime UploadDate { get; set; }
         public int ClosureDatesId { get; set; }
         public string UsersId { get; set; }

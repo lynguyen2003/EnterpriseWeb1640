@@ -12,8 +12,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace EnpterpriseWebApi.Controllers
 {
-	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
-	[Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Route("api/[controller]")]
 	[ApiController]
 	public class FacultiesController : ControllerBase
 	{
@@ -47,7 +47,8 @@ namespace EnpterpriseWebApi.Controllers
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<FacultiesDTO>> CreateFaculty(CreateFacultyDTO facultyDTO)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        public async Task<ActionResult<FacultiesDTO>> CreateFaculty(CreateFacultyDTO facultyDTO)
 		{
 			var faculty = _mapper.Map<Faculties>(facultyDTO);
 			await _facultiesRepository.CreateFacultyAsync(faculty);
@@ -56,7 +57,8 @@ namespace EnpterpriseWebApi.Controllers
 		}
 
 		[HttpPut]
-		public async Task<IActionResult> UpdateFaculty(int id, UpdateFacultyDTO facultyDTO)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        public async Task<IActionResult> UpdateFaculty(int id, UpdateFacultyDTO facultyDTO)
 		{
 			var faculty = await _facultiesRepository.GetFacultyByIdAsync(id);
 			if (faculty == null)
@@ -69,7 +71,8 @@ namespace EnpterpriseWebApi.Controllers
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteFaculty(int id)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        public async Task<IActionResult> DeleteFaculty(int id)
 		{
 			var faculty = await _facultiesRepository.GetFacultyByIdAsync(id);
 			if (faculty == null)

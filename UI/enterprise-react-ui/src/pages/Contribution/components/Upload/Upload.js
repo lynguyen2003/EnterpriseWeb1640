@@ -1,30 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useGetClosureDateByIdQuery } from '~/feature/closureDates/dateApiSlice';
 import { useGetAllMagazineQuery } from '~/feature/magazine/magazineApiSlice';
 import { usePostContributionMutation } from '~/feature/contribution/contributionApiSlice';
 import { useGetUserByEmailQuery } from '~/feature/user/userApiSlice';
 import { addContribution } from '~/feature/contribution/contributionSlice';
-import { usePostFileMutation } from '~/feature/file/fileApiSlice';
-import { addFile } from '~/feature/file/fileSlice';
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+
+import { fileDb } from '~/Config';
+import { ref, uploadBytes } from 'firebase/storage';
+import { selectCurrentEmail } from '~/feature/auth/authSlice';
+import { ToastContainer, toast } from 'react-toastify';
+import LoadingSpinner from '~/components/LoadingSpinner';
 
 const Upload = () => {
-    const [successMessage, setSuccessMessage] = useState(null);
-    const [errorMessage, setErrorMessage] = useState(null);
     const [file, setFile] = useState(null);
+    const [img, setImg] = useState(null);
     const dispatch = useDispatch();
     const [post, { isLoading }] = usePostContributionMutation();
-    const [postFile] = usePostFileMutation();
 
-    const { data: closureDate, isLoading: closureDateLoading, error: closureDateError } = useGetClosureDateByIdQuery(1);
+    const {
+        data: closureDate,
+        isLoading: closureDateLoading,
+        error: closureDateError,
+    } = useGetClosureDateByIdQuery(15);
     const { data: magazines, isLoading: magazinesLoading, error: magazinesError } = useGetAllMagazineQuery();
-    const currentEmail = localStorage.getItem('email');
+    const currentEmail = useSelector(selectCurrentEmail);
     const { data: users, isLoading: usersLoading, error: usersError } = useGetUserByEmailQuery(currentEmail);
 
     const [formData, setFormData] = useState({
         title: '',
         description: '',
         filePath: '',
+        imgPath: '',
         closureDatesId: '',
         usersId: '',
         magazinesId: '',
@@ -43,10 +53,22 @@ const Upload = () => {
         if (!usersLoading && !usersError && users) {
             setFormData((prevState) => ({
                 ...prevState,
-                usersId: users.id,
+                usersId: users[0].id,
             }));
         }
     }, [users, usersLoading, usersError]);
+
+    const VisuallyHiddenInput = styled('input')({
+        clip: 'rect(0 0 0 0)',
+        clipPath: 'inset(50%)',
+        height: 1,
+        overflow: 'hidden',
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        whiteSpace: 'nowrap',
+        width: 1,
+    });
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -70,6 +92,15 @@ const Upload = () => {
         });
     };
 
+    const handleImgChange = (e) => {
+        const img = e.target.files[0];
+        setImg(img);
+        setFormData({
+            ...formData,
+            imgPath: img.name,
+        });
+    };
+
     const handleMagazineSelect = (e) => {
         const selectedMagazineId = e.target.value;
         setFormData({
@@ -83,29 +114,35 @@ const Upload = () => {
         try {
             const contributionData = await post(formData).unwrap();
             dispatch(addContribution(contributionData));
-            const fileData = await postFile(file).unwrap();
-            dispatch(addFile(fileData));
+
+            const fileRef = ref(fileDb, `files/${file.name}`);
+            uploadBytes(fileRef, file);
+
+            const imgRef = ref(fileDb, `images/${img.name}`);
+            uploadBytes(imgRef, img);
+
             setFormData({
+                ...formData,
                 title: '',
                 description: '',
                 filePath: '',
-                closureDatesId: '',
-                usersId: '',
+                imgPath: '',
                 magazinesId: '',
             });
-            setSuccessMessage('Submitted successfully!');
+            toast.success('Submitted successfully!');
         } catch (error) {
             if (error.status !== 'PARSING_ERROR') {
                 console.error('Error:', error);
-                setErrorMessage('An error occurred while submitting the form. Please try again later.');
-            } else setSuccessMessage('Submitted successfully!');
+                toast.error('Failed to submit user');
+            } else toast.success('Submitted successfully!');
         }
     };
     return (
-        <form onSubmit={handleSubmitUpdate}>
-            <div className="mb-3">
-                <label className="form-label">Title:</label>
+        <form className="formArticle" onSubmit={handleSubmitUpdate}>
+            <div className="mb-3 field">
+                <label className="form-label">Title</label>
                 <input
+                    placeholder="Type your title here"
                     type="text"
                     className="form-control"
                     name="title"
@@ -113,26 +150,50 @@ const Upload = () => {
                     onChange={handleInputChange}
                 />
             </div>
-            <div className="mb-3">
-                <label className="form-label">Description:</label>
-                <textarea
+            <div className="mb-3 fileUpload">
+                <label className="form-label">Upload File:</label>
+                <br />
+                <Button
+                    component="label"
+                    role={undefined}
+                    variant="contained"
+                    tabIndex={-1}
+                    startIcon={<CloudUploadIcon />}
+                    size="large"
+                    sx={{ backgroundColor: '#3288c5' }}
+                >
+                    Upload file
+                    <VisuallyHiddenInput type="file" onChange={handleFileChange} />
+                </Button>
+            </div>
+            <div className="mb-3 field">
+                <label className="form-label">Description</label>
+                <input
+                    placeholder="Type your description here"
                     className="form-control"
                     name="description"
                     value={formData.description}
                     onChange={handleInputChange}
                 />
             </div>
-            <div className="mb-3">
-                <label className="form-label">Upload File:</label>
-                <input type="file" onChange={handleFileChange} />
-            </div>
-            <div className="mb-3">
+            <div className="mb-3 fileUpload">
                 <label className="form-label">Upload Image:</label>
-                <input type="file" />
+                <br />
+                <Button
+                    component="label"
+                    role={undefined}
+                    variant="contained"
+                    tabIndex={-1}
+                    startIcon={<CloudUploadIcon />}
+                    size="large"
+                    sx={{ backgroundColor: '#3288c5' }}
+                >
+                    Upload Image
+                    <VisuallyHiddenInput type="file" onChange={handleImgChange} />
+                </Button>
             </div>
             <div className="mb-3">
                 <label className="form-label">Submission date :</label>
-                {/* Assuming you want to display the first closure date */}
                 {closureDateLoading ? (
                     <span>Loading...</span>
                 ) : closureDateError ? (
@@ -168,16 +229,12 @@ const Upload = () => {
                     I have read and agree to the terms and conditions
                 </label>
             </div>
-
-            {isLoading ? (
-                <span>Loading...</span>
-            ) : (
-                <button type="submit" className="btn btn-primary">
-                    Submit
+            <div className="upload">
+                <button type="submit" className="submit btn btn-primary">
+                    {isLoading ? <LoadingSpinner /> : 'Submit'}
                 </button>
-            )}
-            {successMessage && <div className="success">{successMessage}</div>}
-            {errorMessage && <div className="error">{errorMessage}</div>}
+                <ToastContainer />
+            </div>
         </form>
     );
 };

@@ -20,6 +20,8 @@ namespace Models.DTO.Request
 
         [Required(ErrorMessage = "FilePath is required")]
         public string FilePath { get; set; }
+        [Required(ErrorMessage = "ImgPath is required")]
+        public string ImgPath { get; set; }
 
         [Required(ErrorMessage = "ClosureDatesId is required")]
         [RegularExpression(@"^\d+$", ErrorMessage = "ClosureDatesId must be a numeric value")]

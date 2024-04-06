@@ -47,6 +47,38 @@ namespace DataServices.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "6df8a542-c22c-415b-ad62-74043acc1aa8",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "6dac4041-a2c9-487f-92d4-e9ffc953579c",
+                            Name = "MarketingManager",
+                            NormalizedName = "MARKETINGMANAGER"
+                        },
+                        new
+                        {
+                            Id = "8d92f0d7-7ec1-4d72-b142-a7370f40b6ae",
+                            Name = "MarketingCoordinator",
+                            NormalizedName = "MARKETINGCOORDINATOR"
+                        },
+                        new
+                        {
+                            Id = "1528ec0e-986f-422b-8cb1-41edd729311d",
+                            Name = "Student",
+                            NormalizedName = "STUDENT"
+                        },
+                        new
+                        {
+                            Id = "de84815c-55e6-499e-a0a7-3e58a2727cd7",
+                            Name = "Guest",
+                            NormalizedName = "GUEST"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -248,6 +280,15 @@ namespace DataServices.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ClosureDates");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AcademicYear = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ClosureDate = new DateTime(2024, 4, 25, 11, 0, 0, 0, DateTimeKind.Unspecified),
+                            FinalClosureDate = new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("Models.Entities.Contributions", b =>
@@ -266,6 +307,10 @@ namespace DataServices.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImgPath")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -309,6 +354,33 @@ namespace DataServices.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Faculties");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            FacultyName = "Greenwich University"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            FacultyName = "Faculty of Education, Health and Human Sciences"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            FacultyName = "Faculty of Engineering and Science"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            FacultyName = "Faculty of Liberal Arts and Sciences"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            FacultyName = "Faculty of Information Technology"
+                        });
                 });
 
             modelBuilder.Entity("Models.Entities.Feedbacks", b =>
@@ -319,44 +391,22 @@ namespace DataServices.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Comment")
+                    b.Property<string>("Feedback")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CommentDate")
+                    b.Property<DateTime>("UploadDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("UsersId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UsersId");
 
                     b.ToTable("Feedbacks");
-                });
-
-            modelBuilder.Entity("Models.Entities.Images", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ContributionsId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FilePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContributionsId");
-
-                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("Models.Entities.Magazines", b =>
@@ -382,6 +432,43 @@ namespace DataServices.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Magazines");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CoverImagePath = "image1.jpg",
+                            Description = "Description for Magazine 1",
+                            Title = "Greenwich Gazette: Exploring Campus Life and Beyond"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CoverImagePath = "image2.jpg",
+                            Description = "Description for Magazine 2",
+                            Title = "Academic Insights: Greenwich University's Research & Scholarship Digest"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CoverImagePath = "image3.jpg",
+                            Description = "Description for Magazine 3",
+                            Title = "The Greenwich Pioneer: Celebrating Innovation and Leadership on Campus"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CoverImagePath = "image4.jpg",
+                            Description = "Description for Magazine 4",
+                            Title = "Campus Chronicles: Stories, Events, and Perspectives from Greenwich University"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CoverImagePath = "image5.jpg",
+                            Description = "Description for Magazine 5",
+                            Title = "Greenwich Perspectives: Diverse Voices, Shared Experiences in our University Community"
+                        });
                 });
 
             modelBuilder.Entity("Models.Entities.RefreshToken", b =>
@@ -425,10 +512,10 @@ namespace DataServices.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.Property<int>("FaculitiesId")
+                    b.Property<int>("FacultiesId")
                         .HasColumnType("int");
 
-                    b.HasIndex("FaculitiesId");
+                    b.HasIndex("FacultiesId");
 
                     b.HasDiscriminator().HasValue("Users");
                 });
@@ -515,43 +602,27 @@ namespace DataServices.Migrations
                 {
                     b.HasOne("Models.Entities.Users", "User")
                         .WithMany("Feedbacks")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Models.Entities.Images", b =>
-                {
-                    b.HasOne("Models.Entities.Contributions", "Contributions")
-                        .WithMany("Images")
-                        .HasForeignKey("ContributionsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Contributions");
-                });
-
             modelBuilder.Entity("Models.Entities.Users", b =>
                 {
-                    b.HasOne("Models.Entities.Faculties", "Faculities")
+                    b.HasOne("Models.Entities.Faculties", "Faculties")
                         .WithMany("Users")
-                        .HasForeignKey("FaculitiesId")
+                        .HasForeignKey("FacultiesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Faculities");
+                    b.Navigation("Faculties");
                 });
 
             modelBuilder.Entity("Models.Entities.ClosureDates", b =>
                 {
                     b.Navigation("Contributions");
-                });
-
-            modelBuilder.Entity("Models.Entities.Contributions", b =>
-                {
-                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("Models.Entities.Faculties", b =>

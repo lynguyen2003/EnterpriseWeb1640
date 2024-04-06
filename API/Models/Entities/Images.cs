@@ -11,8 +11,5 @@ namespace Models.Entities
     {
         public int Id { get; set; }
         public string FilePath { get; set; }
-        [ForeignKey("Contributions")]
-        public int ContributionsId { get; set; }
-        public Contributions Contributions { get; set; }
     }
 }
