@@ -12,10 +12,11 @@ import { TextField } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 
-import { selectCurrentListUsers, setUsers } from '~/feature/user/userSlice';
+import { setUsers } from '~/feature/user/userSlice';
 import { useGetAllUserQuery, useUpdateUserMutation, useDeleteUserMutation } from '~/feature/user/userApiSlice';
 import { useGetAllFacultiesQuery } from '~/feature/faculty/facultyApiSlice';
 import { selectFaculties, setFaculties } from '~/feature/faculty/facultySlice';
+import { useGetUserRoleMutation, useAddUserToRoleMutation } from '~/feature/role/roleApiSlice';
 import MenuItem from '@mui/material/MenuItem';
 
 const Users = () => {
@@ -24,9 +25,8 @@ const Users = () => {
     const dispatch = useDispatch();
     const [editRow, setEditRow] = useState(null);
     const [open, setOpen] = useState(false);
-    const [formUser, setFormUser] = useState({});
-    const [rows, setRows] = useState([]);
-    const [facultiesOption, setFacultiesOption] = useState('');
+    const [openRoleDialog, setOpenRoleDialog] = useState(false);
+    const [formUser, setFormUser] = useState([]);
     const [formData, setFormData] = useState({
         userName: '',
         email: '',
@@ -34,14 +34,16 @@ const Users = () => {
         role: '',
         facultiesId: '',
     });
+    const [roleFormData, setRoleFormData] = useState({
+        email: '',
+        oldRoleName: '',
+        roleName: '',
+    });
     const { data: users, refetch } = useGetAllUserQuery();
     const { data: facultiesData } = useGetAllFacultiesQuery();
+    const [getUserRole] = useGetUserRoleMutation();
+    const [addUserToRole] = useAddUserToRoleMutation();
     const faculties = useSelector(selectFaculties);
-    const userObjects = useSelector(selectCurrentListUsers);
-
-    useEffect(() => {
-        setRows(formUser);
-    }, [formUser]);
 
     useEffect(() => {
         if (users) {
@@ -54,9 +56,10 @@ const Users = () => {
 
     useEffect(() => {
         if (users && faculties) {
-            const formUserObjects = users.map((user) => {
+            const formUserObjects = users.map(async (user) => {
                 const facultyObj = faculties.find((fac) => fac.id === user.facultiesId);
                 const facultyName = facultyObj ? facultyObj.facultyName : 'Unknown Faculty';
+                const roles = await getUserRole(user.email).unwrap();
                 return {
                     id: user.id,
                     userName: user.userName,
@@ -64,11 +67,12 @@ const Users = () => {
                     phone: user.phoneNumber,
                     facultiesId: user.facultiesId,
                     faculties: facultyName,
+                    role: roles ? roles : 'Unknown Role',
                 };
             });
-            setFormUser(formUserObjects);
+            Promise.all(formUserObjects).then(setFormUser);
         }
-    }, [users, faculties]);
+    }, [users, faculties, getUserRole]);
 
     const [updateUser] = useUpdateUserMutation();
     const [deleteUser] = useDeleteUserMutation();
@@ -123,14 +127,28 @@ const Users = () => {
             ),
         },
     ];
-    const handleChange = (event) => {
-        setFacultiesOption(event.target.value);
-    };
 
     const handleUpdateClick = (id) => {
-        const row = rows.find((row) => row.id === id);
+        const row = formUser.find((row) => row.id === id);
         setEditRow(row);
         setOpen(true);
+    };
+
+    const handleRoleInputChange = (e) => {
+        setRoleFormData({
+            ...roleFormData,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    const handleRoleSubmit = async (e) => {
+        try {
+            await addUserToRole(roleFormData).unwrap();
+            toast.success('Role updated successfully');
+            setOpenRoleDialog(false);
+        } catch (error) {
+            toast.error(`Failed to update role: ${error.message}`);
+        }
     };
 
     const handleUpdate = () => {
@@ -162,7 +180,7 @@ const Users = () => {
         deleteUser(userId)
             .then(() => {
                 toast.success('User deleted successfully');
-                setRows(rows.filter((row) => row.id !== userId));
+                setFormUser(formUser.filter((row) => row.id !== userId));
             })
             .catch(() => {
                 toast.error('Failed to delete user');
@@ -202,6 +220,50 @@ const Users = () => {
                     },
                 }}
             >
+                <Dialog open={openRoleDialog} onClose={() => setOpenRoleDialog(false)}>
+                    <DialogTitle>Add/Update Role</DialogTitle>
+                    <DialogContent>
+                        <form onSubmit={handleRoleSubmit}>
+                            <TextField
+                                name="email"
+                                label="Email"
+                                fullWidth
+                                margin="normal"
+                                value={roleFormData.email}
+                                onChange={handleRoleInputChange}
+                                required
+                            />
+                            <TextField
+                                name="oldRoleName"
+                                label="Old Role Name"
+                                fullWidth
+                                margin="normal"
+                                value={roleFormData.oldRoleName}
+                                onChange={handleRoleInputChange}
+                            />
+                            <TextField
+                                name="roleName"
+                                label="Role Name"
+                                fullWidth
+                                margin="normal"
+                                value={roleFormData.roleName}
+                                onChange={handleRoleInputChange}
+                                required
+                            />
+                            <DialogActions>
+                                <Button onClick={() => setOpenRoleDialog(false)} color="primary">
+                                    Cancel
+                                </Button>
+                                <Button type="submit" color="secondary">
+                                    Submit
+                                </Button>
+                            </DialogActions>
+                        </form>
+                    </DialogContent>
+                </Dialog>
+                <Button variant="outlined" onClick={() => setOpenRoleDialog(true)}>
+                    Add/Update Role
+                </Button>
                 <Dialog open={open} onClose={() => setOpen(false)}>
                     <DialogTitle>Update User</DialogTitle>
                     <DialogContent>
@@ -240,7 +302,7 @@ const Users = () => {
                             type="text"
                             fullWidth
                             value={formData.phoneNumber}
-                            onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value }, handleChange)}
+                            onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
                             InputLabelProps={{
                                 shrink: true,
                             }}
@@ -250,7 +312,7 @@ const Users = () => {
                             label="Faculties"
                             fullWidth
                             value={formUser.faculties}
-                            onChange={(e) => setFormData({ ...formData, facultiesId: e.target.value }, handleChange)}
+                            onChange={(e) => setFormData({ ...formData, facultiesId: e.target.value })}
                             InputLabelProps={{
                                 shrink: true,
                             }}
@@ -274,12 +336,14 @@ const Users = () => {
                         >
                             Cancel
                         </Button>
-                        <Button onClick={handleUpdate}>Update</Button>
+                        <Button onClick={handleUpdate} color="secondary">
+                            Update
+                        </Button>
                     </DialogActions>
                 </Dialog>
 
                 {formUser ? (
-                    <DataGrid checkboxSelection disableRowSelectionOnClick rows={rows} columns={columns} />
+                    <DataGrid checkboxSelection disableRowSelectionOnClick rows={formUser} columns={columns} />
                 ) : (
                     <div>Loading...</div>
                 )}

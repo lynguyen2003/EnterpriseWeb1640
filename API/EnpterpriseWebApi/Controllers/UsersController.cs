@@ -11,6 +11,7 @@ using Models.Entities;
 using EnpterpriseWebApi.Controllers;
 using DataServices.Interfaces;
 using Models.DTO.Response;
+using Models.DTO;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -79,11 +80,24 @@ public class UsersController : BaseController
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
     public async Task<IActionResult> CreateUser([FromBody] UsersRequestCreateDTO model)
     {
-        if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+        var existingUser = await _userManager.FindByEmailAsync(model.Email);
+
+        if (existingUser != null)
         {
-            return BadRequest(ModelState);
+            return BadRequest(new AuthResult()
+            {
+                Result = false,
+                Errors = new List<string>()
+                        {
+                            "Email already exist"
+                        }
+            });
         }
-            var user = _mapper.Map<Users>(model);
+        var user = _mapper.Map<Users>(model);
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {

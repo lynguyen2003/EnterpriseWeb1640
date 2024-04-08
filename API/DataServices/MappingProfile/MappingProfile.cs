@@ -37,6 +37,9 @@ namespace DataServices.MappingProfile
             CreateMap<Users, UsersResponseDTO>();
             CreateMap<UsersRequestCreateDTO, Users>();
             CreateMap<UsersRequestUpdateDTO, Users>();
+
+            CreateMap<Users, UsersResponseDTO>();
+
         }
-	}
+    }
 }
