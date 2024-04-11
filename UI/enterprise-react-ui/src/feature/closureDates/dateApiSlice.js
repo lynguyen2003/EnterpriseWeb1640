@@ -2,7 +2,7 @@ import { apiSlice } from '~/app/api/apiSlice';
 
 export const dateApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getClosureDateById: builder.query({
+        getClosureDateById: builder.mutation({
             query: (closureDateId) => ({
                 url: `/ClosureDates/${closureDateId}`,
                 method: 'GET',
@@ -24,10 +24,15 @@ export const dateApiSlice = apiSlice.injectEndpoints({
             }),
         }),
         updateClosureDates: builder.mutation({
-            query: (id, credentials) => ({
-                url: `/ClosureDates/${id}`,
+            query: (data) => ({
+                url: `/ClosureDates/${data.id}`,
                 method: 'PUT',
-                body: { ...credentials },
+                body: {
+                    academicYear: data.academicYear,
+                    closureDate: data.closureDate,
+                    finalClosureDate: data.finalClosureDate,
+                    isSet: data.isSet,
+                },
             }),
         }),
         deleteClosureDates: builder.mutation({
@@ -40,7 +45,7 @@ export const dateApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-    useGetClosureDateByIdQuery,
+    useGetClosureDateByIdMutation,
     useGetAllClosureDatesQuery,
     usePostClosureDatesMutation,
     useUpdateClosureDatesMutation,

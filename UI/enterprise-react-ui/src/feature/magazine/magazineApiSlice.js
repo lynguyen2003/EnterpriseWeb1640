@@ -8,7 +8,13 @@ export const magazineApiSlice = apiSlice.injectEndpoints({
                 method: 'GET',
             }),
         }),
+        getMagazineById: builder.mutation({
+            query: (id) => ({
+                url: `/Magazines/${id}`,
+                method: 'GET',
+            }),
+        }),
     }),
 });
 
-export const { useGetAllMagazineQuery } = magazineApiSlice;
+export const { useGetAllMagazineQuery, useGetMagazineByIdMutation } = magazineApiSlice;

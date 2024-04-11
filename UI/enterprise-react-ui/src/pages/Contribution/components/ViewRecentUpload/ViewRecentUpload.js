@@ -2,128 +2,168 @@ import React, { useState, useEffect } from 'react';
 import {
     useGetContributionByUserIdQuery,
     usePutContributionMutation,
-    useDeleteContributionMutation,
 } from '~/feature/contribution/contributionApiSlice';
 import { useGetUserByEmailQuery } from '~/feature/user/userApiSlice';
 import { fileDb } from '~/Config';
 import { ref, getDownloadURL, uploadBytes, deleteObject } from 'firebase/storage';
 import { useSelector } from 'react-redux';
 import { selectCurrentEmail } from '~/feature/auth/authSlice';
+import { useGetCommentsByContributionIdMutation, useAddCommentMutation } from '~/feature/comment/commentApiSlice';
+
+import { ToastContainer, toast } from 'react-toastify';
+
+import { styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import {
+    ListItemText,
+    Button,
+    Accordion,
+    AccordionSummary,
+    AccordionDetails,
+    Typography,
+    TextField,
+    IconButton,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    FormControl,
+    Input,
+    FormHelperText,
+} from '@mui/material';
+import Grid from '@mui/material/Grid';
+import EditIcon from '@mui/icons-material/Edit';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 const ViewRecent = () => {
-    const currentEmail = useSelector(selectCurrentEmail);
-    const { data: users } = useGetUserByEmailQuery(currentEmail);
-    const userId = users[0].id;
+    const [imageUrls, setImageUrls] = useState({});
     const [file, setFile] = useState(null);
     const [img, setImg] = useState(null);
-    const [successMessage, setSuccessMessage] = useState(null);
-    const [errorMessage, setErrorMessage] = useState(null);
-    const [isUpdating, setIsUpdating] = useState(false);
-    const [selectedContributionId, setSelectedContributionId] = useState(null);
-    const [update] = usePutContributionMutation();
-    const [deleteContribution] = useDeleteContributionMutation();
-    const [showFeedback, setShowFeedback] = useState({});
-    const [isVisible, setIsVisible] = useState(true);
-
-    const {
-        data: contributions,
-        isLoading: contributionsLoading,
-        error: contributionsError,
-        refetch: refetchContributions,
-    } = useGetContributionByUserIdQuery(userId);
-
-    const [formData, setFormData] = useState({
-        id: null,
+    const [expanded, setExpanded] = useState(false);
+    const [selectedRow, setSelectedRow] = useState(null);
+    const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
+    const [comments, setComments] = useState([]);
+    const [comment, setComment] = useState('');
+    const [updateFormData, setUpdateFormData] = useState({
+        id: '',
         title: '',
         description: '',
         filePath: '',
         imgPath: '',
     });
+    const currentEmail = useSelector(selectCurrentEmail);
+    const { data: users } = useGetUserByEmailQuery(currentEmail);
+    const userId = users[0].id;
+    const [updateContribution] = usePutContributionMutation();
+    const { data: contributions, refetch: refetchContributions } = useGetContributionByUserIdQuery(userId);
+    const [getComments] = useGetCommentsByContributionIdMutation();
+    const [postComment] = useAddCommentMutation();
 
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        const options = {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric',
-            hour12: false,
-            timeZone: 'UTC',
-        };
-        return date.toLocaleDateString('vi-VN', options);
+    /* useEffect(() => {
+        contributions.forEach((contribution) => {
+            handleDisplayImg(contribution.imgPath);
+        });
+    }, [contributions]); */
+
+    const Item = styled(Paper)(({ theme }) => ({
+        padding: theme.spacing(1),
+        fontWeight: theme.typography.fontWeightMedium,
+        fontSize: '16px',
+    }));
+
+    const handleAccordionToggle = (contributionId) => (event, newExpanded) => {
+        setExpanded(newExpanded ? contributionId : false);
+        if (newExpanded) {
+            const fetchComments = async () => {
+                const fetchedComments = await getComments(contributionId).unwrap();
+                if (Array.isArray(fetchedComments)) {
+                    setComments(fetchedComments);
+                } else {
+                    toast.error('Failed to fetch comments');
+                    console.error('Fetched comments is not an array:', fetchedComments);
+                }
+            };
+
+            fetchComments();
+        }
     };
 
-    useEffect(() => {
-        if (successMessage || errorMessage) {
-            const timeout = setTimeout(() => {
-                setSuccessMessage(null);
-                setErrorMessage(null);
-            }, 5000);
-            return () => clearTimeout(timeout);
-        }
-    }, [successMessage, errorMessage]);
-
-    const toggleVisibility = () => {
-        setIsVisible(!isVisible);
+    const handleInputChange = (event) => {
+        setUpdateFormData({
+            ...updateFormData,
+            [event.target.name]: event.target.value,
+        });
     };
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
-        setFile(file);
-        setFormData({
-            ...formData,
-            filePath: file.name,
-        });
-    };
 
-    const handleImgChange = (e) => {
-        const img = e.target.files[0];
-        setImg(img);
-    };
+        if (file) {
+            const fileType = file.type;
+            const allowedTypes = [
+                'application/pdf',
+                'application/msword',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            ];
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    };
+            if (!allowedTypes.includes(fileType)) {
+                toast.error('File upload is not allowed.');
+                return;
+            }
 
-    const handleUpdateClick = (contributionId, contribution) => {
-        if (selectedContributionId === contributionId) {
-            setIsUpdating(false);
-            setSelectedContributionId(null);
-        } else {
-            setIsUpdating(true);
-            setSelectedContributionId(contributionId);
-            setFormData({
-                id: contribution.id,
-                title: contribution.title,
-                description: contribution.description,
-                filePath: contribution.filePath,
-                imgPath: contribution.imgPath,
+            if (file.size > 5000000) {
+                toast.error('File size should not exceed 5MB.');
+                return;
+            }
+
+            setFile(file);
+            setUpdateFormData({
+                ...updateFormData,
+                filePath: file.name,
             });
         }
     };
 
-    const handleFeedbackToggle = (contributionId) => {
-        setShowFeedback((prevShowFeedback) => ({
-            ...prevShowFeedback,
-            [contributionId]: !prevShowFeedback[contributionId],
+    const handleImgChange = (e) => {
+        const img = e.target.files[0];
+        if (img) {
+            const fileType = img.type;
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+            if (!allowedTypes.includes(fileType)) {
+                toast.error('Type of image is not allowed.');
+                return;
+            }
+
+            if (img.size > 5000000) {
+                toast.error('Image size should not exceed 5MB.');
+                return;
+            }
+
+            setImg(img);
+            setUpdateFormData({
+                ...updateFormData,
+                imgPath: img.name,
+            });
+        }
+    };
+
+    const handleDeleteFile = () => {
+        setUpdateFormData((prevState) => ({
+            ...prevState,
+            filePath: '',
         }));
     };
 
-    const handleDelete = async (contributionId) => {
-        try {
-            await deleteContribution(contributionId).unwrap();
-            await refetchContributions();
-        } catch (error) {
-            console.error('Error deleting contribution:', error);
-            setErrorMessage('An error occurred while deleting the contribution. Please try again later.');
-        }
+    const handleDeleteImg = () => {
+        setUpdateFormData((prevState) => ({
+            ...prevState,
+            imgPath: '',
+        }));
     };
 
     const handleDownloadFile = async (fileName) => {
@@ -131,299 +171,170 @@ const ViewRecent = () => {
             const fileRef = ref(fileDb, `files/${fileName}`);
             const downloadURL = await getDownloadURL(fileRef);
             window.open(downloadURL, '_blank');
+            toast.success('Download successfully');
         } catch (error) {
             console.error('Error download:', error);
-            setErrorMessage('An error occurred while downloading. Please try again later.');
+            toast.error('Download failed');
         }
     };
 
-    const handleDownloadImg = async (imgName) => {
-        try {
-            const imageRef = ref(fileDb, `images/${imgName}`);
-            const downloadURL = await getDownloadURL(imageRef);
-            window.open(downloadURL, '_blank');
-        } catch (error) {
-            console.error('Error:', error);
-            setErrorMessage('An error occurred while downloading. Please try again later.');
-        }
+    const handleDisplayImg = async (imgPath) => {
+        const imageRef = ref(fileDb, `images/${imgPath}`);
+        const url = await getDownloadURL(imageRef);
+        setImageUrls((prevUrls) => ({ ...prevUrls, [imgPath]: url }));
     };
 
-    const handleDeleteFile = async (fileName) => {
-        try {
-            const fileRef = ref(fileDb, `files/${fileName}`);
-            await deleteObject(fileRef);
-        } catch (error) {
-            console.error('Error delete:', error);
-            setIsVisible(isVisible);
-            setErrorMessage('An error occurred while deleting. Please try again later.');
-        }
+    const handleCommentChange = (event) => {
+        event.persist();
+        setComment(event.target.value);
     };
 
-    const handleDeleteImg = async (imgName) => {
-        try {
-            const imgRef = ref(fileDb, `images/${imgName}`);
-            await deleteObject(imgRef);
-        } catch (error) {
-            console.error('Error delete:', error);
-            setIsVisible(isVisible);
-            setErrorMessage('An error occurred while deleting. Please try again later.');
-        }
-    };
-
-    const handleSubmitUpdate = async (e) => {
+    const handlePostComment = async (e) => {
         e.preventDefault();
         try {
-            await update(formData).unwrap();
-
-            const fileRef = ref(fileDb, `files/${file.name}`);
-            uploadBytes(fileRef, file);
-
-            const imgRef = ref(fileDb, `images/${img.name}`);
-            uploadBytes(imgRef, img);
-            setFormData({
-                id: null,
-                title: '',
-                description: '',
-                filePath: '',
-                imgPath: '',
-            });
-            setSuccessMessage('Form submitted successfully!');
-            await refetchContributions();
+            const commentData = {
+                contributionId: selectedRow.id,
+                content: comment,
+                email: users[0].email,
+                userName: users[0].userName,
+            };
+            await postComment(commentData).unwrap();
+            setComments([...comments, commentData]);
+            setComment('');
         } catch (error) {
-            console.error('Error submitting form:', error);
-            setErrorMessage('An error occurred while submitting the form. Please try again later.');
+            console.error('Error posting comment:', error);
+            toast.error('Failed to post comment');
         }
     };
 
-    if (contributionsLoading) {
-        return <p>Loading contributions...</p>;
-    }
-    if (contributionsError) {
-        return <p>Error fetching contributions{contributionsError.message}</p>;
-    }
-    if (!contributions || contributions.length === 0) {
-        return <p>No contributions found.</p>;
-    }
+    const handleUpdateContribution = async (data) => {
+        try {
+            await updateContribution(data).unwrap();
+
+            if (!data.filePath && updateFormData.filePath) {
+                const fileRef = ref(fileDb, `files/${updateFormData.filePath}`);
+                await deleteObject(fileRef);
+            }
+
+            if (!data.imgPath && updateFormData.imgPath) {
+                const imgRef = ref(fileDb, `images/${updateFormData.imgPath}`);
+                await deleteObject(imgRef);
+            }
+
+            await uploadBytes(ref(fileDb, `files/${data.filePath}`), file);
+            await uploadBytes(ref(fileDb, `images/${data.imgPath}`), img);
+
+            setUpdateDialogOpen(false);
+            setUpdateFormData({});
+
+            setFile(null);
+            setImg(null);
+            refetchContributions();
+        } catch (error) {
+            toast.error('Error updating contribution');
+            console.error('Error updating contribution:', error);
+        }
+    };
+
     return (
         <div className="table-responsive">
+            <ToastContainer />
             <table className="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">No</th>
-                        <th scope="col">Title</th>
-                        <th scope="col">Submission Date</th>
-                        <th scope="col"></th>
-                        <th scope="col"></th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {contributions.map((contribution, index) => (
-                        <tr key={contribution.id}>
-                            <td>{index + 1}</td>
-                            <td>{contribution.title}</td>
-                            <td>Upload Date: {formatDate(contribution.uploadDate)}</td>
-                            <td className="edit">
-                                <i
-                                    class="fa-solid fa-pen"
-                                    onClick={() => handleUpdateClick(contribution.id, contribution)}
-                                ></i>
-                            </td>
-                            <td className="trash">
-                                <i class="fa-solid fa-trash-can" onClick={() => handleDelete(contribution.id)}></i>
-                            </td>
-                            <td className="feedback">
-                                <i class="fa-solid fa-angle-down" onClick={() => handleFeedbackToggle(contribution.id)}>
-                                    {showFeedback[contribution.id] ? '' : ''}
-                                </i>
-                            </td>
-                            {isUpdating && selectedContributionId === contribution.id && (
-                                <td colSpan="6">
-                                    <form onSubmit={handleSubmitUpdate}>
-                                        <div className="mb-3">
-                                            <label className="form-label">Title:</label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                name="title"
-                                                value={formData.title}
-                                                onChange={handleInputChange}
-                                            />
-                                        </div>
-                                        <div className="mb-3">
-                                            <label className="form-label">Description:</label>
-                                            <textarea
-                                                className="form-control"
-                                                name="description"
-                                                value={formData.description}
-                                                onChange={handleInputChange}
-                                            />
-                                        </div>
-                                        <div className="mb-3">
-                                            {isVisible && (
-                                                <div className="mb-2">
-                                                    <a
-                                                        href="#"
-                                                        onClick={(event) => {
-                                                            event.preventDefault();
-                                                            handleDownloadFile(contribution.filePath);
-                                                        }}
-                                                    >
-                                                        {contribution.filePath}
-                                                    </a>
-                                                    <a
-                                                        href="#"
-                                                        onClick={(event) => {
-                                                            event.preventDefault();
-                                                            toggleVisibility();
-                                                            handleDeleteFile(contribution.filePath);
-                                                        }}
-                                                    >
-                                                        <i className="fa-sharp fa-solid fa-circle-xmark"></i>
-                                                    </a>
-                                                </div>
-                                            )}
-                                            <label className="form-label">Upload File:</label>
-                                            <input type="file" onChange={handleFileChange} />
-                                        </div>
-                                        <div className="mb-3">
-                                            {isVisible && (
-                                                <div className="mb-2">
-                                                    <a
-                                                        href="#"
-                                                        onClick={(event) => {
-                                                            event.preventDefault();
-                                                            handleDownloadImg(contribution.imgPath);
-                                                        }}
-                                                    >
-                                                        {contribution.imgPath}
-                                                    </a>
-                                                    <a
-                                                        href="#"
-                                                        onClick={(event) => {
-                                                            event.preventDefault();
-                                                            toggleVisibility();
-                                                            handleDeleteImg(contribution.imgPath);
-                                                        }}
-                                                    >
-                                                        <i className="fa-sharp fa-solid fa-circle-xmark"></i>
-                                                    </a>
-                                                </div>
-                                            )}
-                                            <label className="form-label">Upload Image:</label>
-                                            <input type="file" onChange={handleImgChange} />
-                                        </div>
-                                        <button type="submit">Submit Update</button>
-                                        {successMessage && <div className="success">{successMessage}</div>}
-                                        {errorMessage && <div className="error">{errorMessage}</div>}
-                                    </form>
-                                </td>
-                            )}
-
-                            {showFeedback[contribution.id] && (
-                                <div>
-                                    <div className="row">
-                                        <div className="col-md-8">
-                                            <div className="card">
-                                                <div className="card-body">
-                                                    <h5 className="card-title">Feedback</h5>
-                                                    <p className="card-text">This is the feedback message.</p>
-                                                    <hr />
-                                                    <h6 className="card-subtitle mb-2 text-muted">Comments</h6>
-                                                    <div className="row">
-                                                        <div className="col">
-                                                            <div className="d-flex flex-start">
-                                                                <div className="flex-grow-1 flex-shrink-1">
-                                                                    <div>
-                                                                        <div className="d-flex justify-content-between align-items-center">
-                                                                            <p className="mb-1">
-                                                                                <i className="fas fa-user-circle fa-2x ml-2 me-2"></i>
-                                                                                <b>Maria Smantha </b>
-                                                                                <span className="small">
-                                                                                    - 2 hours ago
-                                                                                </span>
-                                                                            </p>
-                                                                            <a href="#!">
-                                                                                <i className="fas fa-reply fa-xs"></i>
-                                                                                <span className="small"> reply</span>
-                                                                            </a>
-                                                                        </div>
-                                                                        <p className="small mb-0">
-                                                                            It is a long established fact that a reader
-                                                                            will be distracted by the readable content
-                                                                            of a page.
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <input
-                                                        type="text"
-                                                        className="form-control"
-                                                        id="commenterName"
-                                                        placeholder="Comment."
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-
-            {/* <ul className="list-group">
-                {contributions.map((contribution) => (
-                    <li key={contribution.id} className="list-group-item">
-                        <h3>{contribution.title}</h3>
-                        <p>{contribution.description}</p>
-                        <p>Upload Date: {formatDate(contribution.uploadDate)}</p>
-                        <button
-                            className="btn mr-2"
-                            onClick={(e) => {
-                                handleUpdateClick(contribution.id);
-                                handleContributionSelect(e);
+                {(contributions || []).map((contribution, index) => (
+                    <Accordion
+                        key={contribution.id}
+                        sx={{
+                            marginBlockEnd: 2,
+                        }}
+                    >
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls={`panel${index + 1}a-content`}
+                            id={`panel${index + 1}a-header`}
+                            onClick={() => {
+                                setSelectedRow(contribution);
+                                handleDisplayImg(contribution.imgPath);
                             }}
-                            value={contribution.id}
                         >
-                            {selectedContributionId === contribution.id && isUpdating ? 'Update' : 'Update'}
-                        </button>
-                        <button className="btn" onClick={() => handleDelete(contribution.id)}>
-                            Delete
-                        </button>
-                        <button className="btn" onClick={() => handleFeedbackToggle(contribution.id)}>
-                            {showFeedback[contribution.id] ? 'Feedback' : 'Feedback'}
-                        </button>
-
-                        {isUpdating && selectedContributionId === contribution.id && (
-                            <form onSubmit={handleSubmitUpdate}>
-                                <div className="mb-3">
-                                    <label className="form-label">Title:</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        name="title"
-                                        value={formData.title}
-                                        onChange={handleInputChange}
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    <label className="form-label">Description:</label>
-                                    <textarea
-                                        className="form-control"
-                                        name="description"
-                                        value={formData.description}
-                                        onChange={handleInputChange}
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    {isVisible && (
-                                        <div className="mb-2">
+                            <Grid container>
+                                <Grid item xs={3}>
+                                    <Typography>{contribution.id}</Typography>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <Typography>{contribution.title}</Typography>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <Typography>{new Date(contribution.uploadDate).toLocaleString()}</Typography>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <IconButton
+                                        onClick={(event) => {
+                                            event.stopPropagation();
+                                            setUpdateFormData({
+                                                ...updateFormData,
+                                                id: contribution.id,
+                                                title: contribution.title,
+                                                description: contribution.description,
+                                                filePath: contribution.filePath,
+                                                imgPath: contribution.imgPath,
+                                            });
+                                            setUpdateDialogOpen(true);
+                                        }}
+                                        disabled={!selectedRow}
+                                    >
+                                        <EditIcon />
+                                    </IconButton>
+                                </Grid>
+                            </Grid>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Typography>
+                                <Grid container marginBlockEnd={5}>
+                                    <Grid xs={4}>
+                                        <Item>Title</Item>
+                                    </Grid>
+                                    <Grid xs={8}>
+                                        <Item>{contribution.title}</Item>
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <Item>Description</Item>
+                                    </Grid>
+                                    <Grid item xs={8}>
+                                        <Item>{contribution.description}</Item>
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <Item>Upload Date</Item>
+                                    </Grid>
+                                    <Grid item xs={8}>
+                                        <Item>{new Date(contribution.uploadDate).toLocaleString()}</Item>
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <Item>Student</Item>
+                                    </Grid>
+                                    <Grid item xs={8}>
+                                        <Item>{contribution.email}</Item>
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <Item>Image</Item>
+                                    </Grid>
+                                    <Grid item xs={8}>
+                                        <Item>
+                                            {imageUrls[contribution.imgPath] && (
+                                                <img
+                                                    src={imageUrls[contribution.imgPath]}
+                                                    alt="Contribution"
+                                                    style={{ width: '500px', height: '350px' }}
+                                                />
+                                            )}
+                                        </Item>
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <Item>File</Item>
+                                    </Grid>
+                                    <Grid item xs={8}>
+                                        <Item>
                                             <a
-                                                href="#"
+                                                href={contribution.filePath}
                                                 onClick={(event) => {
                                                     event.preventDefault();
                                                     handleDownloadFile(contribution.filePath);
@@ -431,104 +342,182 @@ const ViewRecent = () => {
                                             >
                                                 {contribution.filePath}
                                             </a>
-                                            <a
-                                                href="#"
-                                                onClick={(event) => {
-                                                    event.preventDefault();
-                                                    toggleVisibility();
-                                                    handleDeleteFile(contribution.filePath);
-                                                }}
-                                            >
-                                                <i className="fa-sharp fa-solid fa-circle-xmark"></i>
-                                            </a>
-                                        </div>
-                                    )}
-                                    <label className="form-label">Upload File:</label>
-                                    <input type="file" onChange={handleFileChange} />
-                                </div>
-                                <div className="mb-3">
-                                    {isVisible && (
-                                        <div className="mb-2">
-                                            <a
-                                                href="#"
-                                                onClick={(event) => {
-                                                    event.preventDefault();
-                                                    handleDownloadImg(contribution.imgPath);
-                                                }}
-                                            >
-                                                {contribution.imgPath}
-                                            </a>
-                                            <a
-                                                href="#"
-                                                onClick={(event) => {
-                                                    event.preventDefault();
-                                                    toggleVisibility();
-                                                    handleDeleteImg(contribution.imgPath);
-                                                }}
-                                            >
-                                                <i className="fa-sharp fa-solid fa-circle-xmark"></i>
-                                            </a>
-                                        </div>
-                                    )}
-                                    <label className="form-label">Upload Image:</label>
-                                    <input type="file" onChange={handleImgChange} />
-                                </div>
-                                <button type="submit">Submit Update</button>
-                                {successMessage && <div className="success">{successMessage}</div>}
-                                {errorMessage && <div className="error">{errorMessage}</div>}
-                            </form>
-                        )}
+                                        </Item>
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <Item>Magazine</Item>
+                                    </Grid>
+                                    <Grid item xs={8}>
+                                        <Item>{contribution.magazinesId}</Item>
+                                    </Grid>
+                                </Grid>
+                            </Typography>
 
-                        {showFeedback[contribution.id] && (
+                            <Accordion
+                                expanded={expanded === `${contribution.id}`}
+                                onChange={handleAccordionToggle(`${contribution.id}`)}
+                            >
+                                <AccordionSummary
+                                    expandIcon={<ExpandMoreIcon />}
+                                    aria-controls={`${index + 1}a-content`}
+                                    id={`${index + 1}a-header`}
+                                    width="100%"
+                                    sx={{ fontSize: '18px' }}
+                                >
+                                    FeedBack
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                    <Grid item xs={4} marginBlockEnd={2}>
+                                        <List
+                                            sx={{
+                                                py: 0,
+                                                width: '100%',
+                                                maxWidth: 360,
+                                                borderRadius: 2,
+                                                border: '1px solid',
+                                                borderColor: 'divider',
+                                                backgroundColor: 'background.paper',
+                                            }}
+                                        >
+                                            {comments.map((comment, index) => (
+                                                <ListItem key={index}>
+                                                    <ListItemText
+                                                        primary={
+                                                            <>
+                                                                {comment.userName} -{' '}
+                                                                <Typography
+                                                                    sx={{
+                                                                        display: 'inline',
+                                                                        fontStyle: 'italic',
+                                                                        color: 'text.secondary',
+                                                                    }}
+                                                                    component="span"
+                                                                >
+                                                                    {comment.email}
+                                                                </Typography>
+                                                            </>
+                                                        }
+                                                        secondary={
+                                                            <>
+                                                                <Typography
+                                                                    sx={{ display: 'inline' }}
+                                                                    component="span"
+                                                                    variant="body2"
+                                                                    color="text.primary"
+                                                                >
+                                                                    {comment.content}
+                                                                </Typography>
+                                                                {' — ' + new Date(comment.createdAt).toLocaleString()}
+                                                            </>
+                                                        }
+                                                    />
+                                                </ListItem>
+                                            ))}
+                                        </List>
+                                    </Grid>
+                                    <Grid item xs={8}>
+                                        <form onSubmit={handlePostComment}>
+                                            <TextField
+                                                id="outlined-multiline-static"
+                                                label="Comment"
+                                                multiline
+                                                rows={2}
+                                                variant="outlined"
+                                                fullWidth
+                                                value={comment}
+                                                onChange={handleCommentChange}
+                                            />
+                                            <Button variant="outlined" type="submit" style={{ marginTop: '10px' }}>
+                                                Post Comment
+                                            </Button>
+                                        </form>
+                                    </Grid>
+                                </AccordionDetails>
+                            </Accordion>
+                        </AccordionDetails>
+                    </Accordion>
+                ))}
+            </table>
+
+            <Dialog open={updateDialogOpen} onClose={() => setUpdateDialogOpen(false)}>
+                <DialogTitle>Update Contribution</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        name="id"
+                        label="Id"
+                        fullWidth
+                        value={updateFormData.id}
+                        required
+                        margin="normal"
+                        disabled
+                    />
+                    <TextField
+                        name="title"
+                        label="Title"
+                        fullWidth
+                        value={updateFormData.title}
+                        onChange={handleInputChange}
+                        required
+                        margin="normal"
+                    />
+                    <TextField
+                        name="description"
+                        label="Description"
+                        fullWidth
+                        multiline
+                        rows={4}
+                        value={updateFormData.description}
+                        onChange={handleInputChange}
+                        required
+                        margin="normal"
+                    />
+                    <FormControl fullWidth margin="normal">
+                        <p>Upload File:</p>
+                        <Input id="filePath" type="file" name="filePath" onChange={handleFileChange} required />
+                        <FormHelperText>Only Word documents and PDF files are allowed.</FormHelperText>
+                        {updateFormData.filePath && (
                             <div>
-                                <div className="row">
-                                    <div className="col-md-8">
-                                        <div className="card">
-                                            <div className="card-body">
-                                                <h5 className="card-title">Feedback</h5>
-                                                <p className="card-text">This is the feedback message.</p>
-                                                <hr />
-                                                <h6 className="card-subtitle mb-2 text-muted">Comments</h6>
-                                                <div className="row">
-                                                    <div className="col">
-                                                        <div className="d-flex flex-start">
-                                                            <div className="flex-grow-1 flex-shrink-1">
-                                                                <div>
-                                                                    <div className="d-flex justify-content-between align-items-center">
-                                                                        <p className="mb-1">
-                                                                            <i className="fas fa-user-circle fa-2x ml-2 me-2"></i>
-                                                                            <b>Maria Smantha </b>
-                                                                            <span className="small">- 2 hours ago</span>
-                                                                        </p>
-                                                                        <a href="#!">
-                                                                            <i className="fas fa-reply fa-xs"></i>
-                                                                            <span className="small"> reply</span>
-                                                                        </a>
-                                                                    </div>
-                                                                    <p className="small mb-0">
-                                                                        It is a long established fact that a reader will
-                                                                        be distracted by the readable content of a page.
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <input
-                                                    type="text"
-                                                    className="form-control"
-                                                    id="commenterName"
-                                                    placeholder="Comment."
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <p>
+                                    {updateFormData.filePath}
+                                    <IconButton onClick={handleDeleteFile}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </p>
                             </div>
                         )}
-                    </li>
-                ))}
-            </ul> */}
+                    </FormControl>
+                    <FormControl fullWidth margin="normal">
+                        <p>Upload Image:</p>
+                        <Input id="imgPath" type="file" name="imgPath" onChange={handleImgChange} required />
+                        <FormHelperText>Only JPEG, PNG, GIF, and WEBP files are allowed.</FormHelperText>
+                        {updateFormData.imgPath && (
+                            <div>
+                                <p>
+                                    {updateFormData.imgPath}
+                                    <IconButton onClick={handleDeleteImg}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </p>
+                            </div>
+                        )}
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setUpdateDialogOpen(false)}>Cancel</Button>
+                    <Button
+                        onClick={() => handleUpdateContribution(updateFormData)}
+                        disabled={
+                            !updateFormData.id ||
+                            !updateFormData.title ||
+                            !updateFormData.description ||
+                            !updateFormData.filePath ||
+                            !updateFormData.imgPath
+                        }
+                    >
+                        Update
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };

@@ -17,8 +17,8 @@ import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import LockResetIcon from '@mui/icons-material/LockReset';
 
-import { useDispatch } from 'react-redux';
-import { logOut } from '~/feature/auth/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { logOut, selectCurrentEmail } from '~/feature/auth/authSlice';
 import { ToastContainer, toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 
@@ -26,6 +26,7 @@ const Topbar = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const colorMode = useContext(ColorModeContext);
+    const email = useSelector(selectCurrentEmail);
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -105,7 +106,7 @@ const Topbar = () => {
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
                 <MenuItem onClick={handleClose}>
-                    <Avatar /> Profile
+                    <Avatar /> {email}
                 </MenuItem>
                 <Divider />
                 <MenuItem onClick={handleClose}>

@@ -155,25 +155,12 @@ const Sidebar = () => {
                                     setSelected={setSelected}
                                 />
                                 <Typography variant="h6" color={colors.grey[300]} sx={{ m: '15px 0 5px 20px' }}>
-                                    Data
+                                    Management
                                 </Typography>
                                 <Item
-                                    title="Manage Users"
+                                    title="Users"
                                     to="/admin/users"
                                     icon={<PeopleOutlinedIcon />}
-                                    selected={selected}
-                                    setSelected={setSelected}
-                                />
-                                <Item
-                                    title="Manage Deadlines"
-                                    to="/admin/deadlines"
-                                    icon={<ContactsOutlinedIcon />}
-                                    selected={selected}
-                                    setSelected={setSelected}
-                                />
-                                <Item
-                                    title="Manage Magazines"
-                                    icon={<ReceiptOutlinedIcon />}
                                     selected={selected}
                                     setSelected={setSelected}
                                 />
@@ -185,14 +172,27 @@ const Sidebar = () => {
                                     setSelected={setSelected}
                                 />
                                 <Item
-                                    title="Calendar"
+                                    title="Deadlines"
+                                    to="/admin/deadlines"
+                                    icon={<ContactsOutlinedIcon />}
+                                    selected={selected}
+                                    setSelected={setSelected}
+                                />
+                                <Item
+                                    title="Magazines"
+                                    icon={<ReceiptOutlinedIcon />}
+                                    selected={selected}
+                                    setSelected={setSelected}
+                                />
+                                <Item
+                                    title="Faculty"
                                     to=""
                                     icon={<CalendarTodayOutlinedIcon />}
                                     selected={selected}
                                     setSelected={setSelected}
                                 />
                                 <Item
-                                    title="FAQ Page"
+                                    title="Roles"
                                     to=""
                                     icon={<HelpOutlineOutlinedIcon />}
                                     selected={selected}
