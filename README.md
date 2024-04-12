@@ -1,6 +1,6 @@
 Welcome to the EnterpriseWeb1640 project repository! This repository contains our enterprise web application's source code and related files.
-# Getting Started
-To get started with the project, follow the instructions below:
+# Working with repository for Dev
+To get started with the project, follow the instructions below:<br>
 First, create a new folder on your local machine, open terminal and follow command:
 ```
 git init
@@ -47,24 +47,16 @@ Display the commit history in a compact format
 ```
 git log --oneline
 ```
-# How to run ReactJS project 
+# Demo web on localhost
+## How to run ReactJS project in Visual Studio Code
 ```
-npm install -g webpack-dev-server
+npm install
 ```
 ```
 npm start
 ```
-                            ......#####......#####.......
-                            .###......###..#.#....###....
-                            ###............#..........##.
-                            ...###......love.......###...
-                            ......####...........###.....
-                            ..........### . ####.........
-                            ..............##.............
-                            ......#####......#####.......
-                            ..###......#.#..#.#....###...
-                            ###............#..........##.
-                            ...###......you.......###....
-                            ......####...........###.....
-                            ..........### .. .###........
-                            .............###.............
+## How to run ASP.NET Core Web API (SQL Server) project in Visual Studio
+Step 1: Change the ConnectionStrings in appsettings.json<br>
+Step 2: Open Package Manager Console, run command ``update-databse``.<br>
+Step 3: Select launch profile EnterpriseWebAPI to run project. <br>
+You can run the project using any launch profile, just ensure that the URL is set to run on port 7136 using HTTP.
