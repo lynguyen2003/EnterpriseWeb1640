@@ -2,6 +2,13 @@ import { apiSlice } from '~/app/api/apiSlice';
 
 export const roleApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
+        getAllRoles: builder.query({
+            query: () => ({
+                url: `/SetupRole`,
+                method: 'GET',
+            }),
+        }),
+
         getUserRole: builder.mutation({
             query: (email) => ({
                 url: `/SetupRole/GetUserRoles?email=${email}`,
@@ -22,4 +29,4 @@ export const roleApiSlice = apiSlice.injectEndpoints({
     }),
 });
 
-export const { useGetUserRoleMutation, useAddUserToRoleMutation } = roleApiSlice;
+export const { useGetAllRolesQuery, useGetUserRoleMutation, useAddUserToRoleMutation } = roleApiSlice;

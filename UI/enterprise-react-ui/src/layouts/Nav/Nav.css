@@ -24,7 +24,6 @@
 .nav-menu {
     display: grid;
     grid-template-columns: repeat(4, auto);
-    grid-gap: 15px;
     list-style: none;
     align-items: center;
     margin-top: auto;

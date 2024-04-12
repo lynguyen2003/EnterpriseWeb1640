@@ -46,7 +46,7 @@ const Sidebar = () => {
     const currentToken = useSelector(selectCurrentToken);
     const { role } = currentToken ? jwtDecode(currentToken) : { role: null };
     const { data: users } = useGetUserByEmailQuery(email);
-    const userName = users ? users[0].userName : 'Unknown User';
+    const fullName = users ? users[0].fullName : 'Unknown User';
     const [isCollapsed, setIsCollapsed] = useState(false);
     const isAdmin = role === 'Admin';
     const isManager = role === 'MarketingManager';
@@ -112,7 +112,7 @@ const Sidebar = () => {
                                     fontWeight="bold"
                                     sx={{ m: '10px 0 0 0' }}
                                 >
-                                    {userName}
+                                    {fullName}
                                 </Typography>
                                 <Typography variant="h5" color={colors.greenAccent[500]}>
                                     {role ? role : 'Unknown Role'}
@@ -175,12 +175,6 @@ const Sidebar = () => {
                                     title="Deadlines"
                                     to="/admin/deadlines"
                                     icon={<ContactsOutlinedIcon />}
-                                    selected={selected}
-                                    setSelected={setSelected}
-                                />
-                                <Item
-                                    title="Magazines"
-                                    icon={<ReceiptOutlinedIcon />}
                                     selected={selected}
                                     setSelected={setSelected}
                                 />

@@ -1,6 +1,5 @@
 ﻿using DataServices.Configurations;
 using DataServices.Data;
-using DataServices.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

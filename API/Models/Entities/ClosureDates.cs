@@ -9,9 +9,10 @@ namespace Models.Entities
     public class ClosureDates
     {
         public int Id { get; set; }
-        public DateTime AcademicYear { get; set; }
+        public string AcademicYear { get; set; }
         public DateTime ClosureDate { get; set; }
         public DateTime FinalClosureDate { get; set; }
+        public bool? IsSet { get; set; } = false;
         public ICollection<Contributions> Contributions { get; set; }
     }
 }

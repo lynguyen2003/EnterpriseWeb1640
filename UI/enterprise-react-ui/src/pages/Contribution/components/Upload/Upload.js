@@ -14,7 +14,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import LoadingSpinner from '~/components/LoadingSpinner';
 
 import { useGetAllClosureDatesQuery } from '~/feature/closureDates/dateApiSlice';
-import { useGetAllMagazineQuery } from '~/feature/magazine/magazineApiSlice';
 import { usePostContributionMutation } from '~/feature/contribution/contributionApiSlice';
 import { useGetUserByEmailQuery } from '~/feature/user/userApiSlice';
 import { addContribution } from '~/feature/contribution/contributionSlice';
@@ -33,7 +32,6 @@ const Upload = () => {
     const [sendEmailRequest] = useSendEmailRequestMutation();
 
     const { data: closureDatesObject } = useGetAllClosureDatesQuery();
-    const { data: magazines, isLoading: magazinesLoading, isError: magazinesError } = useGetAllMagazineQuery();
     const currentEmail = useSelector(selectCurrentEmail);
     const { data: users, isLoading: usersLoading, error: usersError } = useGetUserByEmailQuery(currentEmail);
 
@@ -44,10 +42,7 @@ const Upload = () => {
         imgPath: '',
         closureDatesId: '',
         usersId: '',
-        magazinesId: '',
     });
-
-    console.log(formData);
 
     useEffect(() => {
         if (!usersLoading && !usersError && users) {
@@ -150,14 +145,6 @@ const Upload = () => {
         }));
     };
 
-    const handleMagazineSelect = (e) => {
-        const selectedMagazineId = e.target.value;
-        setFormData({
-            ...formData,
-            magazinesId: selectedMagazineId,
-        });
-    };
-
     const handleAcademicYearChange = (e) => {
         const selectedAcademicYear = e.target.value;
         setSelectedAcademicYear(selectedAcademicYear);
@@ -211,7 +198,6 @@ const Upload = () => {
                 description: '',
                 filePath: '',
                 imgPath: '',
-                magazinesId: '',
             });
             toast.success('Submitted successfully!');
         } catch (error) {
@@ -321,27 +307,6 @@ const Upload = () => {
                         </select>
                     </Box>
                 </Box>
-            </div>
-            <div>
-                <select
-                    className="form-select"
-                    aria-label="Default select example"
-                    value={formData.magazinesId}
-                    onChange={handleMagazineSelect}
-                >
-                    <option defaultValue>Select magazine</option>
-                    {magazinesLoading ? (
-                        <option>Loading...</option>
-                    ) : magazinesError ? (
-                        <option>Error loading magazines.</option>
-                    ) : (
-                        magazines.map((magazine) => (
-                            <option key={magazine.id} value={magazine.id}>
-                                {magazine.title}
-                            </option>
-                        ))
-                    )}
-                </select>
             </div>
 
             <div className="form-check">

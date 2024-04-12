@@ -29,6 +29,7 @@ const Users = () => {
     const [formUser, setFormUser] = useState([]);
     const [formData, setFormData] = useState({
         userName: '',
+        fullName: '',
         email: '',
         phoneNumber: '',
         role: '',
@@ -63,6 +64,7 @@ const Users = () => {
                 return {
                     id: user.id,
                     userName: user.userName,
+                    fullName: user.fullName,
                     email: user.email,
                     phone: user.phoneNumber,
                     facultiesId: user.facultiesId,
@@ -81,9 +83,13 @@ const Users = () => {
         { field: 'id', headerName: 'ID' },
         {
             field: 'userName',
-            headerName: 'Name',
+            headerName: 'User Name',
             flex: 1,
-            cellClassName: 'name-column--cell',
+        },
+        {
+            field: 'fullName',
+            headerName: 'Full Name',
+            flex: 1,
         },
         {
             field: 'email',
@@ -162,6 +168,7 @@ const Users = () => {
                 setEditRow(null);
                 setFormData({
                     userName: '',
+                    fullName: '',
                     email: '',
                     phoneNumber: '',
                     role: '',
@@ -221,7 +228,7 @@ const Users = () => {
                 }}
             >
                 <Dialog open={openRoleDialog} onClose={() => setOpenRoleDialog(false)}>
-                    <DialogTitle>Add/Update Role</DialogTitle>
+                    <DialogTitle>Update Role</DialogTitle>
                     <DialogContent>
                         <form onSubmit={handleRoleSubmit}>
                             <TextField
@@ -262,7 +269,7 @@ const Users = () => {
                     </DialogContent>
                 </Dialog>
                 <Button variant="outlined" onClick={() => setOpenRoleDialog(true)}>
-                    Add/Update Role
+                    Update Role
                 </Button>
                 <Dialog open={open} onClose={() => setOpen(false)}>
                     <DialogTitle>Update User</DialogTitle>

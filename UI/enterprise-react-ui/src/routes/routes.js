@@ -18,9 +18,12 @@ import Deadlines from '~/pages/Admin/deadline';
 import Coordinator from '~/pages/Coordinator';
 import ForgotPwd from '~/pages/Password/ForgotPwd';
 import ResetPwd from '~/pages/Password/ResetPwd';
+import Guest from '~/pages/Guest';
 
 const privateRoutes = [
     { path: '/contribution', component: Contribution, layout: DefaultLayout, requiredRoles: 'Student' },
+
+    { path: '/contribution-list', component: Guest, layout: DefaultLayout, requiredRoles: ['Guest', 'Student'] },
 
     { path: '/forgot-password', component: ForgotPwd, layout: null, requiredRoles: null },
     { path: '/reset-password', component: ResetPwd, layout: null, requiredRoles: null },

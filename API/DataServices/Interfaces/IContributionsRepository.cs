@@ -1,4 +1,5 @@
-﻿using Models.Entities;
+﻿using Models.DTO;
+using Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace DataServices.Interfaces
 {
     public interface IContributionsRepository : IGenericRepository<Contributions>
     {
+        Task<IEnumerable<Contributions>> GetAll(PaginationDTO paginationDTO);
         Task<IEnumerable<Contributions>> GetByUserId(string userId);
     }
 }

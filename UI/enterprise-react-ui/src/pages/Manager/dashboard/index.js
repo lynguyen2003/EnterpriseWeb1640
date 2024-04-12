@@ -24,7 +24,7 @@ import { toast } from 'react-toastify';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
-import { useGetAllContributionQuery } from '~/feature/contribution/contributionApiSlice';
+import { useGetAllContributionWithFilterQuery } from '~/feature/contribution/contributionApiSlice';
 import { useGetUserByUserIdMutation } from '~/feature/user/userApiSlice';
 import { useGetFacultyByIdMutation } from '~/feature/faculty/facultyApiSlice';
 
@@ -36,7 +36,8 @@ const Dashboard = () => {
     const [imageUrl, setImageUrl] = useState(null);
     const [selectedRow, setSelectedRow] = useState(null);
     const [open, setOpen] = useState(false);
-    const { data: contributions, error, isLoading } = useGetAllContributionQuery();
+    const [isApproved, setIsApproved] = useState(true);
+    const { data: contributions, error, isLoading } = useGetAllContributionWithFilterQuery(isApproved);
     const [getUserByUserId] = useGetUserByUserIdMutation();
     const [getFacultyById] = useGetFacultyByIdMutation();
 
@@ -158,12 +159,6 @@ const Dashboard = () => {
             width: 120,
         },
         {
-            field: 'magazinesId',
-            headerName: 'Magazine',
-            width: 100,
-        },
-
-        {
             field: 'facultyName',
             headerName: 'Faculties',
             width: 150,
@@ -273,8 +268,12 @@ const Dashboard = () => {
                     onClose={() => setOpen(false)}
                     sx={{ '& .MuiDialog-paper': { maxWidth: 'fit-content' } }}
                 >
-                    <DialogTitle>
-                        <Typography variant="h5" sx={{ color: colors.blueAccent[700], fontWeight: 800, fontSize: 18 }}>
+                    <DialogTitle
+                        sx={{
+                            backgroundColor: colors.blueAccent[700],
+                        }}
+                    >
+                        <Typography variant="h5" sx={{ fontWeight: 800, fontSize: 18 }}>
                             Contribution Details
                         </Typography>
                     </DialogTitle>
@@ -284,8 +283,19 @@ const Dashboard = () => {
                             aria-controls="panel1a-content"
                             id="panel1a-header"
                             width="100%"
+                            sx={{
+                                backgroundColor: colors.blueAccent[900],
+                                color: colors.grey[100],
+                            }}
                         >
-                            <Typography>{selectedRow.title}</Typography>
+                            <Typography
+                                sx={{
+                                    fontSize: '16px',
+                                    color: colors.grey[100],
+                                }}
+                            >
+                                {selectedRow.title}
+                            </Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <Typography>
@@ -300,7 +310,9 @@ const Dashboard = () => {
                                         <Item>Description</Item>
                                     </Grid>
                                     <Grid item xs={8}>
-                                        <Item>{selectedRow.description}</Item>
+                                        <Item style={{ overflowWrap: 'break-word', wordWrap: 'break-word' }}>
+                                            {selectedRow.description}
+                                        </Item>
                                     </Grid>
                                     <Grid item xs={4}>
                                         <Item>Upload Date</Item>
@@ -343,12 +355,6 @@ const Dashboard = () => {
                                                 {selectedRow.filePath}
                                             </a>
                                         </Item>
-                                    </Grid>
-                                    <Grid item xs={4}>
-                                        <Item>Magazine</Item>
-                                    </Grid>
-                                    <Grid item xs={8}>
-                                        <Item>{selectedRow.magazinesId}</Item>
                                     </Grid>
                                 </Grid>
                             </Typography>

@@ -13,10 +13,8 @@ namespace DataServices.Repositories
     public class UnitOfWorks : IUnitOfWorks
     {
         public IContributionsRepository Contributions { get; }
-        public IMagazinesRepository Magazines { get; }
-        public IImagesRepository Images { get; }
-        public IFeedbacksRepository Feedbacks { get; }
         public IUsersRepository Users { get; }
+        public ICommentsRepository Comments { get; }
         private readonly DataContext _context;
 
         public UnitOfWorks(DataContext context, ILoggerFactory loggerFactory) 
@@ -25,10 +23,8 @@ namespace DataServices.Repositories
             var logger = loggerFactory.CreateLogger("log");
 
             Contributions = new ContributionsRepository(logger, _context);
-            Magazines = new MagazinesRepository(logger, _context);
-            Images = new ImagesRepository(logger, _context);
-            Feedbacks = new FeedbacksRepository(logger, _context);
             Users = new UsersRepository(logger, _context);
+            Comments = new CommentsRepository(logger, _context);
         }
 
 

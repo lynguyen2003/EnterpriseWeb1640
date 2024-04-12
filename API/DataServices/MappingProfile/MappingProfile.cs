@@ -21,24 +21,15 @@ namespace DataServices.MappingProfile
 				.ForMember(dest => dest.Id, opt => opt.Ignore())
 				.ForMember(dest => dest.UploadDate, opt => opt.MapFrom(src => DateTime.Now));
 
-			CreateMap<Images, ImagesResponseDTO>();
-			CreateMap<ImagesRequestCreateDTO, Images>();
-			CreateMap<ImagesRequestUpdateDTO, Images>();
-
-            CreateMap<Magazines, MagazinesResponseDTO>();
-            CreateMap<MagazinesRequestCreateDTO, Magazines>();
-            CreateMap<MagazinesRequestUpdateDTO, Magazines>();
-
-            CreateMap<Feedbacks, FeedbacksResponseDTO>();
-            CreateMap<FeedbacksRequestCreateDTO, Feedbacks>()
-                .ForMember(dest => dest.UploadDate, opt => opt.MapFrom(src => DateTime.Now));
-            CreateMap<FeedbacksRequestUpdateDTO, Feedbacks>();
-
             CreateMap<Users, UsersResponseDTO>();
             CreateMap<UsersRequestCreateDTO, Users>();
             CreateMap<UsersRequestUpdateDTO, Users>();
 
             CreateMap<Users, UsersResponseDTO>();
+
+            CreateMap<Comments, CommentsResponseDTO>();
+            CreateMap<CommentsRequestCreateDTO, Comments>()
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.Now));
 
         }
     }

@@ -32,6 +32,7 @@ import { useGetFacultyByIdMutation } from '~/feature/faculty/facultyApiSlice';
 import { selectCurrentEmail } from '~/feature/auth/authSlice';
 import { useGetUserByEmailQuery } from '~/feature/user/userApiSlice';
 import { useGetCommentsByContributionIdMutation, useAddCommentMutation } from '~/feature/comment/commentApiSlice';
+import { usePutContributionMutation } from '~/feature/contribution/contributionApiSlice';
 
 const Coordinator = () => {
     const theme = useTheme();
@@ -44,12 +45,12 @@ const Coordinator = () => {
     const [open, setOpen] = useState(false);
     const [expanded, setExpanded] = useState(false);
 
-    const { data: contributions, error, isLoading } = useGetAllContributionQuery();
+    const { data: contributions, error, isLoading, refetch } = useGetAllContributionQuery();
     const [getUserByUserId] = useGetUserByUserIdMutation();
     const [getFacultyById] = useGetFacultyByIdMutation();
     const [getComments] = useGetCommentsByContributionIdMutation();
     const [postComment] = useAddCommentMutation();
-
+    const [updateContribution] = usePutContributionMutation();
     const email = useSelector(selectCurrentEmail);
     const { data: currentUser } = useGetUserByEmailQuery(email);
 
@@ -79,7 +80,10 @@ const Coordinator = () => {
                 });
 
                 const filteredContributions = contributionsWithUsersAndFaculties.filter(
-                    (contribution) => contribution.facultiesId === currentUser[0].facultiesId,
+                    (contribution) =>
+                        currentUser &&
+                        currentUser.length > 0 &&
+                        contribution.facultiesId === currentUser[0].facultiesId,
                 );
 
                 setRows(filteredContributions);
@@ -148,6 +152,26 @@ const Coordinator = () => {
         }
     };
 
+    const handleSetApprove = async (row) => {
+        try {
+            const updatedRow = {
+                id: row.id,
+                title: row.title,
+                description: row.description,
+                filePath: row.filePath,
+                imgPath: row.imgPath,
+                isApproved: !row.isApproved,
+            };
+            await updateContribution(updatedRow).unwrap();
+
+            refetch();
+            toast.success(`Contribution ${updatedRow.isApproved ? 'published' : 'unpublished'} successfully`);
+        } catch (error) {
+            console.error('Error publishing:', error);
+            toast.error('Failed to publish');
+        }
+    };
+
     const handleAccordionToggle = (panel) => (event, newExpanded) => {
         setExpanded(newExpanded ? panel : false);
         if (newExpanded) {
@@ -175,23 +199,21 @@ const Coordinator = () => {
         {
             field: 'title',
             headerName: 'Title',
-            width: 100,
+            width: 200,
         },
         {
             field: 'uploadDate',
             headerName: 'Upload Date',
-            width: 120,
         },
 
         {
             field: 'isApproved',
-            headerName: 'Published',
-            width: 150,
+            headerName: 'Approve',
         },
         {
             field: 'filePath',
             headerName: 'Download File',
-            width: 150,
+            width: 130,
             renderCell: (params) => (
                 <a
                     href={params.value}
@@ -204,23 +226,40 @@ const Coordinator = () => {
                 </a>
             ),
         },
-
         {
             field: 'viewDetails',
             headerName: '',
-            width: 150,
-            flex: 1,
+            width: 130,
             renderCell: (params) => (
                 <Button
                     onClick={() => handleViewDetails(params.row)}
                     sx={{
-                        color: colors.grey[100],
+                        color: colors.grey[300],
                         fontSize: '12px',
                         fontWeight: 'bold',
                         padding: '10px 20px',
                     }}
                 >
                     View Details
+                </Button>
+            ),
+        },
+
+        {
+            field: 'published',
+            headerName: '',
+            width: 150,
+            renderCell: (params) => (
+                <Button
+                    onClick={() => handleSetApprove(params.row)}
+                    sx={{
+                        color: colors.blueAccent[500],
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        padding: '10px 20px',
+                    }}
+                >
+                    Published
                 </Button>
             ),
         },
@@ -301,7 +340,9 @@ const Coordinator = () => {
                                         <Item>Description</Item>
                                     </Grid>
                                     <Grid item xs={8}>
-                                        <Item>{selectedRow.description}</Item>
+                                        <Item style={{ overflowWrap: 'break-word', wordWrap: 'break-word' }}>
+                                            {selectedRow.description}
+                                        </Item>
                                     </Grid>
                                     <Grid item xs={4}>
                                         <Item>Upload Date</Item>
@@ -344,12 +385,6 @@ const Coordinator = () => {
                                                 {selectedRow.filePath}
                                             </a>
                                         </Item>
-                                    </Grid>
-                                    <Grid item xs={4}>
-                                        <Item>Magazine</Item>
-                                    </Grid>
-                                    <Grid item xs={8}>
-                                        <Item>{selectedRow.magazinesId}</Item>
                                     </Grid>
                                 </Grid>
                             </Typography>

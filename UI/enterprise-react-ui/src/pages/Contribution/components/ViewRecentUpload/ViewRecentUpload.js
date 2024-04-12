@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
     useGetContributionByUserIdQuery,
     usePutContributionMutation,
 } from '~/feature/contribution/contributionApiSlice';
+import { useGetClosureDateByIdQuery } from '~/feature/closureDates/dateApiSlice';
 import { useGetUserByEmailQuery } from '~/feature/user/userApiSlice';
 import { fileDb } from '~/Config';
 import { ref, getDownloadURL, uploadBytes, deleteObject } from 'firebase/storage';
@@ -63,11 +64,10 @@ const ViewRecent = () => {
     const [getComments] = useGetCommentsByContributionIdMutation();
     const [postComment] = useAddCommentMutation();
 
-    /* useEffect(() => {
-        contributions.forEach((contribution) => {
-            handleDisplayImg(contribution.imgPath);
-        });
-    }, [contributions]); */
+    const { data: closureDates } = useGetClosureDateByIdQuery(selectedRow?.closureDatesId);
+    const finalClosureDate = new Date(closureDates?.finalClosureDate);
+    const currentDate = new Date();
+    const isUpdateDisabled = finalClosureDate < currentDate;
 
     const Item = styled(Paper)(({ theme }) => ({
         padding: theme.spacing(1),
@@ -208,6 +208,11 @@ const ViewRecent = () => {
     };
 
     const handleUpdateContribution = async (data) => {
+        if (isUpdateDisabled) {
+            toast.error('Cannot update contribution after the final closure date');
+            return;
+        }
+
         try {
             await updateContribution(data).unwrap();
 
@@ -440,7 +445,34 @@ const ViewRecent = () => {
             </table>
 
             <Dialog open={updateDialogOpen} onClose={() => setUpdateDialogOpen(false)}>
-                <DialogTitle>Update Contribution</DialogTitle>
+                <DialogTitle
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        backgroundColor: '#f5f5f5',
+                    }}
+                >
+                    <Typography variant="h6">Update Contribution</Typography>
+                    <Typography
+                        variant="overline"
+                        style={{
+                            marginRight: '38px',
+                            color: finalClosureDate < currentDate ? 'red' : 'black',
+                        }}
+                    >
+                        Final Edit Submission: {new Date(finalClosureDate).toLocaleString()}
+                    </Typography>
+                </DialogTitle>
+                {new Date(finalClosureDate) < new Date() && (
+                    <Typography
+                        variant="caption"
+                        color={'red'}
+                        sx={{ marginLeft: 'auto', marginRight: '38px', marginTop: '5px' }}
+                    >
+                        Submit Expired
+                    </Typography>
+                )}
                 <DialogContent>
                     <TextField
                         name="id"
