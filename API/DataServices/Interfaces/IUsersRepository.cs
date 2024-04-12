@@ -11,5 +11,6 @@ namespace DataServices.Interfaces
     {
         Task<IEnumerable<Users>> GetUserByEmail(string email);
         Task<IEnumerable<Users>> GetUserByUserId(string userId);
+        Task<IEnumerable<Users>> GetUserByFacultiesId(int facultiesId);
     }
 }

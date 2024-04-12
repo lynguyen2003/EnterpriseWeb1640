@@ -1,4 +1,4 @@
-import { Box, IconButton, useTheme } from '@mui/material';
+import { Box, IconButton, useTheme, Select, MenuItem } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { tokens } from '../../../theme';
 import Header from '../../../components/Header';
@@ -26,6 +26,7 @@ const Deadlines = () => {
         academicYear: '',
         closureDate: '',
         finalClosureDate: '',
+        isSet: '',
     });
     const [open, setOpen] = useState(false);
     const colors = tokens(theme.palette.mode);
@@ -36,23 +37,27 @@ const Deadlines = () => {
         {
             field: 'academicYear',
             headerName: 'Academic Year',
-            type: 'date',
+            type: 'text',
             width: 180,
-            editable: true,
         },
         {
             field: 'closureDate',
             headerName: 'Submission Date',
             type: 'dateTime',
             width: 220,
-            editable: true,
         },
         {
             field: 'finalClosureDate',
             headerName: 'Final Submission Date',
             type: 'dateTime',
             width: 220,
-            editable: true,
+            flex: 1,
+        },
+        {
+            field: 'isSet',
+            headerName: 'Set Date',
+            type: 'text',
+            width: 220,
             flex: 1,
         },
         {
@@ -95,18 +100,18 @@ const Deadlines = () => {
     const handleUpdateClick = (id) => {
         const row = rows.find((row) => row.id === id);
         setEditRow(row);
+        setFormPostData({ ...formPostData, id: row.id });
         setOpen(true);
     };
 
     const handleUpdate = async () => {
         try {
-            const id = editRow.id;
-            console.log('updatedClosureDate', id);
-            const response = await updateClosureDate({ id, formPostData });
+            const response = await updateClosureDate(formPostData);
             if (response.error) {
                 throw response.error;
             }
             refetch();
+            setOpen(false);
             toast.success('Closure Date updated successfully!');
         } catch (error) {
             console.error('Failed to update closure date:', error);
@@ -131,7 +136,7 @@ const Deadlines = () => {
         if (closureDates) {
             const formattedClosureDates = closureDates.map((date) => ({
                 ...date,
-                academicYear: new Date(date.academicYear),
+                academicYear: date.academicYear,
                 closureDate: new Date(date.closureDate),
                 finalClosureDate: new Date(date.finalClosureDate),
             }));
@@ -184,7 +189,7 @@ const Deadlines = () => {
                             margin="dense"
                             id="academicYear"
                             label="Academic Year"
-                            type="date"
+                            type="text"
                             fullWidth
                             value={formPostData.academicYear}
                             onChange={(e) => setFormPostData({ ...formPostData, academicYear: e.target.value })}
@@ -216,6 +221,21 @@ const Deadlines = () => {
                                 shrink: true,
                             }}
                         />
+                        <TextField
+                            select
+                            margin="dense"
+                            id="isSet"
+                            label="Set Date"
+                            fullWidth
+                            value={formPostData.isSet}
+                            onChange={(e) => setFormPostData({ ...formPostData, isSet: e.target.value })}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        >
+                            <MenuItem value={true}>True</MenuItem>
+                            <MenuItem value={false}>False</MenuItem>
+                        </TextField>
                     </DialogContent>
                     <DialogActions>
                         <Button

@@ -37,7 +37,8 @@ namespace EnpterpriseWebApi.Controllers
                         Id = closureDate.Id,
                         AcademicYear = closureDate.AcademicYear,
                         ClosureDate = closureDate.ClosureDate,
-                        FinalClosureDate = closureDate.FinalClosureDate
+                        FinalClosureDate = closureDate.FinalClosureDate,
+                        IsSet = closureDate.IsSet
                     });
                 }
                 return Ok(closureDatesDTO);
@@ -63,7 +64,8 @@ namespace EnpterpriseWebApi.Controllers
                     Id = closureDate.Id,
                     AcademicYear = closureDate.AcademicYear,
                     ClosureDate = closureDate.ClosureDate,
-                    FinalClosureDate = closureDate.FinalClosureDate
+                    FinalClosureDate = closureDate.FinalClosureDate,
+                    IsSet = closureDate.IsSet
                 };
                 return Ok(closureDateDTO);
             }
@@ -83,7 +85,8 @@ namespace EnpterpriseWebApi.Controllers
                 {
                     AcademicYear = closureDate.AcademicYear,
                     ClosureDate = closureDate.ClosureDate,
-                    FinalClosureDate = closureDate.FinalClosureDate
+                    FinalClosureDate = closureDate.FinalClosureDate,
+                    IsSet = closureDate.IsSet
                 };
                 await _closureDatesRepository.AddClosureDate(closureDateEntity);
                 var createdClosureDateDTO = new ClosureDatesDTO
@@ -91,7 +94,8 @@ namespace EnpterpriseWebApi.Controllers
                     Id = closureDateEntity.Id,
                     AcademicYear = closureDateEntity.AcademicYear,
                     ClosureDate = closureDateEntity.ClosureDate,
-                    FinalClosureDate = closureDateEntity.FinalClosureDate
+                    FinalClosureDate = closureDateEntity.FinalClosureDate,
+                    IsSet = closureDateEntity.IsSet
                 };
                 return CreatedAtAction(nameof(GetClosureDateById), new { id = createdClosureDateDTO.Id }, createdClosureDateDTO);
             }
@@ -115,6 +119,7 @@ namespace EnpterpriseWebApi.Controllers
                 existingClosureDate.AcademicYear = closureDate.AcademicYear;
                 existingClosureDate.ClosureDate = closureDate.ClosureDate;
                 existingClosureDate.FinalClosureDate = closureDate.FinalClosureDate;
+                existingClosureDate.IsSet = closureDate.IsSet;
                 await _closureDatesRepository.UpdateClosureDate(id, existingClosureDate);
                 return NoContent();
             }

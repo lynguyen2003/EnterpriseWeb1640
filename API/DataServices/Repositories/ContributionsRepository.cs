@@ -2,6 +2,7 @@
 using DataServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Models.DTO;
 using Models.Entities;
 using System;
 using System.Collections;
@@ -16,6 +17,18 @@ namespace DataServices.Repositories
     {
         public ContributionsRepository(ILogger logger, DataContext context) : base(logger, context)
         {
+        }
+
+        public virtual async Task<IEnumerable<Contributions>> GetAll(PaginationDTO paginationDTO)
+        {
+            var query = _dbSet.AsQueryable();
+            if (paginationDTO.IsApproved.HasValue)
+            {
+                query = query.Where(c => c.IsApproved == paginationDTO.IsApproved);
+            }
+            return await query.Skip((paginationDTO.PageNum - 1) * paginationDTO.PageSize)
+                .Take(paginationDTO.PageSize)
+                .ToListAsync();
         }
 
         public override async Task<IEnumerable<Contributions>> GetAll()
@@ -47,6 +60,7 @@ namespace DataServices.Repositories
                     existingContributions.Description = contributions.Description;
                     existingContributions.FilePath = contributions.FilePath;
                     existingContributions.ImgPath = contributions.ImgPath;
+                    existingContributions.IsApproved = contributions.IsApproved;
                     //TO DO:
 
                     await _context.SaveChangesAsync();

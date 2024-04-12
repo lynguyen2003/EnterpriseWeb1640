@@ -51,31 +51,31 @@ namespace DataServices.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "6df8a542-c22c-415b-ad62-74043acc1aa8",
+                            Id = "c9f2cfe5-89ce-4f54-bb3c-2dc01528d8dd",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "6dac4041-a2c9-487f-92d4-e9ffc953579c",
+                            Id = "bb0fe9e1-ff03-4ac0-b81b-4674c5904404",
                             Name = "MarketingManager",
                             NormalizedName = "MARKETINGMANAGER"
                         },
                         new
                         {
-                            Id = "8d92f0d7-7ec1-4d72-b142-a7370f40b6ae",
+                            Id = "fcd0d850-67ea-4dd7-959e-164f952fc743",
                             Name = "MarketingCoordinator",
                             NormalizedName = "MARKETINGCOORDINATOR"
                         },
                         new
                         {
-                            Id = "1528ec0e-986f-422b-8cb1-41edd729311d",
+                            Id = "6a98f26f-699e-461f-857c-36ed1c679653",
                             Name = "Student",
                             NormalizedName = "STUDENT"
                         },
                         new
                         {
-                            Id = "de84815c-55e6-499e-a0a7-3e58a2727cd7",
+                            Id = "961f424e-9a22-4653-ba72-603c9a2bfaf1",
                             Name = "Guest",
                             NormalizedName = "GUEST"
                         });
@@ -268,14 +268,18 @@ namespace DataServices.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("AcademicYear")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("AcademicYear")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ClosureDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("FinalClosureDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool?>("IsSet")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -285,10 +289,44 @@ namespace DataServices.Migrations
                         new
                         {
                             Id = 1,
-                            AcademicYear = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AcademicYear = "2022/2025",
                             ClosureDate = new DateTime(2024, 4, 25, 11, 0, 0, 0, DateTimeKind.Unspecified),
-                            FinalClosureDate = new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            FinalClosureDate = new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsSet = false
                         });
+                });
+
+            modelBuilder.Entity("Models.Entities.Comments", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ContributionId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContributionId");
+
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("Models.Entities.Contributions", b =>
@@ -314,8 +352,8 @@ namespace DataServices.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MagazinesId")
-                        .HasColumnType("int");
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -331,8 +369,6 @@ namespace DataServices.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClosureDatesId");
-
-                    b.HasIndex("MagazinesId");
 
                     b.HasIndex("UsersId");
 
@@ -383,94 +419,6 @@ namespace DataServices.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Models.Entities.Feedbacks", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Feedback")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UploadDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UsersId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("Feedbacks");
-                });
-
-            modelBuilder.Entity("Models.Entities.Magazines", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CoverImagePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Magazines");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CoverImagePath = "image1.jpg",
-                            Description = "Description for Magazine 1",
-                            Title = "Greenwich Gazette: Exploring Campus Life and Beyond"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CoverImagePath = "image2.jpg",
-                            Description = "Description for Magazine 2",
-                            Title = "Academic Insights: Greenwich University's Research & Scholarship Digest"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CoverImagePath = "image3.jpg",
-                            Description = "Description for Magazine 3",
-                            Title = "The Greenwich Pioneer: Celebrating Innovation and Leadership on Campus"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CoverImagePath = "image4.jpg",
-                            Description = "Description for Magazine 4",
-                            Title = "Campus Chronicles: Stories, Events, and Perspectives from Greenwich University"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CoverImagePath = "image5.jpg",
-                            Description = "Description for Magazine 5",
-                            Title = "Greenwich Perspectives: Diverse Voices, Shared Experiences in our University Community"
-                        });
-                });
-
             modelBuilder.Entity("Models.Entities.RefreshToken", b =>
                 {
                     b.Property<int>("Id")
@@ -514,6 +462,10 @@ namespace DataServices.Migrations
 
                     b.Property<int>("FacultiesId")
                         .HasColumnType("int");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasIndex("FacultiesId");
 
@@ -571,17 +523,22 @@ namespace DataServices.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Models.Entities.Comments", b =>
+                {
+                    b.HasOne("Models.Entities.Contributions", "Contribution")
+                        .WithMany()
+                        .HasForeignKey("ContributionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Contribution");
+                });
+
             modelBuilder.Entity("Models.Entities.Contributions", b =>
                 {
                     b.HasOne("Models.Entities.ClosureDates", "ClosureDates")
                         .WithMany("Contributions")
                         .HasForeignKey("ClosureDatesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Models.Entities.Magazines", "Magazines")
-                        .WithMany("Contributions")
-                        .HasForeignKey("MagazinesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -593,20 +550,7 @@ namespace DataServices.Migrations
 
                     b.Navigation("ClosureDates");
 
-                    b.Navigation("Magazines");
-
                     b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("Models.Entities.Feedbacks", b =>
-                {
-                    b.HasOne("Models.Entities.Users", "User")
-                        .WithMany("Feedbacks")
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Models.Entities.Users", b =>
@@ -630,16 +574,9 @@ namespace DataServices.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("Models.Entities.Magazines", b =>
-                {
-                    b.Navigation("Contributions");
-                });
-
             modelBuilder.Entity("Models.Entities.Users", b =>
                 {
                     b.Navigation("Contributions");
-
-                    b.Navigation("Feedbacks");
                 });
 #pragma warning restore 612, 618
         }

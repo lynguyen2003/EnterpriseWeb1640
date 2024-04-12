@@ -22,9 +22,9 @@ namespace DataServices.Data
         public DbSet<ClosureDates> ClosureDates { get; set; }
         public DbSet<Contributions> Contributions { get; set; }
         public DbSet<Faculties> Faculties { get; set; }
-        public DbSet<Feedbacks> Feedbacks { get; set; }
-        public DbSet<Magazines> Magazines { get; set; }
+        public DbSet<Comments> Comments { get; set; }
 
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -32,9 +32,9 @@ namespace DataServices.Data
                 new ClosureDates
                 {
                     Id = 1,
-                    AcademicYear = new DateTime(2024, 1, 1),
+                    AcademicYear = new string("2022/2025"),
                     ClosureDate = new DateTime(2024, 4, 25, 11, 00, 00),
-                    FinalClosureDate = new DateTime(2024, 5, 1)
+                    FinalClosureDate = new DateTime(2024, 5, 1),
                 }
             );
 
@@ -63,44 +63,6 @@ namespace DataServices.Data
                 {
                     Id = 5,
                     FacultyName = "Faculty of Information Technology"
-                }
-            );
-
-            modelBuilder.Entity<Magazines>().HasData(
-                new Magazines
-                {
-                    Id = 1,
-                    Title = "Greenwich Gazette: Exploring Campus Life and Beyond",
-                    Description = "Description for Magazine 1",
-                    CoverImagePath = "image1.jpg"
-                },
-                new Magazines
-                {
-                    Id = 2,
-                    Title = "Academic Insights: Greenwich University's Research & Scholarship Digest",
-                    Description = "Description for Magazine 2",
-                    CoverImagePath = "image2.jpg"
-                },
-                new Magazines
-                {
-                    Id = 3,
-                    Title = "The Greenwich Pioneer: Celebrating Innovation and Leadership on Campus",
-                    Description = "Description for Magazine 3",
-                    CoverImagePath = "image3.jpg"
-                },
-                new Magazines
-                {
-                    Id = 4,
-                    Title = "Campus Chronicles: Stories, Events, and Perspectives from Greenwich University",
-                    Description = "Description for Magazine 4",
-                    CoverImagePath = "image4.jpg"
-                },
-                new Magazines
-                {
-                    Id = 5,
-                    Title = "Greenwich Perspectives: Diverse Voices, Shared Experiences in our University Community",
-                    Description = "Description for Magazine 5",
-                    CoverImagePath = "image5.jpg"
                 }
             );
 

@@ -32,8 +32,8 @@ export const navbarItems = [
         icon: 'fa-solid fa-book-open',
     },
     {
-        title: ' Contribution List',
-        url: '/guest/contribution-list',
+        title: ' Published Contribution',
+        url: '/contribution-list',
         cName: 'nav-link',
         icon: 'fa-solid fa-book-open',
     },

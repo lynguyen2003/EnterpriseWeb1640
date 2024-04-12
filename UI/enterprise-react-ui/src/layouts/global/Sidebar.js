@@ -46,7 +46,7 @@ const Sidebar = () => {
     const currentToken = useSelector(selectCurrentToken);
     const { role } = currentToken ? jwtDecode(currentToken) : { role: null };
     const { data: users } = useGetUserByEmailQuery(email);
-    const userName = users ? users[0].userName : 'Unknown User';
+    const fullName = users ? users[0].fullName : 'Unknown User';
     const [isCollapsed, setIsCollapsed] = useState(false);
     const isAdmin = role === 'Admin';
     const isManager = role === 'MarketingManager';
@@ -112,7 +112,7 @@ const Sidebar = () => {
                                     fontWeight="bold"
                                     sx={{ m: '10px 0 0 0' }}
                                 >
-                                    {userName}
+                                    {fullName}
                                 </Typography>
                                 <Typography variant="h5" color={colors.greenAccent[500]}>
                                     {role ? role : 'Unknown Role'}
@@ -155,49 +155,39 @@ const Sidebar = () => {
                                     setSelected={setSelected}
                                 />
                                 <Typography variant="h6" color={colors.grey[300]} sx={{ m: '15px 0 5px 20px' }}>
-                                    Data
+                                    Management
                                 </Typography>
                                 <Item
-                                    title="Manage Users"
+                                    title="Users"
                                     to="/admin/users"
                                     icon={<PeopleOutlinedIcon />}
                                     selected={selected}
                                     setSelected={setSelected}
                                 />
                                 <Item
-                                    title="Manage Deadlines"
-                                    to="/admin/deadlines"
-                                    icon={<ContactsOutlinedIcon />}
-                                    selected={selected}
-                                    setSelected={setSelected}
-                                />
-                                <Item
-                                    title="Manage Magazines"
-                                    icon={<ReceiptOutlinedIcon />}
-                                    selected={selected}
-                                    setSelected={setSelected}
-                                />
-
-                                <Typography variant="h6" color={colors.grey[300]} sx={{ m: '15px 0 5px 20px' }}>
-                                    Pages
-                                </Typography>
-                                <Item
-                                    title="Register Users"
+                                    title="Create Users"
                                     to="/admin/form"
                                     icon={<PersonOutlinedIcon />}
                                     selected={selected}
                                     setSelected={setSelected}
                                 />
                                 <Item
-                                    title="Calendar"
-                                    to="/admin/calendar"
+                                    title="Deadlines"
+                                    to="/admin/deadlines"
+                                    icon={<ContactsOutlinedIcon />}
+                                    selected={selected}
+                                    setSelected={setSelected}
+                                />
+                                <Item
+                                    title="Faculty"
+                                    to=""
                                     icon={<CalendarTodayOutlinedIcon />}
                                     selected={selected}
                                     setSelected={setSelected}
                                 />
                                 <Item
-                                    title="FAQ Page"
-                                    to="/admin/faq"
+                                    title="Roles"
+                                    to=""
                                     icon={<HelpOutlineOutlinedIcon />}
                                     selected={selected}
                                     setSelected={setSelected}

@@ -11,6 +11,11 @@ using Models.Entities;
 using EnpterpriseWebApi.Controllers;
 using DataServices.Interfaces;
 using Models.DTO.Response;
+using Models.DTO;
+using System.Web;
+using DataServices.Service;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using DataServices.JwtServices;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -18,9 +23,22 @@ using Models.DTO.Response;
 public class UsersController : BaseController
 {
     private readonly UserManager<IdentityUser> _userManager;
-    public UsersController(IUnitOfWorks unitOfWorks, IMapper mapper, UserManager<IdentityUser> userManager) : base(unitOfWorks, mapper)
+    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly IJwtService _jwtService;
+    private readonly IEmailService _emailService;
+    public UsersController(
+        IUnitOfWorks unitOfWorks, 
+        IMapper mapper, 
+        UserManager<IdentityUser> userManager,
+        RoleManager<IdentityRole> roleManager,
+        IJwtService jwtService,
+        IEmailService emailService
+        ) : base(unitOfWorks, mapper)
     {
         _userManager = userManager;
+        _roleManager = roleManager;
+        _jwtService = jwtService;
+        _emailService = emailService;
     }
 
     // GET: api/Users
@@ -80,19 +98,54 @@ public class UsersController : BaseController
     public async Task<IActionResult> CreateUser([FromBody] UsersRequestCreateDTO model)
     {
         if (!ModelState.IsValid)
+            return BadRequest();
+
+        var existingUser = await _userManager.FindByEmailAsync(model.Email);
+        if (existingUser != null)
         {
-            return BadRequest(ModelState);
+            return BadRequest(new AuthResult()
+            {
+                Result = false,
+                Errors = new List<string>()
+                        {
+                            "Email already exist"
+                        }
+            });
         }
-            var user = _mapper.Map<Users>(model);
-            var result = await _userManager.CreateAsync(user, model.Password);
-            if (result.Succeeded)
+        var user = _mapper.Map<Users>(model);
+        var result = await _userManager.CreateAsync(user);
+        
+        if (result.Succeeded)
+        {
+            var roleExist = await _roleManager.RoleExistsAsync(model.RoleName);
+
+            if (!roleExist) // check role exist status
             {
-                return NoContent();
+                return BadRequest(new AuthResult()
+                {
+                    Result = false,
+                    Errors = new List<string>()
+                        {
+                            "Role does not exist!!!"
+                        }
+                });
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            await _userManager.AddToRoleAsync(user, model.RoleName);
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var encodedToken = HttpUtility.UrlEncode(token);
+            var encodedEmail = HttpUtility.UrlEncode(user.Email);
+            var forgotPasswordUrl = $"http://localhost:3000/reset-password?token={encodedToken}&email={encodedEmail}";
+            var message = new Message(new string[] { user.Email! }, "[Greenwich-HCM] A new account has been registered at greenwich.localhost.vn", $"Hello,\n\nA new account has been registered using your email address ({user.Email}).\n\nPlease follow the link below to proceed:\n\n{forgotPasswordUrl}");
+            _emailService.SendEmail(message);
+
+            return NoContent();
+        }
+        else
+        {
+            return BadRequest();
+        }
     }
 
     // PUT: api/Users/{id}

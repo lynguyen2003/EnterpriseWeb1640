@@ -24,10 +24,15 @@ export const dateApiSlice = apiSlice.injectEndpoints({
             }),
         }),
         updateClosureDates: builder.mutation({
-            query: (id, credentials) => ({
-                url: `/ClosureDates/${id}`,
+            query: (data) => ({
+                url: `/ClosureDates/${data.id}`,
                 method: 'PUT',
-                body: { ...credentials },
+                body: {
+                    academicYear: data.academicYear,
+                    closureDate: data.closureDate,
+                    finalClosureDate: data.finalClosureDate,
+                    isSet: data.isSet,
+                },
             }),
         }),
         deleteClosureDates: builder.mutation({

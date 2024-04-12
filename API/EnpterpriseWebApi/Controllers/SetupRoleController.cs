@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Models.DTO;
 
 namespace EnpterpriseWebApi.Controllers
 {
@@ -17,6 +18,7 @@ namespace EnpterpriseWebApi.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger<SetupRoleController> _logger;
+        private string roleName;
 
         public SetupRoleController(DataContext context, 
                                    UserManager<IdentityUser> userManager,
@@ -76,14 +78,14 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpPost("AddUserToRole")]
-        public async Task<IActionResult> AddUserToRole(string email, string roleName)
+        public async Task<IActionResult> AddUserToRole(AddUserToRoleDTO model)
         {
             // check if user exist
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByEmailAsync(model.Email);
 
             if (user == null) // user does not exist
             {
-                _logger.LogInformation($"The user with the {email} does not exist!!!");
+                _logger.LogInformation($"User does not exist!!!");
                 return BadRequest(new
                 {
                     error = "User does not exist!!!"
@@ -91,19 +93,24 @@ namespace EnpterpriseWebApi.Controllers
             }
 
             // check if role exist
-            var roleExist = await _roleManager.RoleExistsAsync(roleName);
+            var roleExist = await _roleManager.RoleExistsAsync(model.RoleName);
 
             if (!roleExist) // check role exist status
             {
-                _logger.LogInformation($"The role {roleName} does not exist!!!");
+                _logger.LogInformation($"Role does not exist!!!");
                 return BadRequest(new
                 {
                     error = "Role does not exist!!!"
                 });
             }
 
+            if (!string.IsNullOrEmpty(model.OldRoleName))
+            {
+                await _userManager.RemoveFromRoleAsync(user, model.OldRoleName);
+            }
+
             // check if user assign to role success
-            var result = await _userManager.AddToRoleAsync(user, roleName);
+            var result = await _userManager.AddToRoleAsync(user, model.RoleName);
             if (result.Succeeded)
             {
                 return Ok(new

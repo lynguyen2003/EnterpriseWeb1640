@@ -4,11 +4,12 @@ import { Link } from 'react-router-dom';
 import { navbarItems } from './NavItems';
 import './Nav.css';
 import { selectIsAuthenticated, logOut, selectCurrentEmail } from '~/feature/auth/authSlice';
+import { useGetUserByEmailQuery } from '~/feature/user/userApiSlice';
 
 import { jwtDecode } from 'jwt-decode';
 import { ToastContainer, toast } from 'react-toastify';
 
-import { Avatar, Box, Divider, IconButton, ListItemIcon } from '@mui/material';
+import { Avatar, Box, Divider, IconButton, ListItemIcon, Typography } from '@mui/material';
 import { selectCurrentToken } from '~/feature/auth/authSlice';
 import { Logout, Settings } from '@mui/icons-material';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
@@ -21,6 +22,8 @@ function Nav() {
     const [clicked, setClicked] = useState(false);
     const currentToken = useSelector(selectCurrentToken);
     const email = useSelector(selectCurrentEmail);
+    const { data: currentUser } = useGetUserByEmailQuery(email);
+    const fullName = currentUser ? currentUser[0].fullName : 'Unknown User';
     const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -58,7 +61,8 @@ function Nav() {
                             (!isLoggedIn || userObject.role !== 'MarketingCoordinator')) ||
                         (item.title === ' Manage Dashboard' &&
                             (!isLoggedIn || userObject.role !== 'MarketingManager')) ||
-                        (item.title === ' Contribution List' && (!isLoggedIn || userObject.role !== 'Guest')) ||
+                        (item.title === ' Published Contribution' &&
+                            (!isLoggedIn || (userObject.role !== 'Guest' && userObject.role !== 'Student'))) ||
                         (item.title === ' About' && isLoggedIn)
                     ) {
                         return null;
@@ -66,7 +70,7 @@ function Nav() {
                     return (
                         <li key={index}>
                             <Link to={item.url} className={item.cName}>
-                                <i className={item.icon}></i>
+                                <i className={item.icon}> </i>
                                 {item.title}
                             </Link>
                         </li>
@@ -118,7 +122,13 @@ function Nav() {
                             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                         >
                             <MenuItem onClick={handleClose}>
-                                <Avatar /> {email}
+                                <Avatar />
+                                <Box display="flex" flexDirection="column">
+                                    <Typography variant="body1">{fullName}</Typography>
+                                    <Typography variant="body2" color="textSecondary">
+                                        {email}
+                                    </Typography>
+                                </Box>
                             </MenuItem>
                             <Divider />
                             <MenuItem onClick={handleClose}>

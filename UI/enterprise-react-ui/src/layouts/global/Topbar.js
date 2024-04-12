@@ -1,4 +1,4 @@
-import { Box, IconButton, useTheme } from '@mui/material';
+import { Box, IconButton, Typography, useTheme } from '@mui/material';
 import { useContext, useState } from 'react';
 import { ColorModeContext, tokens } from '../../theme';
 import InputBase from '@mui/material/InputBase';
@@ -17,15 +17,19 @@ import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import LockResetIcon from '@mui/icons-material/LockReset';
 
-import { useDispatch } from 'react-redux';
-import { logOut } from '~/feature/auth/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { logOut, selectCurrentEmail } from '~/feature/auth/authSlice';
 import { ToastContainer, toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
+import { useGetUserByEmailQuery } from '~/feature/user/userApiSlice';
 
 const Topbar = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const colorMode = useContext(ColorModeContext);
+    const email = useSelector(selectCurrentEmail);
+    const { data: currentUser } = useGetUserByEmailQuery(email);
+    const fullName = currentUser ? currentUser[0].fullName : 'Unknown User';
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -105,7 +109,13 @@ const Topbar = () => {
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
                 <MenuItem onClick={handleClose}>
-                    <Avatar /> Profile
+                    <Avatar />
+                    <Box display="flex" flexDirection="column">
+                        <Typography variant="body1">{fullName}</Typography>
+                        <Typography variant="body2" color="textSecondary">
+                            {email}
+                        </Typography>
+                    </Box>
                 </MenuItem>
                 <Divider />
                 <MenuItem onClick={handleClose}>

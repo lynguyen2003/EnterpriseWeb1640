@@ -9,8 +9,9 @@ namespace Models.DTO.Response
     public class ClosureDatesDTO
     {
         public int Id { get; set; }
-        public DateTime AcademicYear { get; set; }
+        public string AcademicYear { get; set; }
         public DateTime ClosureDate { get; set; }
         public DateTime FinalClosureDate { get; set; }
+        public bool? IsSet { get; set; }
     }
 }

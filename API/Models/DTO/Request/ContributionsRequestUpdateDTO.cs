@@ -18,5 +18,6 @@ namespace Models.DTO.Request
         public string Description { get; set; }
         public string FilePath { get; set; }
         public string ImgPath { get; set; }
+        public bool? IsApproved { get; set; }
     }
 }

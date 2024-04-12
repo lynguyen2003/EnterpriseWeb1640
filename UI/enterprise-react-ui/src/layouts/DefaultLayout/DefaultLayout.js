@@ -4,10 +4,12 @@ import Nav from '../Nav';
 
 function DefaultLayout({ children }) {
     return (
-        <>
-            <Nav />
-            <div className="content">{children}</div>
-        </>
+        <div className="app">
+            <main className="content">
+                <Nav />
+                {children}
+            </main>
+        </div>
     );
 }
 

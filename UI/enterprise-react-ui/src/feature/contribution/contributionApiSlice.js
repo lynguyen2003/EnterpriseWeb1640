@@ -8,6 +8,12 @@ export const contributionApiSlice = apiSlice.injectEndpoints({
                 method: 'GET',
             }),
         }),
+        getAllContributionWithFilter: builder.query({
+            query: (isApproved) => ({
+                url: `/Contributions?IsApproved=${isApproved}`,
+                method: 'GET',
+            }),
+        }),
         getContributionByUserId: builder.query({
             query: (userId) => ({
                 url: `/Contributions/user/${userId}`,
@@ -39,6 +45,7 @@ export const contributionApiSlice = apiSlice.injectEndpoints({
 
 export const {
     useGetAllContributionQuery,
+    useGetAllContributionWithFilterQuery,
     useGetContributionByUserIdQuery,
     usePutContributionMutation,
     usePostContributionMutation,

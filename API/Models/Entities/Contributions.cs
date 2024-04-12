@@ -17,14 +17,12 @@ namespace Models.Entities
         public string FilePath { get; set; }
         public string ImgPath { get; set; }
         public DateTime UploadDate { get; set; }
+        public bool IsApproved { get; set; }
         [ForeignKey("ClosureDates")]
         public int ClosureDatesId { get; set; }
         public ClosureDates ClosureDates { get; set; }
         [ForeignKey("Users")]
         public string UsersId { get; set; }
         public Users Users { get; set; }
-        [ForeignKey("Magazines")]
-        public int MagazinesId { get; set; }
-        public Magazines Magazines { get; set; }
     }
 }

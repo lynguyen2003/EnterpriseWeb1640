@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Models.DTO;
 using Models.DTO.Request;
 using Models.DTO.Response;
 using Models.Entities;
@@ -22,27 +23,10 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Gets()
+        public async Task<IActionResult> Gets([FromQuery] PaginationDTO paginationDTO)
         {
-            var users = await _unitOfWorks.Contributions.GetAll();
-
-            if (users == null)
-                return NotFound();
-
-            return Ok(_mapper.Map<IEnumerable<ContributionsResponseDTO>>(users));
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
-        {
-            var user = await _unitOfWorks.Contributions.GetById(id);
-
-            if (user == null)
-                return NotFound();
-
-            var result = _mapper.Map<ContributionsResponseDTO>(user);
-
-            return Ok(result);
+            var contributions = await _unitOfWorks.Contributions.GetAll(paginationDTO);
+            return Ok(_mapper.Map<List<ContributionsResponseDTO>>(contributions));
         }
 
         [HttpGet("user/{userId}")]
@@ -69,7 +53,7 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpPut("")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Student,Admin")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Student,Admin,MarketingCoordinator")]
         public async Task<IActionResult> Update(ContributionsRequestUpdateDTO contributions)
         {
             if (!ModelState.IsValid)

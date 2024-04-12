@@ -9,10 +9,8 @@ namespace DataServices.Interfaces
     public interface IUnitOfWorks
     {
         IContributionsRepository Contributions { get; }
-        IMagazinesRepository Magazines { get; }
-        IImagesRepository Images { get; }
-        IFeedbacksRepository Feedbacks { get; }
         IUsersRepository Users { get; }
+        ICommentsRepository Comments { get; }
         Task<bool> CompleteAsync();
         
     }

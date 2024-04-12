@@ -14,10 +14,11 @@ namespace Models.DTO.Request
         [Required]
         public string Email { get; set; }
         [Required]
-        public string Password { get; set; }
+        public string FullName { get; set; }
         [Required]
         public string PhoneNumber { get; set; }
         [Required]
         public int FacultiesId { get; set; }
+        public string RoleName { get; set; }
     }
 }
