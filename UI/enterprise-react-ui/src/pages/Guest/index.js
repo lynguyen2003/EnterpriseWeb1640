@@ -71,9 +71,14 @@ const Guest = () => {
     }, [contributionsObj]);
 
     const handleDisplayImg = async (imgPath) => {
-        const imageRef = ref(fileDb, `images/${imgPath}`);
-        const url = await getDownloadURL(imageRef);
-        setImageUrls((prevUrls) => ({ ...prevUrls, [imgPath]: url }));
+        try {
+            const imageRef = ref(fileDb, `images/${imgPath}`);
+            const url = await getDownloadURL(imageRef);
+            setImageUrls((prevUrls) => ({ ...prevUrls, [imgPath]: url }));
+        } catch (error) {
+            console.error(`Failed to download image: ${imgPath}`, error);
+            // Handle the error according to your application's requirements
+        }
     };
 
     const handleDownloadFile = async (fileName) => {

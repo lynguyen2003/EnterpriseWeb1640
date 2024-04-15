@@ -89,7 +89,6 @@ public class Startup
         services.AddScoped<IUnitOfWorks, UnitOfWorks>();
         services.AddScoped<IClosureDates, ClosureDatesRepository>();
         services.AddScoped<IFacultiesRepository, FacultiesRepository>();
-        services.AddScoped<SeedData>();
         services.AddControllers();
 
         services.AddEndpointsApiExplorer();
@@ -120,12 +119,13 @@ public class Startup
                 });
         });
 
+
         services.AddCors(options =>
         {
-            options.AddPolicy("AllowReactFrontend",
+            options.AddPolicy("AllowFirebaseClient",
                 builder =>
                 {
-                    builder.WithOrigins("http://localhost:3000")
+                    builder.WithOrigins("https://greenwichweb-4f0ca.web.app")
                            .AllowAnyHeader()
                            .AllowAnyMethod()
                            .AllowCredentials(); // Allow credentials
@@ -139,12 +139,6 @@ public class Startup
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                SeedData.InitializeAsync(userManager, roleManager).Wait();
-            }
         }
 
         app.UseSwagger();
@@ -153,7 +147,7 @@ public class Startup
         app.UseHttpsRedirection();
 
         app.UseRouting();
-        app.UseCors("AllowReactFrontend");
+        app.UseCors("AllowFirebaseClient");
 
         app.UseAuthentication(); // Add authentication middleware
         app.UseAuthorization();

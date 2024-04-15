@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import queryString from 'query-string';
 import LoadingSpinner from '~/components/LoadingSpinner';
@@ -7,8 +7,9 @@ import * as yup from 'yup';
 import 'react-toastify/dist/ReactToastify.css';
 import { useResetPwdMutation } from '~/feature/auth/authApiSlice';
 
+import { Box, Typography } from '@mui/material';
+
 const ResetPwd = () => {
-    const userRef = useRef();
     const location = useLocation();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -42,9 +43,6 @@ const ResetPwd = () => {
                     .then(() => {
                         toast.success('Password reset successfully');
                         navigate('/login');
-                    })
-                    .catch(() => {
-                        toast.error('Failed to reset password');
                     });
             })
             .catch((err) => {
@@ -52,96 +50,86 @@ const ResetPwd = () => {
             });
     };
     return (
-        <section className="login">
-            <div>
-                <div className="vh-100 gradient-custom">
-                    <div className="container h-100">
-                        <div className="row d-flex justify-content-center align-items-center h-100">
-                            <div className="col-12 col-md-8 col-lg-6 col-xl-5">
-                                <div className="card text-black m-2">
-                                    <div className="card-body p-5">
-                                        <div className="my-5 mt-1">
-                                            <h1 className="imgLogin mt-1 mb-4">
-                                                <img
-                                                    alt="logo"
-                                                    src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Logo-Truong-Dai-hoc-Greenwich-Viet-Nam.png"
-                                                    height="80"
-                                                />
-                                            </h1>
-                                            <h2 className="fw-bold mb-3 text-center fs-1">Reset Password</h2>
-                                            <form onSubmit={handleSubmit}>
-                                                <div className="form-outline form-white mb-5 txt_field">
-                                                    <input
-                                                        type="password"
-                                                        id="password"
-                                                        autoComplete="off"
-                                                        required
-                                                        ref={userRef}
-                                                        onChange={(e) => {
-                                                            setFormData({
-                                                                ...formData,
-                                                                password: e.target.value,
-                                                            });
-                                                        }}
-                                                    />
-                                                    <label className="form-label">New Password</label>
-                                                </div>
-
-                                                <div className="form-outline form-white mb-5 txt_field">
-                                                    <input
-                                                        type="password"
-                                                        id="confirmPassword"
-                                                        ref={userRef}
-                                                        onChange={(e) => {
-                                                            setFormData({
-                                                                ...formData,
-                                                                confirmPassword: e.target.value,
-                                                            });
-                                                        }}
-                                                        autoComplete="off"
-                                                        required
-                                                    />
-                                                    <label className="form-label">Confirm Password</label>
-                                                </div>
-
-                                                <div className="d-flex justify-content-center">
-                                                    {isLoading ? (
-                                                        <LoadingSpinner />
-                                                    ) : (
-                                                        <button
-                                                            className="btn-signin btn btn-outline-light btn-lg px-5"
-                                                            type="submit"
-                                                        >
-                                                            Submit
-                                                        </button>
-                                                    )}
-                                                </div>
-                                            </form>
-                                        </div>
-
-                                        <div>
-                                            <p className="mb-0 text-center">
-                                                <i className="fa-regular fa-copyright"></i> Powered by{' '}
-                                                <u>
-                                                    <a
-                                                        href="https://greenwich.edu.vn/"
-                                                        className="text-decoration-underline"
-                                                        target="#"
-                                                    >
-                                                        Greenwich Việt Nam{' '}
-                                                    </a>
-                                                </u>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
+            }}
+            className="gradient-custom"
+        >
+            <Box
+                sx={{
+                    backgroundColor: '#fff',
+                    width: '90%',
+                    paddingY: '30px',
+                    maxWidth: '500px',
+                    borderRadius: '50px',
+                }}
+            >
+                <Typography sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <img
+                        alt="logo"
+                        src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Logo-Truong-Dai-hoc-Greenwich-Viet-Nam.png"
+                        height="80"
+                    />
+                </Typography>
+                <Typography
+                    variant="h4"
+                    sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginY: 2 }}
+                >
+                    <strong>Reset Password</strong>
+                </Typography>
+                <form onSubmit={handleSubmit} className="px-4">
+                    <div className="form-outline form-white mb-5 txt_field">
+                        <input
+                            type="password"
+                            id="password"
+                            className="form-control"
+                            onChange={(e) => setFormData((prev) => ({ ...prev, password: e.target.value }))}
+                            value={formData.password}
+                            required
+                        />
+                        <label className="form-label" htmlFor="password">
+                            Password
+                        </label>
                     </div>
-                </div>
-            </div>
+                    <div className="form-outline form-white mb-5 txt_field">
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            className="form-control"
+                            onChange={(e) => setFormData((prev) => ({ ...prev, confirmPassword: e.target.value }))}
+                            value={formData.confirmPassword}
+                            required
+                        />
+                        <label className="form-label" htmlFor="password">
+                            Confirm Password
+                        </label>
+                    </div>
+                    <div className="d-flex justify-content-center">
+                        {isLoading ? (
+                            <LoadingSpinner />
+                        ) : (
+                            <button className="btn-signin btn btn-outline-light btn-lg px-5" type="submit">
+                                Login
+                            </button>
+                        )}
+                    </div>
+                </form>
+                <p className="mt-4 mb-8 text-center">
+                    <i className="fa-regular fa-copyright"></i> Powered by{' '}
+                    <u>
+                        <a href="https://greenwich.edu.vn/" className="text-decoration-underline" target="#">
+                            Greenwich Việt Nam{' '}
+                        </a>
+                    </u>
+                </p>
+            </Box>
             <ToastContainer />
-        </section>
+        </Box>
     );
 };
 

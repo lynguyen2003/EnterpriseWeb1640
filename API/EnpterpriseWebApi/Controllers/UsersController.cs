@@ -136,7 +136,7 @@ public class UsersController : BaseController
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var encodedToken = HttpUtility.UrlEncode(token);
             var encodedEmail = HttpUtility.UrlEncode(user.Email);
-            var forgotPasswordUrl = $"http://localhost:3000/reset-password?token={encodedToken}&email={encodedEmail}";
+            var forgotPasswordUrl = $"https://greenwichweb-4f0ca.web.app/reset-password?token={encodedToken}&email={encodedEmail}";
             var message = new Message(new string[] { user.Email! }, "[Greenwich-HCM] A new account has been registered at greenwich.localhost.vn", $"Hello,\n\nA new account has been registered using your email address ({user.Email}).\n\nPlease follow the link below to proceed:\n\n{forgotPasswordUrl}");
             _emailService.SendEmail(message);
 

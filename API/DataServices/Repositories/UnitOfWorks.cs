@@ -15,6 +15,7 @@ namespace DataServices.Repositories
         public IContributionsRepository Contributions { get; }
         public IUsersRepository Users { get; }
         public ICommentsRepository Comments { get; }
+        public IStatisticsRepository Statistics { get; }
         private readonly DataContext _context;
 
         public UnitOfWorks(DataContext context, ILoggerFactory loggerFactory) 
@@ -25,6 +26,7 @@ namespace DataServices.Repositories
             Contributions = new ContributionsRepository(logger, _context);
             Users = new UsersRepository(logger, _context);
             Comments = new CommentsRepository(logger, _context);
+            Statistics = new StatisticsRepository(logger, _context);
         }
 
 

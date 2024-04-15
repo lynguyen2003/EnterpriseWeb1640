@@ -8,6 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import './Login.css';
+import { Box, Typography } from '@mui/material';
 const Login = () => {
     const userRef = useRef();
     const [email, setEmail] = useState('');
@@ -41,98 +42,96 @@ const Login = () => {
     const handlePwdInput = (e) => setPassword(e.target.value);
 
     return (
-        <section className="login">
-            <div>
-                <div className="vh-100 gradient-custom">
-                    <div className="container h-100">
-                        <div className="row d-flex justify-content-center align-items-center h-100">
-                            <div className="col-12 col-md-8 col-lg-6 col-xl-5">
-                                <div className="card text-black m-2">
-                                    <div className="card-body p-5">
-                                        <div className="my-5 mt-1">
-                                            <h1 className="imgLogin mt-1 mb-4">
-                                                <img
-                                                    alt="logo"
-                                                    src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Logo-Truong-Dai-hoc-Greenwich-Viet-Nam.png"
-                                                    height="80"
-                                                />
-                                            </h1>
-                                            <h2 className="fw-bold mb-3 text-center fs-1">Login</h2>
-                                            <p className="mb-5 text-center">{errorMessage}</p>
-                                            <form onSubmit={handleSubmit}>
-                                                <div className="form-outline form-white mb-5 txt_field">
-                                                    <input
-                                                        type="text"
-                                                        id="email"
-                                                        className=""
-                                                        ref={userRef}
-                                                        value={email}
-                                                        onChange={handleUserInput}
-                                                        autoComplete="off"
-                                                        required
-                                                    />
-                                                    <label className="form-label" htmlFor="email">
-                                                        Email
-                                                    </label>
-                                                </div>
-
-                                                <div className="form-outline form-white mb-5 txt_field">
-                                                    <input
-                                                        type="password"
-                                                        id="password"
-                                                        className=""
-                                                        onChange={handlePwdInput}
-                                                        value={password}
-                                                        required
-                                                    />
-                                                    <label className="form-label" htmlFor="password">
-                                                        Password
-                                                    </label>
-                                                </div>
-
-                                                <p className="small mb-5 pb-lg-2 text-end pass ">
-                                                    <a className="" href="/forgot-password">
-                                                        Forgot password?
-                                                    </a>
-                                                </p>
-                                                <div className="d-flex justify-content-center">
-                                                    {isLoading ? (
-                                                        <LoadingSpinner />
-                                                    ) : (
-                                                        <button
-                                                            className="btn-signin btn btn-outline-light btn-lg px-5"
-                                                            type="submit"
-                                                        >
-                                                            Login
-                                                        </button>
-                                                    )}
-                                                </div>
-                                            </form>
-                                        </div>
-
-                                        <div>
-                                            <p className="mb-0 text-center">
-                                                <i className="fa-regular fa-copyright"></i> Powered by{' '}
-                                                <u>
-                                                    <a
-                                                        href="https://greenwich.edu.vn/"
-                                                        className="text-decoration-underline"
-                                                        target="#"
-                                                    >
-                                                        Greenwich Việt Nam{' '}
-                                                    </a>
-                                                </u>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
+            }}
+            className="gradient-custom"
+        >
+            <Box
+                sx={{
+                    backgroundColor: '#fff',
+                    width: '90%',
+                    paddingY: '30px',
+                    maxWidth: '500px',
+                    borderRadius: '50px',
+                }}
+            >
+                <Typography sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <img
+                        alt="logo"
+                        src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Logo-Truong-Dai-hoc-Greenwich-Viet-Nam.png"
+                        height="80"
+                    />
+                </Typography>
+                <Typography
+                    variant="h4"
+                    sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginY: 2 }}
+                >
+                    <strong>Login</strong>
+                </Typography>
+                <p className="mb-5 text-center text-danger">{errorMessage}</p>
+                <form onSubmit={handleSubmit} className="px-4">
+                    <div className="form-outline form-white mb-5 txt_field">
+                        <input
+                            type="text"
+                            id="email"
+                            className="form-control"
+                            ref={userRef}
+                            value={email}
+                            onChange={handleUserInput}
+                            autoComplete="off"
+                            required
+                        />
+                        <label className="form-label" htmlFor="email">
+                            Email
+                        </label>
                     </div>
-                </div>
-            </div>
+
+                    <div className="form-outline form-white mb-5 txt_field">
+                        <input
+                            type="password"
+                            id="password"
+                            className="form-control"
+                            onChange={handlePwdInput}
+                            value={password}
+                            required
+                        />
+                        <label className="form-label" htmlFor="password">
+                            Password
+                        </label>
+                    </div>
+
+                    <p className="small mb-5 pb-lg-2 text-end pass ">
+                        <a className="text-decoration-none" href="/forgot-password">
+                            Forgot password?
+                        </a>
+                    </p>
+                    <div className="d-flex justify-content-center">
+                        {isLoading ? (
+                            <LoadingSpinner />
+                        ) : (
+                            <button className="btn-signin btn btn-outline-light btn-lg px-5" type="submit">
+                                Login
+                            </button>
+                        )}
+                    </div>
+                </form>
+                <p className="mt-4 mb-8 text-center">
+                    <i className="fa-regular fa-copyright"></i> Powered by{' '}
+                    <u>
+                        <a href="https://greenwich.edu.vn/" className="text-decoration-underline" target="#">
+                            Greenwich Việt Nam{' '}
+                        </a>
+                    </u>
+                </p>
+            </Box>
             <ToastContainer />
-        </section>
+        </Box>
     );
 };
 export default Login;

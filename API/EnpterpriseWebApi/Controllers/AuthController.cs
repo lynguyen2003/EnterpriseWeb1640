@@ -156,7 +156,7 @@ namespace EnpterpriseWebApi.Controllers
                     var token = await _userManager.GeneratePasswordResetTokenAsync(existing_user);
                     var encodedToken = HttpUtility.UrlEncode(token);
                     var encodedEmail = HttpUtility.UrlEncode(existing_user.Email);
-                    var forgotPasswordUrl = $"http://localhost:3000/reset-password?token={encodedToken}&email={encodedEmail}";
+                    var forgotPasswordUrl = $"https://greenwichweb-4f0ca.web.app/reset-password?token={encodedToken}&email={encodedEmail}";
                     var message = new Message(new string[] { existing_user.Email! }, "[Greenwich-HCM] Change Password at greenwich.localhoast.vn", $"Hello,\n\nPlease click the following link to reset your password:\n\n{forgotPasswordUrl}");
                     _emailService.SendEmail(message);
 

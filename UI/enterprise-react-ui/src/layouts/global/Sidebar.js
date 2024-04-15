@@ -6,8 +6,6 @@ import 'react-pro-sidebar/dist/css/styles.css';
 import { tokens } from '../../theme';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
-import ContactsOutlinedIcon from '@mui/icons-material/ContactsOutlined';
-import ReceiptOutlinedIcon from '@mui/icons-material/ReceiptOutlined';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
@@ -16,6 +14,8 @@ import PieChartOutlineOutlinedIcon from '@mui/icons-material/PieChartOutlineOutl
 import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
+import EqualizerOutlinedIcon from '@mui/icons-material/EqualizerOutlined';
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import { useGetUserByEmailQuery } from '~/feature/user/userApiSlice';
 import { useSelector } from 'react-redux';
 import { selectCurrentEmail, selectCurrentToken } from '~/feature/auth/authSlice';
@@ -90,9 +90,8 @@ const Sidebar = () => {
                                     <img
                                         className="navbar-logo"
                                         src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Logo-Truong-Dai-hoc-Greenwich-Viet-Nam.png"
-                                        height="60"
-                                        width="195"
-                                        alt=""
+                                        height="40"
+                                        alt="logo-greenwich"
                                         loading="lazy"
                                     />
                                 </Typography>
@@ -174,7 +173,7 @@ const Sidebar = () => {
                                 <Item
                                     title="Deadlines"
                                     to="/admin/deadlines"
-                                    icon={<ContactsOutlinedIcon />}
+                                    icon={<AccessTimeOutlinedIcon />}
                                     selected={selected}
                                     setSelected={setSelected}
                                 />
@@ -192,9 +191,19 @@ const Sidebar = () => {
                                     selected={selected}
                                     setSelected={setSelected}
                                 />
+                                <Typography variant="h6" color={colors.grey[300]} sx={{ m: '15px 0 5px 20px' }}>
+                                    Reports
+                                </Typography>
+                                <Item
+                                    title="Statistics"
+                                    to="/admin/statistics"
+                                    icon={<EqualizerOutlinedIcon />}
+                                    selected={selected}
+                                    setSelected={setSelected}
+                                />
 
                                 <Typography variant="h6" color={colors.grey[300]} sx={{ m: '15px 0 5px 20px' }}>
-                                    Charts
+                                    Analysis
                                 </Typography>
                                 <Item
                                     title="Bar Chart"

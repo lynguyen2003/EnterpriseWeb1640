@@ -11,6 +11,7 @@ namespace DataServices.Interfaces
         IContributionsRepository Contributions { get; }
         IUsersRepository Users { get; }
         ICommentsRepository Comments { get; }
+        IStatisticsRepository Statistics { get; }
         Task<bool> CompleteAsync();
         
     }

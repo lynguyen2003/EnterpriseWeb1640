@@ -18,6 +18,7 @@ import Deadlines from '~/pages/Admin/deadline';
 import Coordinator from '~/pages/Coordinator';
 import ForgotPwd from '~/pages/Password/ForgotPwd';
 import ResetPwd from '~/pages/Password/ResetPwd';
+import Statistics from '~/pages/Admin/statistics';
 import Guest from '~/pages/Guest';
 
 const privateRoutes = [
@@ -34,6 +35,7 @@ const privateRoutes = [
     { path: '/admin/users', component: Users, layout: AdminLayout, requiredRoles: 'Admin' },
     { path: '/admin/form', component: Form, layout: AdminLayout, requiredRoles: 'Admin' },
     { path: '/admin/deadlines', component: Deadlines, layout: AdminLayout, requiredRoles: 'Admin' },
+    { path: '/admin/statistics', component: Statistics, layout: AdminLayout, requiredRoles: 'Admin' },
 
     { path: '/admin/bar', component: Bar, layout: AdminLayout, requiredRoles: 'Admin' },
     { path: '/admin/pie', component: Pie, layout: AdminLayout, requiredRoles: 'Admin' },

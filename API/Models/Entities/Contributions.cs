@@ -17,7 +17,8 @@ namespace Models.Entities
         public string FilePath { get; set; }
         public string ImgPath { get; set; }
         public DateTime UploadDate { get; set; }
-        public bool IsApproved { get; set; }
+        public bool? IsApproved { get; set; }
+        public bool? IsPublished { get; set; }
         [ForeignKey("ClosureDates")]
         public int ClosureDatesId { get; set; }
         public ClosureDates ClosureDates { get; set; }

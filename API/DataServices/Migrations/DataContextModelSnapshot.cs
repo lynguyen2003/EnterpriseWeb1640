@@ -17,7 +17,7 @@ namespace DataServices.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.16")
+                .HasAnnotation("ProductVersion", "7.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -51,31 +51,31 @@ namespace DataServices.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c9f2cfe5-89ce-4f54-bb3c-2dc01528d8dd",
+                            Id = "f64e16f9-f397-41fa-8e8b-dd8f16671dfd",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "bb0fe9e1-ff03-4ac0-b81b-4674c5904404",
+                            Id = "e2c52ec2-9777-42b9-8d9e-ad837868828b",
                             Name = "MarketingManager",
                             NormalizedName = "MARKETINGMANAGER"
                         },
                         new
                         {
-                            Id = "fcd0d850-67ea-4dd7-959e-164f952fc743",
+                            Id = "2dc98ce2-69fb-411e-a00a-9d6856270bac",
                             Name = "MarketingCoordinator",
                             NormalizedName = "MARKETINGCOORDINATOR"
                         },
                         new
                         {
-                            Id = "6a98f26f-699e-461f-857c-36ed1c679653",
+                            Id = "1622632d-c75a-49fd-bb08-0a5a5a58431b",
                             Name = "Student",
                             NormalizedName = "STUDENT"
                         },
                         new
                         {
-                            Id = "961f424e-9a22-4653-ba72-603c9a2bfaf1",
+                            Id = "e7fb1cd4-cd6c-40a1-a414-423f872ff8f0",
                             Name = "Guest",
                             NormalizedName = "GUEST"
                         });
@@ -352,7 +352,10 @@ namespace DataServices.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsApproved")
+                    b.Property<bool?>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsPublished")
                         .HasColumnType("bit");
 
                     b.Property<string>("Title")
@@ -449,9 +452,11 @@ namespace DataServices.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("RefreshTokens");
                 });
@@ -551,6 +556,17 @@ namespace DataServices.Migrations
                     b.Navigation("ClosureDates");
 
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("Models.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("Models.Entities.Users", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Models.Entities.Users", b =>

@@ -23,6 +23,7 @@ namespace DataServices.Data
         public DbSet<Contributions> Contributions { get; set; }
         public DbSet<Faculties> Faculties { get; set; }
         public DbSet<Comments> Comments { get; set; }
+        public DbSet<Users> Users {  get; set; }
 
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -7,7 +7,7 @@ import { selectIsAuthenticated, logOut, selectCurrentEmail } from '~/feature/aut
 import { useGetUserByEmailQuery } from '~/feature/user/userApiSlice';
 
 import { jwtDecode } from 'jwt-decode';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
 import { Avatar, Box, Divider, IconButton, ListItemIcon, Typography } from '@mui/material';
 import { selectCurrentToken } from '~/feature/auth/authSlice';
@@ -34,7 +34,7 @@ function Nav() {
     const userObject = currentToken ? jwtDecode(currentToken) : { role: null };
 
     const handleLogout = () => {
-        toast.success('Logout successfully');
+        window.location.reload();
         dispatch(logOut());
     };
 
@@ -47,30 +47,38 @@ function Nav() {
             <img
                 className="navbar-logo"
                 src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Logo-Truong-Dai-hoc-Greenwich-Viet-Nam.png"
-                height="60"
-                alt=""
+                height="50"
+                alt="logo-greenwich"
                 loading="lazy"
             />
 
             <ul className={clicked ? 'nav-menu active' : 'nav-menu'}>
                 {navbarItems.map((item, index) => {
                     if (
-                        (item.title === ' Contributions' && (!isLoggedIn || userObject.role !== 'Student')) ||
-                        (item.title === ' Dashboard' && (!isLoggedIn || userObject.role !== 'Admin')) ||
-                        (item.title === ' Coordinator Dashboard' &&
+                        (item.title === 'Contributions' && (!isLoggedIn || userObject.role !== 'Student')) ||
+                        (item.title === 'Dashboard' && (!isLoggedIn || userObject.role !== 'Admin')) ||
+                        (item.title === 'Coordinator Dashboard' &&
                             (!isLoggedIn || userObject.role !== 'MarketingCoordinator')) ||
-                        (item.title === ' Manage Dashboard' &&
+                        (item.title === 'Manage Dashboard' &&
                             (!isLoggedIn || userObject.role !== 'MarketingManager')) ||
-                        (item.title === ' Published Contribution' &&
+                        (item.title === 'Published Contribution' &&
                             (!isLoggedIn || (userObject.role !== 'Guest' && userObject.role !== 'Student'))) ||
-                        (item.title === ' About' && isLoggedIn)
+                        (item.title === 'About' && isLoggedIn) ||
+                        (item.title === 'Login' && isLoggedIn)
                     ) {
                         return null;
                     }
                     return (
                         <li key={index}>
                             <Link to={item.url} className={item.cName}>
-                                <i className={item.icon}> </i>
+                                <i
+                                    className={item.icon}
+                                    style={{
+                                        marginRight: '0.5rem',
+                                    }}
+                                >
+                                    {' '}
+                                </i>
                                 {item.title}
                             </Link>
                         </li>
@@ -79,7 +87,7 @@ function Nav() {
             </ul>
             <ul className="navbar-nav ms-auto">
                 {isLoggedIn ? (
-                    <Box>
+                    <Box marginX={2}>
                         <Box>
                             <IconButton onClick={handleClick}>
                                 <PersonOutlinedIcon fontSize="large" />

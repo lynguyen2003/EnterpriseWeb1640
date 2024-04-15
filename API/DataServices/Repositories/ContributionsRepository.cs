@@ -26,6 +26,10 @@ namespace DataServices.Repositories
             {
                 query = query.Where(c => c.IsApproved == paginationDTO.IsApproved);
             }
+            if (paginationDTO.IsPublished.HasValue)
+            {
+                query = query.Where(c => c.IsPublished == paginationDTO.IsPublished);
+            }
             return await query.Skip((paginationDTO.PageNum - 1) * paginationDTO.PageSize)
                 .Take(paginationDTO.PageSize)
                 .ToListAsync();
