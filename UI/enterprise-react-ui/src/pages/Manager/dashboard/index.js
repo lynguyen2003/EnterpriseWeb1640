@@ -24,7 +24,7 @@ import { toast } from 'react-toastify';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
-import { useGetAllContributionWithFilterQuery } from '~/feature/contribution/contributionApiSlice';
+import { useGetContributionApprovedQuery } from '~/feature/contribution/contributionApiSlice';
 import { useGetUserByUserIdMutation } from '~/feature/user/userApiSlice';
 import { useGetFacultyByIdMutation } from '~/feature/faculty/facultyApiSlice';
 
@@ -36,8 +36,8 @@ const Dashboard = () => {
     const [imageUrl, setImageUrl] = useState(null);
     const [selectedRow, setSelectedRow] = useState(null);
     const [open, setOpen] = useState(false);
-    const [isApproved, setIsApproved] = useState(true);
-    const { data: contributions, error, isLoading } = useGetAllContributionWithFilterQuery(isApproved);
+    const [isApproved] = useState(true);
+    const { data: contributions, error, isLoading } = useGetContributionApprovedQuery(isApproved);
     const [getUserByUserId] = useGetUserByUserIdMutation();
     const [getFacultyById] = useGetFacultyByIdMutation();
 
@@ -260,6 +260,12 @@ const Dashboard = () => {
                         const selectedData = newSelection.map((id) => rows.find((row) => row.id === id));
                         setSelectedFiles(selectedData.map((data) => data.filePath));
                     }}
+                    {...rows}
+                    initialState={{
+                        ...rows.initialState,
+                        pagination: { paginationModel: { pageSize: 5 } },
+                    }}
+                    pageSizeOptions={[5, 10, 25]}
                 />
             </Box>
             {selectedRow && (

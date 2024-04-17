@@ -65,6 +65,7 @@ namespace DataServices.Repositories
                     existingContributions.FilePath = contributions.FilePath;
                     existingContributions.ImgPath = contributions.ImgPath;
                     existingContributions.IsApproved = contributions.IsApproved;
+                    existingContributions.IsPublished = contributions.IsPublished;
                     //TO DO:
 
                     await _context.SaveChangesAsync();

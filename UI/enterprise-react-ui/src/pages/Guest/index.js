@@ -24,7 +24,7 @@ import { fileDb } from '~/Config';
 import { ref, getDownloadURL } from 'firebase/storage';
 import { ToastContainer, toast } from 'react-toastify';
 
-import { useGetAllContributionWithFilterQuery } from '~/feature/contribution/contributionApiSlice';
+import { useGetContributionPaginationQuery } from '~/feature/contribution/contributionApiSlice';
 import { useGetUserByUserIdMutation } from '~/feature/user/userApiSlice';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -38,16 +38,13 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 const Guest = () => {
     const [imageUrls, setImageUrls] = useState({});
-    const [page, setPage] = useState(1);
     const [open, setOpen] = useState(false);
-    const [isApproved] = useState(true);
     const [selectedContribution, setSelectedContribution] = useState(null);
     const [selectedUser, setSelectedUser] = useState({});
+    const [params, setParams] = useState({ pageNum: 1, pageSize: 8, isPublished: true });
 
-    const { data: contributionsObj } = useGetAllContributionWithFilterQuery(isApproved);
+    const { data: contributionsObj } = useGetContributionPaginationQuery(params);
     const [getUserByUserId, { data: userData }] = useGetUserByUserIdMutation();
-
-    console.log(selectedUser);
 
     useEffect(() => {
         if (selectedContribution) {
@@ -113,7 +110,7 @@ const Guest = () => {
             <ToastContainer />
             <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                 {contributionsObj &&
-                    contributionsObj.slice((page - 1) * 8, page * 8).map((contribution, index) => (
+                    contributionsObj.map((contribution, index) => (
                         <Grid item xs={3} key={index}>
                             <Card
                                 sx={{
@@ -155,18 +152,17 @@ const Guest = () => {
                             </Card>
                         </Grid>
                     ))}
+                <Pagination
+                    count={(1, 2, 3, 4, 5)}
+                    page={params.pageNum}
+                    onChange={(event, value) => {
+                        setParams((prevParams) => ({ ...prevParams, pageNum: value }));
+                    }}
+                    renderItem={(item) => (
+                        <PaginationItem slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }} {...item} />
+                    )}
+                />
             </Grid>
-            <Pagination
-                count={
-                    contributionsObj
-                        ? Math.ceil(contributionsObj.filter((contribution) => contribution.isApproved).length / 8)
-                        : 0
-                }
-                onChange={(event, value) => setPage(value)}
-                renderItem={(item) => (
-                    <PaginationItem slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }} {...item} />
-                )}
-            />
             <BootstrapDialog
                 onClose={handleClose}
                 aria-labelledby="customized-dialog-title"

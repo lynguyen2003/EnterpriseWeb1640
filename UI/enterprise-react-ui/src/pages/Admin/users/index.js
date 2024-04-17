@@ -8,22 +8,20 @@ import { ToastContainer, toast } from 'react-toastify';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import Stack from '@mui/material/Stack';
-import { TextField } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
+import MenuItem from '@mui/material/MenuItem';
 
 import { setUsers } from '~/feature/user/userSlice';
 import { useGetAllUserQuery, useUpdateUserMutation, useDeleteUserMutation } from '~/feature/user/userApiSlice';
 import { useGetAllFacultiesQuery } from '~/feature/faculty/facultyApiSlice';
 import { selectFaculties, setFaculties } from '~/feature/faculty/facultySlice';
 import { useGetUserRoleMutation, useAddUserToRoleMutation } from '~/feature/role/roleApiSlice';
-import MenuItem from '@mui/material/MenuItem';
 
 const Users = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const dispatch = useDispatch();
-    const [editRow, setEditRow] = useState(null);
     const [open, setOpen] = useState(false);
     const [openRoleDialog, setOpenRoleDialog] = useState(false);
     const [formUser, setFormUser] = useState([]);
@@ -31,7 +29,7 @@ const Users = () => {
         userName: '',
         fullName: '',
         email: '',
-        phoneNumber: '',
+        phone: '',
         role: '',
         facultiesId: '',
     });
@@ -136,7 +134,7 @@ const Users = () => {
 
     const handleUpdateClick = (id) => {
         const row = formUser.find((row) => row.id === id);
-        setEditRow(row);
+        setFormData(row);
         setOpen(true);
     };
 
@@ -157,15 +155,24 @@ const Users = () => {
         }
     };
 
+    console.log(formData);
+
     const handleUpdate = () => {
         // Update the user here
-        updateUser({ ...formData, id: editRow.id })
+        updateUser({
+            id: formData.id,
+            userName: formData.userName,
+            fullName: formData.fullName,
+            email: formData.email,
+            phoneNumber: formData.phone,
+            facultiesId: formData.facultiesId,
+        })
             .unwrap()
             .then((payload) => {
                 toast.success('User updated successfully');
                 // Close the dialog and reset the editRow and formData states
                 setOpen(false);
-                setEditRow(null);
+
                 setFormData({
                     userName: '',
                     fullName: '',
@@ -271,6 +278,7 @@ const Users = () => {
                 <Button variant="outlined" onClick={() => setOpenRoleDialog(true)}>
                     Update Role
                 </Button>
+
                 <Dialog open={open} onClose={() => setOpen(false)}>
                     <DialogTitle>Update User</DialogTitle>
                     <DialogContent>
@@ -284,6 +292,19 @@ const Users = () => {
                             fullWidth
                             value={formData.userName}
                             onChange={(e) => setFormData({ ...formData, userName: e.target.value })}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="fullName"
+                            label="Full Name"
+                            type="text"
+                            fullWidth
+                            value={formData.fullName}
+                            onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                             InputLabelProps={{
                                 shrink: true,
                             }}
@@ -308,8 +329,8 @@ const Users = () => {
                             label="Phone Number"
                             type="text"
                             fullWidth
-                            value={formData.phoneNumber}
-                            onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+                            value={formData.phone}
+                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                             InputLabelProps={{
                                 shrink: true,
                             }}
@@ -318,7 +339,6 @@ const Users = () => {
                         <Select
                             label="Faculties"
                             fullWidth
-                            value={formUser.faculties}
                             onChange={(e) => setFormData({ ...formData, facultiesId: e.target.value })}
                             InputLabelProps={{
                                 shrink: true,
@@ -338,7 +358,6 @@ const Users = () => {
                         <Button
                             onClick={() => {
                                 setOpen(false);
-                                setEditRow(null);
                             }}
                         >
                             Cancel
@@ -350,7 +369,18 @@ const Users = () => {
                 </Dialog>
 
                 {formUser ? (
-                    <DataGrid checkboxSelection disableRowSelectionOnClick rows={formUser} columns={columns} />
+                    <DataGrid
+                        checkboxSelection
+                        disableRowSelectionOnClick
+                        rows={formUser}
+                        columns={columns}
+                        {...formUser}
+                        initialState={{
+                            ...formUser.initialState,
+                            pagination: { paginationModel: { pageSize: 5 } },
+                        }}
+                        pageSizeOptions={[5, 10, 25]}
+                    />
                 ) : (
                     <div>Loading...</div>
                 )}

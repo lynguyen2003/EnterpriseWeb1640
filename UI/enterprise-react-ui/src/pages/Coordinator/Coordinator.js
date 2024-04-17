@@ -155,17 +155,31 @@ const Coordinator = () => {
     const handleSetApprove = async (row) => {
         try {
             const updatedRow = {
-                id: row.id,
-                title: row.title,
-                description: row.description,
-                filePath: row.filePath,
-                imgPath: row.imgPath,
+                ...row,
                 isApproved: !row.isApproved,
             };
+
             await updateContribution(updatedRow).unwrap();
 
             refetch();
-            toast.success(`Contribution ${updatedRow.isApproved ? 'published' : 'unpublished'} successfully`);
+            toast.success(`Contribution ${updatedRow.isApproved ? 'approved' : 'unapproved'} successfully`);
+        } catch (error) {
+            console.error('Error approving:', error);
+            toast.error('Failed to approve');
+        }
+    };
+
+    const handleSetPublish = async (row) => {
+        try {
+            const updatedRow = {
+                ...row,
+                isPublished: !row.isPublished,
+            };
+
+            await updateContribution(updatedRow).unwrap();
+
+            refetch();
+            toast.success(`Contribution ${updatedRow.isPublished ? 'published' : 'unpublished'} successfully`);
         } catch (error) {
             console.error('Error publishing:', error);
             toast.error('Failed to publish');
@@ -194,12 +208,10 @@ const Coordinator = () => {
         {
             field: 'email',
             headerName: 'Email',
-            width: 180,
         },
         {
             field: 'title',
             headerName: 'Title',
-            width: 200,
         },
         {
             field: 'uploadDate',
@@ -211,9 +223,13 @@ const Coordinator = () => {
             headerName: 'Approve',
         },
         {
+            field: 'isPublished',
+            headerName: 'Published',
+        },
+        {
             field: 'filePath',
             headerName: 'Download File',
-            width: 130,
+            flex: 1,
             renderCell: (params) => (
                 <a
                     href={params.value}
@@ -229,7 +245,7 @@ const Coordinator = () => {
         {
             field: 'viewDetails',
             headerName: '',
-            width: 130,
+            flex: 1,
             renderCell: (params) => (
                 <Button
                     onClick={() => handleViewDetails(params.row)}
@@ -246,9 +262,9 @@ const Coordinator = () => {
         },
 
         {
-            field: 'published',
+            field: 'approve',
             headerName: '',
-            width: 150,
+            flex: 1,
             renderCell: (params) => (
                 <Button
                     onClick={() => handleSetApprove(params.row)}
@@ -259,7 +275,25 @@ const Coordinator = () => {
                         padding: '10px 20px',
                     }}
                 >
-                    Published
+                    Approve
+                </Button>
+            ),
+        },
+        {
+            field: 'published',
+            headerName: '',
+            flex: 1,
+            renderCell: (params) => (
+                <Button
+                    onClick={() => handleSetPublish(params.row)}
+                    sx={{
+                        color: colors.blueAccent[500],
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        padding: '10px 20px',
+                    }}
+                >
+                    Publish
                 </Button>
             ),
         },
@@ -298,7 +332,18 @@ const Coordinator = () => {
                     },
                 }}
             >
-                <DataGrid checkboxSelection disableRowSelectionOnClick rows={rows} columns={columns} />
+                <DataGrid
+                    checkboxSelection
+                    disableRowSelectionOnClick
+                    rows={rows}
+                    columns={columns}
+                    {...rows}
+                    initialState={{
+                        ...rows.initialState,
+                        pagination: { paginationModel: { pageSize: 5 } },
+                    }}
+                    pageSizeOptions={[5, 10, 25]}
+                />
             </Box>
             {selectedRow && (
                 <Dialog

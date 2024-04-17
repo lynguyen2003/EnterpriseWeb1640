@@ -8,7 +8,21 @@ export const contributionApiSlice = apiSlice.injectEndpoints({
                 method: 'GET',
             }),
         }),
-        getAllContributionWithFilter: builder.query({
+        getContributionPagination: builder.query({
+            query: (data) => {
+                const params = new URLSearchParams({
+                    PageNum: data.pageNum || 1,
+                    PageSize: data.pageSize || 10,
+                    isPublished: data.isPublished || null,
+                });
+
+                return {
+                    url: `/Contributions?${params.toString()}`,
+                    method: 'GET',
+                };
+            },
+        }),
+        getContributionApproved: builder.query({
             query: (isApproved) => ({
                 url: `/Contributions?IsApproved=${isApproved}`,
                 method: 'GET',
@@ -45,7 +59,8 @@ export const contributionApiSlice = apiSlice.injectEndpoints({
 
 export const {
     useGetAllContributionQuery,
-    useGetAllContributionWithFilterQuery,
+    useGetContributionPaginationQuery,
+    useGetContributionApprovedQuery,
     useGetContributionByUserIdQuery,
     usePutContributionMutation,
     usePostContributionMutation,

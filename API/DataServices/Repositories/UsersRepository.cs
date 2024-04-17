@@ -53,6 +53,7 @@ namespace DataServices.Repositories
                 if (existingUsers != null)
                 {
                     existingUsers.UserName = users.UserName;
+                    existingUsers.FullName = users.FullName;
                     existingUsers.Email = users.Email;
                     existingUsers.PhoneNumber = users.PhoneNumber;
                     existingUsers.FacultiesId = users.FacultiesId;
