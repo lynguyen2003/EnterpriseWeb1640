@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Models.DTO;
+using Models.DTO.Filter;
 using Models.DTO.Request;
 using Models.DTO.Response;
 using Models.Entities;
@@ -23,7 +23,7 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Gets([FromQuery] PaginationDTO paginationDTO)
+        public async Task<IActionResult> Gets([FromQuery] ContributionsFilter paginationDTO)
         {
             var contributions = await _unitOfWorks.Contributions.GetAll(paginationDTO);
             return Ok(_mapper.Map<List<ContributionsResponseDTO>>(contributions));

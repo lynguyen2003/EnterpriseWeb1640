@@ -20,8 +20,8 @@ namespace EnpterpriseWebApi.Controllers
         }
 
         [HttpGet]
-        [Route("contributions-count")]
-        public async Task<IActionResult> Gets([FromQuery]StatisticsFilter filter)
+        [Route("general")]
+        public async Task<IActionResult> GetStatistics([FromQuery] StatisticsFilter filter)
         {
             if (filter == null)
             {
@@ -29,6 +29,28 @@ namespace EnpterpriseWebApi.Controllers
             }
 
             var result = await _unitOfWorks.Statistics.GetStatistics(filter);
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("faculty")]
+        public async Task<IActionResult> GetStatisticsWithFaculty([FromQuery]StatisticsFilter filter)
+        {
+            if (filter == null)
+            {
+                return BadRequest();
+            }
+
+            var result = await _unitOfWorks.Statistics.GetStatisticsWithFaculty(filter);
+
+            return Ok(result);
+        }
+        [HttpGet]
+        [Route("percentage")]
+        public async Task<IActionResult> GetPercentage()
+        {
+            var result = await _unitOfWorks.Statistics.GetPercentage();
 
             return Ok(result);
         }

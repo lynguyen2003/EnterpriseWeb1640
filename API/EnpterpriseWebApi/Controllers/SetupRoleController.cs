@@ -9,7 +9,7 @@ using Models.DTO;
 
 namespace EnpterpriseWebApi.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, MarketingCoordinator")]
     [Route("api/[controller]")]
     [ApiController]
     public class SetupRoleController : ControllerBase

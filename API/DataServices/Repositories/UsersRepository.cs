@@ -2,6 +2,7 @@
 using DataServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Models.DTO.Filter;
 using Models.Entities;
 using System;
 using System.Collections.Generic;
@@ -17,11 +18,22 @@ namespace DataServices.Repositories
         {
         }
 
-        public override async Task<IEnumerable<Users>> GetAll()
+        public virtual async Task<IEnumerable<Users>> GetAll(UsersFilter usersFilter)
         {
             try
             {
-                return await _dbSet.ToListAsync();
+                var query = _dbSet.AsQueryable();
+                if (!string.IsNullOrEmpty(usersFilter.Email))
+                {
+                    query = query.Where(c => c.Email == usersFilter.Email);
+                }
+                if (usersFilter.FacultiesId.HasValue)
+                {
+                    query = query.Where(c => c.FacultiesId == usersFilter.FacultiesId);
+                }
+                return await query.Skip((usersFilter.PageNum - 1) * usersFilter.PageSize)
+                    .Take(usersFilter.PageSize)
+                    .ToListAsync();
             }
             catch (Exception e)
             {

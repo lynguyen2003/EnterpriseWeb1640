@@ -2,7 +2,7 @@
 using DataServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Models.DTO;
+using Models.DTO.Filter;
 using Models.Entities;
 using System;
 using System.Collections;
@@ -19,7 +19,7 @@ namespace DataServices.Repositories
         {
         }
 
-        public virtual async Task<IEnumerable<Contributions>> GetAll(PaginationDTO paginationDTO)
+        public virtual async Task<IEnumerable<Contributions>> GetAll(ContributionsFilter paginationDTO)
         {
             var query = _dbSet.AsQueryable();
             if (paginationDTO.IsApproved.HasValue)

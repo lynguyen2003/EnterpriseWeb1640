@@ -16,6 +16,7 @@ using System.Web;
 using DataServices.Service;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using DataServices.JwtServices;
+using Models.DTO.Filter;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -43,11 +44,11 @@ public class UsersController : BaseController
 
     // GET: api/Users
     [HttpGet]
-    public async Task<IActionResult> GetUsers()
+    public async Task<IActionResult> GetUsers([FromQuery] UsersFilter usersFilter)
     {
         try
         {
-            var users = await _unitOfWorks.Users.GetAll();
+            var users = await _unitOfWorks.Users.GetAll(usersFilter);
 
             if (users == null)
                 return NotFound();
@@ -94,7 +95,7 @@ public class UsersController : BaseController
 
     // POST: api/Users
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, MarketingCoordinator")]
     public async Task<IActionResult> CreateUser([FromBody] UsersRequestCreateDTO model)
     {
         if (!ModelState.IsValid)
@@ -150,7 +151,7 @@ public class UsersController : BaseController
 
     // PUT: api/Users/{id}
     [HttpPut]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, MarketingCoordinator")]
     public async Task<IActionResult> Update(UsersRequestUpdateDTO users)
     {
         if (!ModelState.IsValid)
@@ -164,7 +165,7 @@ public class UsersController : BaseController
 
     // DELETE: api/Users/{id}
     [HttpDelete("{id}")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, MarketingCoordinator")]
     public async Task<IActionResult> DeleteUser(string id)
     {
         try

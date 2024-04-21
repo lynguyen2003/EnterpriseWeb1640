@@ -28,20 +28,80 @@ namespace DataServices.Repositories
         {
             try
             {
+                var query = _context.Faculties
+                    .Where(f => string.IsNullOrEmpty(filter.FacultyName) || f.FacultyName == filter.FacultyName)
+                    .SelectMany(f => f.Users)
+                    .SelectMany(u => u.Contributions)
+                    .Join(_context.ClosureDates,
+                        c => c.ClosureDatesId,
+                        cd => cd.Id,
+                        (c, cd) => new { Contribution = c, ClosureDate = cd })
+                    .GroupBy(c => new { c.Contribution.Users.Faculties.FacultyName, c.ClosureDate.AcademicYear })
+                    .Select(g => new ContributionStatistics
+                    {
+                        FacultyName = g.Key.FacultyName,
+                        AcademicYear = g.Key.AcademicYear,
+                        Contributions = g.Count(),
+                        Contributors = g.Select(c => c.Contribution.UsersId).Distinct().Count(),
+                        Percentage = 0
+                    });
+
+                var statistics = await query.ToListAsync();
+
+                foreach (var stat in statistics)
+                {
+                    var totalContributionsForYear = statistics
+                        .Where(s => s.AcademicYear == stat.AcademicYear)
+                        .Sum(s => s.Contributions);
+
+                    stat.Percentage = Math.Round((stat.Contributions * 100.0) / totalContributionsForYear, 2);
+                }
+
+                return statistics;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "{Repo} GetStatistics Function error", typeof(StatisticsRepository));
+                throw;
+            }
+        }
+
+        public virtual async Task<IEnumerable<ContributionStatistics>> GetStatisticsWithFaculty(StatisticsFilter filter)
+        {
+            try
+            {
+                var query = _context.Faculties
+                    .Where(f => string.IsNullOrEmpty(filter.FacultyName) || f.FacultyName == filter.FacultyName)
+                    .SelectMany(f => f.Users)
+                    .SelectMany(u => u.Contributions)
+                    .GroupBy(c => c.Users.Faculties.FacultyName)
+                    .Select(g => new ContributionStatistics
+                    {
+                        FacultyName = g.Key,
+                        Contributions = g.Count(),
+                        Contributors = g.Select(c => c.UsersId).Distinct().Count(),
+                    });
+
+                var statistics = await query.ToListAsync();
+
+                return statistics;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "{Repo} GetStatisticsWithFaculty Function error", typeof(StatisticsRepository));
+                throw;
+            }
+        }
+
+
+        public virtual async Task<IEnumerable<ContributionStatistics>> GetPercentage()
+        {
+            try
+            {
                 var contributions = _context.Contributions.AsQueryable();
                 var users = _context.Users.AsQueryable();
                 var faculties = _context.Faculties.AsQueryable();
                 var closureDates = _context.ClosureDates.AsQueryable();
-
-                if (!string.IsNullOrEmpty(filter.FacultyName))
-                {
-                    faculties = faculties.Where(f => f.FacultyName == filter.FacultyName);
-                }
-
-                if (!string.IsNullOrEmpty(filter.AcademicYear))
-                {
-                    closureDates = closureDates.Where(f => f.AcademicYear == filter.AcademicYear);
-                }
 
                 var query = contributions
                     .Join(users, c => c.UsersId, u => u.Id, (c, u) => new { Contribution = c, User = u })
@@ -52,10 +112,21 @@ namespace DataServices.Repositories
                     {
                         FacultyName = g.Key.FacultyName,
                         AcademicYear = g.Key.AcademicYear,
-                        ContributionCount = g.Count()
+                        Contributions = g.Count()
                     });
 
-                return await query.ToListAsync();
+                var statistics = await query.ToListAsync();
+
+                foreach (var stat in statistics)
+                {
+                    var totalContributionsForYear = statistics
+                        .Where(s => s.AcademicYear == stat.AcademicYear)
+                        .Sum(s => s.Contributions);
+
+                    stat.Percentage = Math.Round((stat.Contributions * 100.0) / totalContributionsForYear, 2);
+                }
+
+                return statistics;
 
             }
             catch (Exception e)

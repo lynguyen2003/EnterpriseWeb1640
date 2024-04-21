@@ -12,5 +12,7 @@ namespace DataServices.Interfaces
     public interface IStatisticsRepository
     {
         Task<IEnumerable<ContributionStatistics>> GetStatistics(StatisticsFilter filter);
+        Task<IEnumerable<ContributionStatistics>> GetStatisticsWithFaculty(StatisticsFilter filter);
+        Task<IEnumerable<ContributionStatistics>> GetPercentage();
     }
 }

@@ -10,6 +10,10 @@ namespace Models.DTO.Response
     {
         public string FacultyName { get; set; }
         public string AcademicYear { get; set; }
-        public int ContributionCount { get; set; }
+        public int Contributions { get; set; }
+        public int Contributors { get; set; }
+        public int TotalContributions { get; set; }
+        public int TotalContributors { get; set; }
+        public double Percentage { get; set; }
     }
 }
