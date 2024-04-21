@@ -4,11 +4,11 @@ import Contribution from '~/pages/Contribution';
 import { DefaultLayout } from '~/layouts';
 
 import Dashboard from '~/pages/Admin/dashboard';
-import ManagerDashboard from '~/pages/Manager/dashboard';
+import ManagerContributions from '~/pages/Manager/dashboard/Contributions';
 import Users from '~/pages/Admin/users';
 import Form from '~/pages/Admin/form';
-import Bar from '~/scenes/bar';
-import Pie from '~/scenes/pie';
+import Bar from '~/pages/Manager/chart/Bar';
+import Pie from '~/pages/Manager/chart/Pie';
 import Line from '~/scenes/line';
 import FAQ from '~/scenes/faq';
 import Calendar from '~/scenes/calendar/calendar';
@@ -18,8 +18,10 @@ import Deadlines from '~/pages/Admin/deadline';
 import Coordinator from '~/pages/Coordinator';
 import ForgotPwd from '~/pages/Password/ForgotPwd';
 import ResetPwd from '~/pages/Password/ResetPwd';
-import Statistics from '~/pages/Admin/statistics';
+import Statistics from '~/pages/Manager/statistics/Statistics';
 import Guest from '~/pages/Guest';
+import CoordinatorManageUsers from '~/pages/Coordinator/Users';
+import ManagerDashboard from '~/pages/Manager/dashboard/Dashboard';
 
 const privateRoutes = [
     { path: '/contribution', component: Contribution, layout: DefaultLayout, requiredRoles: 'Student' },
@@ -29,16 +31,35 @@ const privateRoutes = [
     { path: '/forgot-password', component: ForgotPwd, layout: null, requiredRoles: null },
     { path: '/reset-password', component: ResetPwd, layout: null, requiredRoles: null },
 
-    { path: '/manager', component: ManagerDashboard, layout: AdminLayout, requiredRoles: 'MarketingManager' },
+    { path: '/coordinator', component: Coordinator, layout: AdminLayout, requiredRoles: 'MarketingCoordinator' },
+    {
+        path: '/coordinator/users',
+        component: CoordinatorManageUsers,
+        layout: AdminLayout,
+        requiredRoles: 'MarketingCoordinator',
+    },
+
+    {
+        path: '/manager',
+        component: ManagerDashboard,
+        layout: AdminLayout,
+        requiredRoles: 'MarketingManager',
+    },
+    {
+        path: '/manager/contribution',
+        component: ManagerContributions,
+        layout: AdminLayout,
+        requiredRoles: 'MarketingManager',
+    },
+    { path: '/manager/statistics', component: Statistics, layout: AdminLayout, requiredRoles: 'MarketingManager' },
+    { path: '/manager/pie', component: Pie, layout: AdminLayout, requiredRoles: 'MarketingManager' },
+    { path: '/manager/bar', component: Bar, layout: AdminLayout, requiredRoles: 'MarketingManager' },
 
     { path: '/admin', component: Dashboard, layout: AdminLayout, requiredRoles: 'Admin' },
     { path: '/admin/users', component: Users, layout: AdminLayout, requiredRoles: 'Admin' },
     { path: '/admin/form', component: Form, layout: AdminLayout, requiredRoles: 'Admin' },
     { path: '/admin/deadlines', component: Deadlines, layout: AdminLayout, requiredRoles: 'Admin' },
-    { path: '/admin/statistics', component: Statistics, layout: AdminLayout, requiredRoles: 'Admin' },
 
-    { path: '/admin/bar', component: Bar, layout: AdminLayout, requiredRoles: 'Admin' },
-    { path: '/admin/pie', component: Pie, layout: AdminLayout, requiredRoles: 'Admin' },
     { path: '/admin/line', component: Line, layout: AdminLayout, requiredRoles: 'Admin' },
     {
         path: '/faq',
@@ -53,12 +74,9 @@ const privateRoutes = [
         requiredRoles: ['Admin', 'MarketingManager', 'MarketingCoordinator'],
     },
     { path: '/admin/geography', component: Geography, layout: AdminLayout, requiredRoles: 'Admin' },
-
-    { path: '/coordinator', component: Coordinator, layout: AdminLayout, requiredRoles: 'MarketingCoordinator' },
 ];
 
 const publicRoutes = [
-    // { path: '/contribution', component: Contribution },
     { path: '/', component: Home, layout: DefaultLayout },
     { path: '/login', component: Login, layout: null },
 ];

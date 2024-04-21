@@ -1,4 +1,5 @@
 import { apiSlice } from '~/app/api/apiSlice';
+import { createParams } from '~/feature/contribution/contributionApiSlice';
 
 export const userApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -7,6 +8,21 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 url: `/Users`,
                 method: 'GET',
             }),
+        }),
+        getUsersWithParams: builder.query({
+            query: (data) => {
+                const params = createParams({
+                    PageNum: data.pageNum,
+                    PageSize: data.pageSize,
+                    Email: data.email,
+                    FacultiesId: data.facultiesId,
+                });
+
+                return {
+                    url: `/Users?${params.toString()}`,
+                    method: 'GET',
+                };
+            },
         }),
         getUserByEmail: builder.query({
             query: (email) => ({
@@ -45,6 +61,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
 
 export const {
     useGetAllUserQuery,
+    useGetUsersWithParamsQuery,
     useGetUserByEmailQuery,
     useGetUserByUserIdMutation,
     usePostUserMutation,

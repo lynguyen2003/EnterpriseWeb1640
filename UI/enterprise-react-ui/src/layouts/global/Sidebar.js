@@ -4,18 +4,19 @@ import { Box, IconButton, Typography, useTheme } from '@mui/material';
 import { Link } from 'react-router-dom';
 import 'react-pro-sidebar/dist/css/styles.css';
 import { tokens } from '../../theme';
+
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
-import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
-import PieChartOutlineOutlinedIcon from '@mui/icons-material/PieChartOutlineOutlined';
-import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
-import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import EqualizerOutlinedIcon from '@mui/icons-material/EqualizerOutlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
+import PieChartOutlineOutlinedIcon from '@mui/icons-material/PieChartOutlineOutlined';
+import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
+
 import { useGetUserByEmailQuery } from '~/feature/user/userApiSlice';
 import { useSelector } from 'react-redux';
 import { selectCurrentEmail, selectCurrentToken } from '~/feature/auth/authSlice';
@@ -130,15 +131,62 @@ const Sidebar = () => {
                                     selected={selected}
                                     setSelected={setSelected}
                                 />
+                                <Typography variant="h6" color={colors.grey[300]} sx={{ m: '15px 0 5px 20px' }}>
+                                    Manage
+                                </Typography>
+                                <Item
+                                    title="Contribution"
+                                    to="/manager/contribution"
+                                    icon={<ArticleOutlinedIcon />}
+                                    selected={selected}
+                                    setSelected={setSelected}
+                                />
+                                <Typography variant="h6" color={colors.grey[300]} sx={{ m: '15px 0 5px 20px' }}>
+                                    Summary Reports
+                                </Typography>
+                                <Item
+                                    title="Contributions"
+                                    to="/manager/statistics"
+                                    icon={<EqualizerOutlinedIcon />}
+                                    selected={selected}
+                                    setSelected={setSelected}
+                                />
+                                <Typography variant="h6" color={colors.grey[300]} sx={{ m: '15px 0 5px 20px' }}>
+                                    Statistical Chart
+                                </Typography>
+                                <Item
+                                    title="Pie Chart"
+                                    to="/manager/pie"
+                                    icon={<PieChartOutlineOutlinedIcon />}
+                                    selected={selected}
+                                    setSelected={setSelected}
+                                />
+                                <Item
+                                    title="Bar Chart"
+                                    to="/manager/bar"
+                                    icon={<BarChartOutlinedIcon />}
+                                    selected={selected}
+                                    setSelected={setSelected}
+                                />
                             </>
                         )}
 
                         {isCoordinator && (
                             <>
+                                <Typography variant="h6" color={colors.grey[300]} sx={{ m: '15px 0 5px 20px' }}>
+                                    Manage
+                                </Typography>
                                 <Item
-                                    title="Dashboard"
+                                    title="Contribution"
                                     to="/coordinator"
-                                    icon={<HomeOutlinedIcon />}
+                                    icon={<ArticleOutlinedIcon />}
+                                    selected={selected}
+                                    setSelected={setSelected}
+                                />
+                                <Item
+                                    title="Users"
+                                    to="/coordinator/users"
+                                    icon={<PersonOutlinedIcon />}
                                     selected={selected}
                                     setSelected={setSelected}
                                 />
@@ -146,15 +194,8 @@ const Sidebar = () => {
                         )}
                         {isAdmin && (
                             <>
-                                <Item
-                                    title="Dashboard"
-                                    to="/admin"
-                                    icon={<HomeOutlinedIcon />}
-                                    selected={selected}
-                                    setSelected={setSelected}
-                                />
                                 <Typography variant="h6" color={colors.grey[300]} sx={{ m: '15px 0 5px 20px' }}>
-                                    Management
+                                    Manage
                                 </Typography>
                                 <Item
                                     title="Users"
@@ -188,48 +229,6 @@ const Sidebar = () => {
                                     title="Roles"
                                     to=""
                                     icon={<HelpOutlineOutlinedIcon />}
-                                    selected={selected}
-                                    setSelected={setSelected}
-                                />
-                                <Typography variant="h6" color={colors.grey[300]} sx={{ m: '15px 0 5px 20px' }}>
-                                    Reports
-                                </Typography>
-                                <Item
-                                    title="Statistics"
-                                    to="/admin/statistics"
-                                    icon={<EqualizerOutlinedIcon />}
-                                    selected={selected}
-                                    setSelected={setSelected}
-                                />
-
-                                <Typography variant="h6" color={colors.grey[300]} sx={{ m: '15px 0 5px 20px' }}>
-                                    Analysis
-                                </Typography>
-                                <Item
-                                    title="Bar Chart"
-                                    to="/admin/bar"
-                                    icon={<BarChartOutlinedIcon />}
-                                    selected={selected}
-                                    setSelected={setSelected}
-                                />
-                                <Item
-                                    title="Pie Chart"
-                                    to="/admin/pie"
-                                    icon={<PieChartOutlineOutlinedIcon />}
-                                    selected={selected}
-                                    setSelected={setSelected}
-                                />
-                                <Item
-                                    title="Line Chart"
-                                    to="/admin/line"
-                                    icon={<TimelineOutlinedIcon />}
-                                    selected={selected}
-                                    setSelected={setSelected}
-                                />
-                                <Item
-                                    title="Geography Chart"
-                                    to="/admin/geography"
-                                    icon={<MapOutlinedIcon />}
                                     selected={selected}
                                     setSelected={setSelected}
                                 />

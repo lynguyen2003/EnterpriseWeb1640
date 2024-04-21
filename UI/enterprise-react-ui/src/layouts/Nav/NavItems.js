@@ -8,13 +8,13 @@ export const navbarItems = [
         icon: 'fa-solid fa-house',
     },
     {
-        title: 'Dashboard',
-        url: '/admin',
+        title: 'Admin Dashboard',
+        url: '/admin/users',
         cName: 'nav-link',
         icon: 'fa-solid fa-address-book',
     },
     {
-        title: 'Manage Dashboard',
+        title: 'Manager Dashboard',
         url: '/manager',
         cName: 'nav-link',
         icon: 'fa-solid fa-address-book',

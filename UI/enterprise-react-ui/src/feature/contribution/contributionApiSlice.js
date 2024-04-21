@@ -1,5 +1,15 @@
 import { apiSlice } from '~/app/api/apiSlice';
 
+export const createParams = (data) => {
+    const params = new URLSearchParams();
+    Object.keys(data).forEach((key) => {
+        if (data[key] !== undefined && data[key] !== null) {
+            params.append(key, data[key]);
+        }
+    });
+    return params;
+};
+
 export const contributionApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getAllContribution: builder.query({
@@ -8,12 +18,13 @@ export const contributionApiSlice = apiSlice.injectEndpoints({
                 method: 'GET',
             }),
         }),
-        getContributionPagination: builder.query({
+        getContributionWithParams: builder.query({
             query: (data) => {
-                const params = new URLSearchParams({
-                    PageNum: data.pageNum || 1,
-                    PageSize: data.pageSize || 10,
-                    isPublished: data.isPublished || null,
+                const params = createParams({
+                    PageNum: data.pageNum,
+                    PageSize: data.pageSize,
+                    isPublished: data.isPublished,
+                    isApproved: data.isApproved,
                 });
 
                 return {
@@ -59,7 +70,7 @@ export const contributionApiSlice = apiSlice.injectEndpoints({
 
 export const {
     useGetAllContributionQuery,
-    useGetContributionPaginationQuery,
+    useGetContributionWithParamsQuery,
     useGetContributionApprovedQuery,
     useGetContributionByUserIdQuery,
     usePutContributionMutation,

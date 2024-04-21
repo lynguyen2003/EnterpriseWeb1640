@@ -56,10 +56,10 @@ function Nav() {
                 {navbarItems.map((item, index) => {
                     if (
                         (item.title === 'Contributions' && (!isLoggedIn || userObject.role !== 'Student')) ||
-                        (item.title === 'Dashboard' && (!isLoggedIn || userObject.role !== 'Admin')) ||
+                        (item.title === 'Admin Dashboard' && (!isLoggedIn || userObject.role !== 'Admin')) ||
                         (item.title === 'Coordinator Dashboard' &&
                             (!isLoggedIn || userObject.role !== 'MarketingCoordinator')) ||
-                        (item.title === 'Manage Dashboard' &&
+                        (item.title === 'Manager Dashboard' &&
                             (!isLoggedIn || userObject.role !== 'MarketingManager')) ||
                         (item.title === 'Published Contribution' &&
                             (!isLoggedIn || (userObject.role !== 'Guest' && userObject.role !== 'Student'))) ||

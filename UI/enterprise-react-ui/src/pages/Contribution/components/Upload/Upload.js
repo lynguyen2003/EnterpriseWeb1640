@@ -6,6 +6,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Box } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Grid from '@mui/material/Grid';
 
 import { fileDb } from '~/Config';
 import { ref, uploadBytes } from 'firebase/storage';
@@ -209,130 +210,144 @@ const Upload = () => {
     };
 
     return (
-        <form className="formArticle" onSubmit={handleSubmit}>
-            <div className=" field">
-                <label className="form-label">Title</label>
-                <input
-                    placeholder="Type your title here"
-                    type="text"
-                    className="form-control"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleInputChange}
-                />
-            </div>
-
-            <div className=" fileUpload">
-                <label className="form-label">Upload File: </label>
-                <p className="form-text text-muted">Only Word documents and PDF files are allowed.</p>
-                <Button
-                    component="label"
-                    role={undefined}
-                    variant="contained"
-                    tabIndex={-1}
-                    startIcon={<CloudUploadIcon />}
-                    size="large"
-                    sx={{ backgroundColor: '#3288c5' }}
-                >
-                    Upload file
-                    <VisuallyHiddenInput type="file" onChange={handleFileChange} />
-                </Button>
-                {formData.filePath && (
-                    <div>
-                        <p>
-                            {formData.filePath}
-                            <IconButton onClick={handleDeleteFile}>
-                                <DeleteIcon />
-                            </IconButton>
-                        </p>
-                    </div>
-                )}
-            </div>
-            <div className=" field">
-                <label className="form-label">Description</label>
-                <input
-                    placeholder="Type your description here"
-                    className="form-control"
-                    name="description"
-                    value={formData.description}
-                    onChange={handleInputChange}
-                />
-            </div>
-            <div className=" fileUpload">
-                <label className="form-label">Upload Image: </label>
-                <p className="form-text text-muted">Only JPEG, PNG, GIF, and WEBP files are allowed.</p>
-                <Button
-                    component="label"
-                    role={undefined}
-                    variant="contained"
-                    tabIndex={-1}
-                    startIcon={<CloudUploadIcon />}
-                    size="large"
-                    sx={{ backgroundColor: '#3288c5' }}
-                >
-                    Upload Image
-                    <VisuallyHiddenInput type="file" onChange={handleImgChange} />
-                </Button>
-
-                {formData.imgPath && (
-                    <Box>
-                        <p>
-                            {formData.imgPath}
-                            <IconButton onClick={handleDeleteImg}>
-                                <DeleteIcon />
-                            </IconButton>
-                        </p>
-                    </Box>
-                )}
-            </div>
-            <div>
-                <Box display="flex" justifyContent="space-between">
-                    <Box>
-                        <label className="form-label">Submission date :</label>
-                        {selectedClosureDate ? <span> {formatDate(selectedClosureDate)}</span> : <span> ...</span>}
-                        {isExpired && <p className="text-danger">The submission date has expired.</p>}
-                    </Box>
-                    <Box>
-                        <select
-                            className="form-select"
-                            value={selectedAcademicYear}
-                            onChange={handleAcademicYearChange}
+        <form onSubmit={handleSubmit}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                    border: '1px solid',
+                    borderRadius: '1.4rem',
+                    padding: '2rem',
+                    margin: '1rem',
+                }}
+            >
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                        <label className="form-label">Title</label>
+                        <input
+                            placeholder="Type your title here"
+                            type="text"
+                            className="form-control"
+                            name="title"
+                            value={formData.title}
+                            onChange={handleInputChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <label className="form-label">Upload File: </label>
+                        <p className="form-text text-muted">Only Word documents and PDF files are allowed.</p>
+                        <Button
+                            component="label"
+                            role={undefined}
+                            variant="contained"
+                            tabIndex={-1}
+                            startIcon={<CloudUploadIcon />}
+                            size="large"
+                            sx={{ backgroundColor: '#3288c5' }}
                         >
-                            <option defaultValue>Select Academic Year</option>
-                            {(closureDatesObject || []).map((date) => (
-                                <option key={date.id} value={date.academicYear}>
-                                    {date.academicYear}
-                                </option>
-                            ))}
-                        </select>
-                    </Box>
-                </Box>
-            </div>
+                            Upload file
+                            <VisuallyHiddenInput type="file" onChange={handleFileChange} />
+                        </Button>
+                        {formData.filePath && (
+                            <div>
+                                <p>
+                                    {formData.filePath}
+                                    <IconButton onClick={handleDeleteFile}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </p>
+                            </div>
+                        )}
+                    </Grid>
 
-            <div className="form-check">
-                <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value={isChecked}
-                    onChange={(e) => {
-                        setIsChecked(e.target.checked);
-                        setShowCheckboxError(!e.target.checked);
-                    }}
-                    id="flexCheckDefault"
-                />
-                <label className="form-check-label" htmlFor="flexCheckDefault">
-                    I have read and agree to the terms and conditions
-                </label>
-                {showCheckboxError && (
-                    <p className="text-danger">You must agree to the terms and conditions before submitting.</p>
-                )}
-            </div>
-            <div className="upload">
-                <button type="submit" className="submit btn btn-primary">
-                    {isLoading ? <LoadingSpinner /> : 'Submit'}
-                </button>
-                <ToastContainer />
-            </div>
+                    <Grid item xs={12} sm={6}>
+                        <label className="form-label">Description</label>
+                        <input
+                            placeholder="Type your description here"
+                            className="form-control"
+                            name="description"
+                            value={formData.description}
+                            onChange={handleInputChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <label className="form-label">Upload Image: </label>
+                        <p className="form-text text-muted">Only JPEG, PNG, GIF, and WEBP files are allowed.</p>
+                        <Button
+                            component="label"
+                            role={undefined}
+                            variant="contained"
+                            tabIndex={-1}
+                            startIcon={<CloudUploadIcon />}
+                            size="large"
+                            sx={{ backgroundColor: '#3288c5' }}
+                        >
+                            Upload Image
+                            <VisuallyHiddenInput type="file" onChange={handleImgChange} />
+                        </Button>
+
+                        {formData.imgPath && (
+                            <Box>
+                                <p>
+                                    {formData.imgPath}
+                                    <IconButton onClick={handleDeleteImg}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </p>
+                            </Box>
+                        )}
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                        <Grid item sm={6}>
+                            <label className="form-label">Submission date :</label>
+                            {selectedClosureDate ? <span> {formatDate(selectedClosureDate)}</span> : <span> ...</span>}
+                            {isExpired && <p className="text-danger">The submission date has expired.</p>}
+                        </Grid>
+                        <Grid item sm={4}>
+                            <select
+                                className="form-select"
+                                value={selectedAcademicYear}
+                                onChange={handleAcademicYearChange}
+                            >
+                                <option defaultValue>Select Academic Year</option>
+                                {(closureDatesObject || []).map((date) => (
+                                    <option key={date.id} value={date.academicYear}>
+                                        {date.academicYear}
+                                    </option>
+                                ))}
+                            </select>
+                        </Grid>
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                        <input
+                            className="form-check-input"
+                            type="checkbox"
+                            value={isChecked}
+                            onChange={(e) => {
+                                setIsChecked(e.target.checked);
+                                setShowCheckboxError(!e.target.checked);
+                            }}
+                            id="flexCheckDefault"
+                        />
+                        <label className="form-check-label" htmlFor="flexCheckDefault">
+                            I have read and agree to the terms and conditions
+                        </label>
+                        {showCheckboxError && (
+                            <p className="text-danger">You must agree to the terms and conditions before submitting.</p>
+                        )}
+                    </Grid>
+
+                    <button type="submit" className="submit btn btn-primary">
+                        {isLoading ? <LoadingSpinner /> : 'Submit'}
+                    </button>
+                    <ToastContainer />
+                </Grid>
+            </Box>
         </form>
     );
 };

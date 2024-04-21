@@ -1,4 +1,4 @@
-import { Box, IconButton, useTheme, Select, MenuItem } from '@mui/material';
+import { Box, IconButton, useTheme, MenuItem } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { tokens } from '../../../theme';
 import Header from '../../../components/Header';
@@ -54,16 +54,10 @@ const Deadlines = () => {
             flex: 1,
         },
         {
-            field: 'isSet',
-            headerName: 'Set Date',
-            type: 'text',
-            width: 220,
-            flex: 1,
-        },
-        {
             field: 'actions',
             type: 'actions',
             width: 100,
+            flex: 1,
             getActions: ({ id }) => [
                 <Stack direction="row" spacing={1}>
                     <IconButton aria-label="update" size="large" onClick={() => handleUpdateClick(id)}>

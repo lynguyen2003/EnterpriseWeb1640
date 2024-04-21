@@ -11,13 +11,15 @@ import {
     Dialog,
     DialogTitle,
     TextField,
+    List,
     ListItemText,
+    ListItem,
+    styled,
+    Grid,
+    Paper,
+    Switch,
+    FormControlLabel,
 } from '@mui/material';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import Grid from '@mui/material/Grid';
-import { styled } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { DataGrid } from '@mui/x-data-grid';
 import { tokens } from '~/theme';
@@ -162,7 +164,6 @@ const Coordinator = () => {
             await updateContribution(updatedRow).unwrap();
 
             refetch();
-            toast.success(`Contribution ${updatedRow.isApproved ? 'approved' : 'unapproved'} successfully`);
         } catch (error) {
             console.error('Error approving:', error);
             toast.error('Failed to approve');
@@ -179,7 +180,6 @@ const Coordinator = () => {
             await updateContribution(updatedRow).unwrap();
 
             refetch();
-            toast.success(`Contribution ${updatedRow.isPublished ? 'published' : 'unpublished'} successfully`);
         } catch (error) {
             console.error('Error publishing:', error);
             toast.error('Failed to publish');
@@ -204,10 +204,11 @@ const Coordinator = () => {
     };
 
     const columns = [
-        { field: 'id', headerName: 'ID', width: 50 },
+        { field: 'id', headerName: 'ID', witdh: 50 },
         {
             field: 'email',
             headerName: 'Email',
+            flex: 1,
         },
         {
             field: 'title',
@@ -216,15 +217,7 @@ const Coordinator = () => {
         {
             field: 'uploadDate',
             headerName: 'Upload Date',
-        },
-
-        {
-            field: 'isApproved',
-            headerName: 'Approve',
-        },
-        {
-            field: 'isPublished',
-            headerName: 'Published',
+            flex: 1,
         },
         {
             field: 'filePath',
@@ -256,45 +249,41 @@ const Coordinator = () => {
                         padding: '10px 20px',
                     }}
                 >
-                    View Details
+                    Details
                 </Button>
             ),
         },
 
         {
             field: 'approve',
-            headerName: '',
+            headerName: 'Approved',
             flex: 1,
             renderCell: (params) => (
-                <Button
-                    onClick={() => handleSetApprove(params.row)}
-                    sx={{
-                        color: colors.blueAccent[500],
-                        fontSize: '12px',
-                        fontWeight: 'bold',
-                        padding: '10px 20px',
-                    }}
-                >
-                    Approve
-                </Button>
+                <FormControlLabel
+                    control={
+                        <IOSSwitch
+                            sx={{ m: 1 }}
+                            defaultChecked={params.row.isApproved}
+                            onChange={() => handleSetApprove(params.row)}
+                        />
+                    }
+                />
             ),
         },
         {
             field: 'published',
-            headerName: '',
+            headerName: 'Published',
             flex: 1,
             renderCell: (params) => (
-                <Button
-                    onClick={() => handleSetPublish(params.row)}
-                    sx={{
-                        color: colors.blueAccent[500],
-                        fontSize: '12px',
-                        fontWeight: 'bold',
-                        padding: '10px 20px',
-                    }}
-                >
-                    Publish
-                </Button>
+                <FormControlLabel
+                    control={
+                        <IOSSwitch
+                            sx={{ m: 1 }}
+                            defaultChecked={params.row.isPublished}
+                            onChange={() => handleSetPublish(params.row)}
+                        />
+                    }
+                />
             ),
         },
     ];
@@ -340,9 +329,9 @@ const Coordinator = () => {
                     {...rows}
                     initialState={{
                         ...rows.initialState,
-                        pagination: { paginationModel: { pageSize: 5 } },
+                        pagination: { paginationModel: { pageSize: 10 } },
                     }}
-                    pageSizeOptions={[5, 10, 25]}
+                    pageSizeOptions={[5, 10, 20]}
                 />
             </Box>
             {selectedRow && (
@@ -520,5 +509,53 @@ const Coordinator = () => {
         </Box>
     );
 };
+
+const IOSSwitch = styled((props) => <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />)(
+    ({ theme }) => ({
+        width: 42,
+        height: 26,
+        padding: 0,
+        '& .MuiSwitch-switchBase': {
+            padding: 0,
+            margin: 2,
+            transitionDuration: '300ms',
+            '&.Mui-checked': {
+                transform: 'translateX(16px)',
+                color: '#fff',
+                '& + .MuiSwitch-track': {
+                    backgroundColor: theme.palette.mode === 'dark' ? '#2ECA45' : '#65C466',
+                    opacity: 1,
+                    border: 0,
+                },
+                '&.Mui-disabled + .MuiSwitch-track': {
+                    opacity: 0.5,
+                },
+            },
+            '&.Mui-focusVisible .MuiSwitch-thumb': {
+                color: '#33cf4d',
+                border: '6px solid #fff',
+            },
+            '&.Mui-disabled .MuiSwitch-thumb': {
+                color: theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[600],
+            },
+            '&.Mui-disabled + .MuiSwitch-track': {
+                opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,
+            },
+        },
+        '& .MuiSwitch-thumb': {
+            boxSizing: 'border-box',
+            width: 22,
+            height: 22,
+        },
+        '& .MuiSwitch-track': {
+            borderRadius: 26 / 2,
+            backgroundColor: theme.palette.mode === 'light' ? '#E9E9EA' : '#39393D',
+            opacity: 1,
+            transition: theme.transitions.create(['background-color'], {
+                duration: 500,
+            }),
+        },
+    }),
+);
 
 export default Coordinator;

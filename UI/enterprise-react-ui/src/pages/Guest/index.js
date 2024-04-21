@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -23,9 +25,11 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { fileDb } from '~/Config';
 import { ref, getDownloadURL } from 'firebase/storage';
 import { ToastContainer, toast } from 'react-toastify';
+import { jwtDecode } from 'jwt-decode';
 
-import { useGetContributionPaginationQuery } from '~/feature/contribution/contributionApiSlice';
+import { useGetContributionWithParamsQuery } from '~/feature/contribution/contributionApiSlice';
 import { useGetUserByUserIdMutation } from '~/feature/user/userApiSlice';
+import { selectCurrentToken } from '~/feature/auth/authSlice';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -37,13 +41,19 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 const Guest = () => {
+    const currentToken = useSelector(selectCurrentToken);
+    const userObject = currentToken ? jwtDecode(currentToken) : { role: null };
     const [imageUrls, setImageUrls] = useState({});
     const [open, setOpen] = useState(false);
     const [selectedContribution, setSelectedContribution] = useState(null);
     const [selectedUser, setSelectedUser] = useState({});
-    const [params, setParams] = useState({ pageNum: 1, pageSize: 8, isPublished: true });
-
-    const { data: contributionsObj } = useGetContributionPaginationQuery(params);
+    const [params, setParams] = useState({
+        pageNum: 1,
+        pageSize: 8,
+        isPublished: userObject.role === 'Guest' ? true : null,
+        isApproved: true,
+    });
+    const { data: contributions } = useGetContributionWithParamsQuery(params);
     const [getUserByUserId, { data: userData }] = useGetUserByUserIdMutation();
 
     useEffect(() => {
@@ -59,13 +69,13 @@ const Guest = () => {
     }, [userData]);
 
     useEffect(() => {
-        if (Array.isArray(contributionsObj)) {
-            contributionsObj.forEach((contribution) => {
+        if (Array.isArray(contributions)) {
+            contributions.forEach((contribution) => {
                 // your code here
                 handleDisplayImg(contribution.imgPath);
             });
         }
-    }, [contributionsObj]);
+    }, [contributions]);
 
     const handleDisplayImg = async (imgPath) => {
         try {
@@ -108,9 +118,16 @@ const Guest = () => {
             }}
         >
             <ToastContainer />
-            <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                {contributionsObj &&
-                    contributionsObj.map((contribution, index) => (
+            <Grid
+                container
+                spacing={{ xs: 2, md: 3 }}
+                columns={{ xs: 4, sm: 8, md: 12 }}
+                sx={{
+                    justifyContent: 'center',
+                }}
+            >
+                {contributions &&
+                    contributions.map((contribution, index) => (
                         <Grid item xs={3} key={index}>
                             <Card
                                 sx={{
@@ -152,17 +169,17 @@ const Guest = () => {
                             </Card>
                         </Grid>
                     ))}
-                <Pagination
-                    count={(1, 2, 3, 4, 5)}
-                    page={params.pageNum}
-                    onChange={(event, value) => {
-                        setParams((prevParams) => ({ ...prevParams, pageNum: value }));
-                    }}
-                    renderItem={(item) => (
-                        <PaginationItem slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }} {...item} />
-                    )}
-                />
             </Grid>
+            <Pagination
+                count={(1, 2, 3, 4, 5)}
+                page={params.pageNum}
+                onChange={(event, value) => {
+                    setParams((prevParams) => ({ ...prevParams, pageNum: value }));
+                }}
+                renderItem={(item) => (
+                    <PaginationItem slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }} {...item} />
+                )}
+            />
             <BootstrapDialog
                 onClose={handleClose}
                 aria-labelledby="customized-dialog-title"

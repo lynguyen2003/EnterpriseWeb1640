@@ -50,7 +50,7 @@ function Content() {
                     }}
                 >
                     <h1>Greenwich University</h1>
-                    <p>Choose Your Feature</p>
+                    <p>Choose Your Future</p>
 
                     <Link className="Join" to="">
                         Join Us
