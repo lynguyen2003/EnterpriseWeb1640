@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Select, MenuItem } from '@mui/material';
+import { Box, Button, TextField, MenuItem } from '@mui/material';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -15,12 +15,11 @@ const Form = () => {
     const [formData, setFormData] = useState({
         userName: '',
         email: '',
-        phoneNumber: '',
         facultiesId: '',
         roleName: '',
     });
 
-    const { data: faculties, isLoading: facultiesLoading } = useGetAllFacultiesQuery();
+    const { data: faculties } = useGetAllFacultiesQuery();
     const { data: roles, isLoading: rolesLoading } = useGetAllRolesQuery();
     const [postUser, { isLoading, isError }] = usePostUserMutation();
 
@@ -94,19 +93,6 @@ const Form = () => {
                                 helperText={touched.email && errors.email}
                                 sx={{ gridColumn: 'span 4' }}
                             />
-                            <TextField
-                                fullWidth
-                                variant="filled"
-                                type="text"
-                                label="Phone Number"
-                                onBlur={handleBlur}
-                                onChange={handleChange}
-                                value={values.phoneNumber}
-                                name="phoneNumber"
-                                error={!!touched.phoneNumber && !!errors.phoneNumber}
-                                helperText={touched.phoneNumber && errors.phoneNumber}
-                                sx={{ gridColumn: 'span 4' }}
-                            />
 
                             <TextField
                                 fullWidth
@@ -121,12 +107,16 @@ const Form = () => {
                                 helperText={touched.facultiesId && errors.facultiesId}
                                 sx={{ gridColumn: 'span 4' }}
                             >
-                                {facultiesLoading ? (
-                                    <MenuItem value="">Loading...</MenuItem>
+                                {faculties ? (
+                                    faculties.length === 0 ? (
+                                        <MenuItem value="">Loading...</MenuItem>
+                                    ) : (
+                                        faculties.map((faculty) => (
+                                            <MenuItem value={faculty.id}>{faculty.facultyName}</MenuItem>
+                                        ))
+                                    )
                                 ) : (
-                                    faculties.map((faculty) => (
-                                        <MenuItem value={faculty.id}>{faculty.facultyName}</MenuItem>
-                                    ))
+                                    <MenuItem value="">Loading...</MenuItem>
                                 )}
                             </TextField>
                             <TextField
@@ -165,13 +155,9 @@ const Form = () => {
     );
 };
 
-const phoneRegExp = /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
-
 const checkoutSchema = yup.object().shape({
     userName: yup.string().required('required'),
     fullName: yup.string().required('required'),
-    email: yup.string().email('invalid email').required('required'),
-    phoneNumber: yup.string().matches(phoneRegExp, 'Phone number is not valid').required('required'),
     facultiesId: yup.string().required('required'),
     roleName: yup.string().required('required'),
 });

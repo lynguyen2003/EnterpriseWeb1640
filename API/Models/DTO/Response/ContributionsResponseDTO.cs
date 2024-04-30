@@ -19,6 +19,7 @@ namespace Models.DTO.Response
         public bool IsPublished { get; set; }
         public int ClosureDatesId { get; set; }
         public string UsersId { get; set; }
-        public int MagazinesId { get; set; }
+        public string FacultyName { get; set; }
+
     }
 }

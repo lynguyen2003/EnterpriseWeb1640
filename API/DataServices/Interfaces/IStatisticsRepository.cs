@@ -13,6 +13,8 @@ namespace DataServices.Interfaces
     {
         Task<IEnumerable<ContributionStatistics>> GetStatistics(StatisticsFilter filter);
         Task<IEnumerable<ContributionStatistics>> GetStatisticsWithFaculty(StatisticsFilter filter);
-        Task<IEnumerable<ContributionStatistics>> GetPercentage();
+        Task<int> GetStatisticsUsers();
+        Task<int> GetStatisticsApprovedContributions();
+        Task<IEnumerable<ContributionStatistics>> GetPercentageWithAcademicYear();
     }
 }

@@ -21,19 +21,34 @@ namespace DataServices.Repositories
 
         public virtual async Task<IEnumerable<Contributions>> GetAll(ContributionsFilter paginationDTO)
         {
-            var query = _dbSet.AsQueryable();
+            var query = _dbSet
+                .Include(c => c.Users) // Include Users table
+                .ThenInclude(u => u.Faculties) // Include Faculties table
+                .AsQueryable();
+
             if (paginationDTO.IsApproved.HasValue)
             {
                 query = query.Where(c => c.IsApproved == paginationDTO.IsApproved);
             }
+
             if (paginationDTO.IsPublished.HasValue)
             {
                 query = query.Where(c => c.IsPublished == paginationDTO.IsPublished);
             }
-            return await query.Skip((paginationDTO.PageNum - 1) * paginationDTO.PageSize)
+
+            if (!string.IsNullOrEmpty(paginationDTO.FacultyName))
+            {
+                query = query.Where(c => c.Users.Faculties.FacultyName == paginationDTO.FacultyName);
+            }
+
+            // Execute the query
+            return await query
+                .OrderBy(c => c.Users.FacultiesId) // Order by Faculty Id for grouping
+                .Skip((paginationDTO.PageNum - 1) * paginationDTO.PageSize)
                 .Take(paginationDTO.PageSize)
                 .ToListAsync();
         }
+
 
         public override async Task<IEnumerable<Contributions>> GetAll()
         {

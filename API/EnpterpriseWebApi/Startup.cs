@@ -125,7 +125,7 @@ public class Startup
             options.AddPolicy("AllowFirebaseClient",
                 builder =>
                 {
-                    builder.WithOrigins("https://greenwichweb-4f0ca.web.app")
+                    builder.WithOrigins("http://localhost:3000")
                            .AllowAnyHeader()
                            .AllowAnyMethod()
                            .AllowCredentials(); // Allow credentials

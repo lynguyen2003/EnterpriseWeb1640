@@ -23,7 +23,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import Stack from '@mui/material/Stack';
 
 import {
-    useGetUsersWithParamsQuery,
+    useGetUsersParamsMutation,
     useGetUserByEmailQuery,
     usePostUserMutation,
     useUpdateUserMutation,
@@ -43,20 +43,20 @@ const CoordinatorManageUsers = () => {
     const [openUpdate, setOpenUpdate] = useState(false);
     const email = useSelector(selectCurrentEmail);
     const { data: currentUser } = useGetUserByEmailQuery(email);
+    const facultiesIdCurrentUser = currentUser ? currentUser[0].facultiesId : null;
     const [rows, setRows] = useState([]);
     const [formData, setFormData] = useState({
         userName: null,
         email: null,
-        phoneNumber: null,
-        facultiesId: currentUser ? currentUser[0].facultiesId : null,
+        facultiesId: facultiesIdCurrentUser ? facultiesIdCurrentUser : null,
         roleName: null,
     });
     const [params] = useState({
         email: '',
-        facultiesId: currentUser ? currentUser[0].facultiesId : null,
+        facultiesId: facultiesIdCurrentUser ? facultiesIdCurrentUser : null,
     });
 
-    const { data: users, refetch } = useGetUsersWithParamsQuery(params);
+    const [getUsersParams, { data: users, refetch }] = useGetUsersParamsMutation();
     const { data: facultiesData } = useGetAllFacultiesQuery();
     const { data: roles, isLoading: rolesLoading } = useGetAllRolesQuery();
     const [getUserRole] = useGetUserRoleMutation();
@@ -64,6 +64,12 @@ const CoordinatorManageUsers = () => {
     const [updateUser] = useUpdateUserMutation();
     const [deleteUser] = useDeleteUserMutation();
     const faculties = useSelector(selectFaculties);
+
+    useEffect(() => {
+        if (facultiesIdCurrentUser) {
+            getUsersParams(params);
+        }
+    }, [getUsersParams, params, currentUser, facultiesIdCurrentUser]);
 
     useEffect(() => {
         if (users) {
@@ -85,13 +91,14 @@ const CoordinatorManageUsers = () => {
                     userName: user.userName,
                     fullName: user.fullName,
                     email: user.email,
-                    phone: user.phoneNumber,
                     facultiesId: user.facultiesId,
                     faculties: facultyName,
                     role: roles ? roles : 'Unknown Role',
                 };
             });
-            Promise.all(userObjects).then(setRows);
+            Promise.all(userObjects)
+                .then((users) => users.filter((user) => user.role[0] === 'Student' || user.role[0] === 'Guest'))
+                .then(setRows);
         }
     }, [users, faculties, getUserRole]);
 
@@ -108,7 +115,6 @@ const CoordinatorManageUsers = () => {
             userName: formData.userName,
             fullName: formData.fullName,
             email: formData.email,
-            phoneNumber: formData.phone,
             facultiesId: formData.facultiesId,
         })
             .unwrap()
@@ -119,7 +125,6 @@ const CoordinatorManageUsers = () => {
                     userName: '',
                     fullName: '',
                     email: '',
-                    phoneNumber: '',
                     role: '',
                 });
                 // Update the rows state with the updated user
@@ -153,11 +158,6 @@ const CoordinatorManageUsers = () => {
             return;
         }
 
-        if (!formData.phoneNumber.trim()) {
-            toast.error('Phone number is required');
-            return;
-        }
-
         if (!formData.roleName.trim()) {
             toast.error('Role is required');
             return;
@@ -168,7 +168,6 @@ const CoordinatorManageUsers = () => {
             setFormData({
                 userName: '',
                 email: '',
-                phoneNumber: '',
                 roleName: '',
             });
             isError ? toast.error('Failed to create user') : toast.success('User created successfully');
@@ -193,11 +192,6 @@ const CoordinatorManageUsers = () => {
         {
             field: 'email',
             headerName: 'Email',
-            flex: 1,
-        },
-        {
-            field: 'phone',
-            headerName: 'Phone Number',
             flex: 1,
         },
         {
@@ -321,16 +315,6 @@ const CoordinatorManageUsers = () => {
                             <TextField
                                 margin="dense"
                                 variant="filled"
-                                id="phoneNumber"
-                                label="Phone Number"
-                                type="number"
-                                fullWidth
-                                value={formData.phoneNumber}
-                                onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
-                            />
-                            <TextField
-                                margin="dense"
-                                variant="filled"
                                 select
                                 label="Role"
                                 name="roleName"
@@ -404,19 +388,6 @@ const CoordinatorManageUsers = () => {
                                 shrink: true,
                             }}
                             disabled
-                        />
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="phoneNumber"
-                            label="Phone Number"
-                            type="text"
-                            fullWidth
-                            value={formData.phone}
-                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
                         />
                     </DialogContent>
                     <DialogActions>

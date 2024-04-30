@@ -24,6 +24,20 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 };
             },
         }),
+        getUsersParams: builder.mutation({
+            query: (data) => {
+                const params = createParams({
+                    PageNum: data.pageNum,
+                    PageSize: data.pageSize,
+                    FacultiesId: data.facultiesId,
+                });
+
+                return {
+                    url: `/Users?${params.toString()}`,
+                    method: 'GET',
+                };
+            },
+        }),
         getUserByEmail: builder.query({
             query: (email) => ({
                 url: `/Users/${email}`,
@@ -62,6 +76,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
 export const {
     useGetAllUserQuery,
     useGetUsersWithParamsQuery,
+    useGetUsersParamsMutation,
     useGetUserByEmailQuery,
     useGetUserByUserIdMutation,
     usePostUserMutation,

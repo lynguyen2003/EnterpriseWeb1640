@@ -30,7 +30,7 @@ const Bar = () => {
     return (
         <Box m="20px">
             <Header
-                title="Contribution Statistics"
+                title="Bar Chart"
                 subtitle="Distribution number of contributions within each Faculty for each academic year"
             />
             <Box height="75vh">

@@ -7,13 +7,21 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import PublishIcon from '@mui/icons-material/Publish';
 import Header from '~/components/Header';
 import BarChart from '~/components/Chart/BarChart';
-import PieChart from '~/components/Chart/PieChartCount';
+import PieChart from '~/components/Chart/PieChart';
 import StatBox from '~/components/StatBox';
-import { useGetStatisticsWithFacutlyQuery, useGetStatisticsQuery } from '~/feature/statistics/statisticsApiSlice';
+import {
+    useGetStatisticsWithFacutlyQuery,
+    useGetStatisticsUsersQuery,
+    useGetStatisticsApprovedContributionsQuery,
+    useGetStatisticsQuery,
+} from '~/feature/statistics/statisticsApiSlice';
 
 const ManagerDashboard = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
+
+    const { data: statCountUsers } = useGetStatisticsUsersQuery();
+    const { data: statCountApprovedContributions } = useGetStatisticsApprovedContributionsQuery();
 
     const { data: statPieData } = useGetStatisticsWithFacutlyQuery();
     let contributions, totalContributions, totalContributors;
@@ -74,7 +82,6 @@ const ManagerDashboard = () => {
                         title={totalContributions ? totalContributions.toString() : ''}
                         subtitle="Total Contributions"
                         progress="0.75"
-                        increase="+14%"
                         icon={<ArticleIcon sx={{ color: colors.greenAccent[600], fontSize: '26px' }} />}
                     />
                 </Box>
@@ -89,7 +96,6 @@ const ManagerDashboard = () => {
                         title={totalContributors ? totalContributors.toString() : ''}
                         subtitle="Contributors"
                         progress="0.50"
-                        increase="+21%"
                         icon={<PersonIcon sx={{ color: colors.greenAccent[600], fontSize: '26px' }} />}
                     />
                 </Box>
@@ -101,10 +107,9 @@ const ManagerDashboard = () => {
                     justifyContent="center"
                 >
                     <StatBox
-                        title="0"
-                        subtitle="Approved Contributions"
+                        title={statCountUsers ? statCountUsers.toString() : ''}
+                        subtitle="Users"
                         progress="0.30"
-                        increase="+5%"
                         icon={<CheckBoxIcon sx={{ color: colors.greenAccent[600], fontSize: '26px' }} />}
                     />
                 </Box>
@@ -116,10 +121,9 @@ const ManagerDashboard = () => {
                     justifyContent="center"
                 >
                     <StatBox
-                        title="0"
-                        subtitle="Published Contributions"
+                        title={statCountApprovedContributions ? statCountApprovedContributions.toString() : ''}
+                        subtitle="Approved Contributions"
                         progress="0.80"
-                        increase="+43%"
                         icon={<PublishIcon sx={{ color: colors.greenAccent[600], fontSize: '26px' }} />}
                     />
                 </Box>

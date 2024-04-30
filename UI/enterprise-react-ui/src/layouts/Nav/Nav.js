@@ -1,37 +1,51 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { navbarItems } from './NavItems';
 import './Nav.css';
-import { selectIsAuthenticated, logOut, selectCurrentEmail } from '~/feature/auth/authSlice';
+import { selectIsAuthenticated, logOut, selectCurrentEmail, selectCurrentToken } from '~/feature/auth/authSlice';
 import { useGetUserByEmailQuery } from '~/feature/user/userApiSlice';
 
 import { jwtDecode } from 'jwt-decode';
 import { ToastContainer } from 'react-toastify';
 
 import { Avatar, Box, Divider, IconButton, ListItemIcon, Typography } from '@mui/material';
-import { selectCurrentToken } from '~/feature/auth/authSlice';
 import { Logout, Settings } from '@mui/icons-material';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import LockResetIcon from '@mui/icons-material/LockReset';
+import { useGetFacultyByIdMutation } from '~/feature/faculty/facultyApiSlice';
 
 function Nav() {
     const [clicked, setClicked] = useState(false);
     const currentToken = useSelector(selectCurrentToken);
     const email = useSelector(selectCurrentEmail);
     const { data: currentUser } = useGetUserByEmailQuery(email);
+    const [getFacultyName, { data: currentFacultyObject }] = useGetFacultyByIdMutation();
     const fullName = currentUser ? currentUser[0].fullName : 'Unknown User';
     const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
+
+    useEffect(() => {
+        if (currentUser) {
+            getFacultyName(currentUser[0].facultiesId);
+        }
+    }, [currentUser, getFacultyName]);
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
     const isLoggedIn = useSelector(selectIsAuthenticated);
-    const userObject = currentToken ? jwtDecode(currentToken) : { role: null };
+    let userObject;
+    try {
+        userObject = currentToken ? jwtDecode(currentToken) : { role: null };
+    } catch (error) {
+        console.error('Invalid token:', error);
+        userObject = { role: null };
+    }
 
     const handleLogout = () => {
         window.location.reload();
@@ -133,6 +147,11 @@ function Nav() {
                                 <Avatar />
                                 <Box display="flex" flexDirection="column">
                                     <Typography variant="body1">{fullName}</Typography>
+                                    {currentFacultyObject && (
+                                        <Typography variant="body3" color="textSecondary">
+                                            {currentFacultyObject.facultyName}
+                                        </Typography>
+                                    )}
                                     <Typography variant="body2" color="textSecondary">
                                         {email}
                                     </Typography>

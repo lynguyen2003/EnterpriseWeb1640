@@ -13,19 +13,41 @@ const baseQuery = fetchBaseQuery({
 });
 
 const baseQueryWithReauth = async (args, api, extraOptions) => {
-    let result = await baseQuery(args, api, extraOptions);
+    let result = await baseQuery(args, api, extraOptions).catch((error) => {
+        console.error('Error occurred during base query: ', error);
+        return { error };
+    });
 
-    if (result?.error?.originalStatus === 401) {
-        console.log('sending refresh token');
-        // send refresh token to get new access token
-        const refreshResult = await baseQuery('/Auth/RefreshToken', api, extraOptions);
-        console.log(refreshResult);
-        if (refreshResult?.data) {
-            const user = api.getState().auth.user;
-            // store the new token
-            api.dispatch(setCredentials({ ...refreshResult.data, user }));
-            // retry the original query with new access token
-            result = await baseQuery(args, api, extraOptions);
+    if (result?.error?.status === 401) {
+        const token = localStorage.getItem('token');
+        const refreshToken = localStorage.getItem('refreshToken');
+        const email = localStorage.getItem('email');
+
+        if (!token) {
+            api.dispatch(logOut());
+            return result;
+        }
+
+        const refreshResult = await baseQuery(
+            {
+                url: '/Auth/RefreshToken',
+                method: 'POST',
+                body: { token, refreshToken },
+            },
+            api,
+            extraOptions,
+        ).catch((error) => {
+            console.error('Error occurred during token refresh: ', error);
+            return { error };
+        });
+
+        if (refreshResult) {
+            const { token, refreshToken } = refreshResult;
+            api.dispatch(setCredentials({ token, refreshToken, email }));
+            result = await baseQuery(args, api, extraOptions).catch((error) => {
+                console.error('Error occurred during retrying base query: ', error);
+                return { error };
+            });
         } else {
             api.dispatch(logOut());
         }

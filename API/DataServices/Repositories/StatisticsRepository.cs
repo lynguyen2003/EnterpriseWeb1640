@@ -93,41 +93,53 @@ namespace DataServices.Repositories
             }
         }
 
-
-        public virtual async Task<IEnumerable<ContributionStatistics>> GetPercentage()
+        public virtual async Task<int> GetStatisticsUsers()
         {
             try
             {
-                var contributions = _context.Contributions.AsQueryable();
-                var users = _context.Users.AsQueryable();
-                var faculties = _context.Faculties.AsQueryable();
-                var closureDates = _context.ClosureDates.AsQueryable();
+                int userCount = await _context.Users.CountAsync();
+                return userCount;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "{Repo} GetStatisticsUsers Function error", typeof(StatisticsRepository));
+                throw;
+            }
+        }
 
-                var query = contributions
-                    .Join(users, c => c.UsersId, u => u.Id, (c, u) => new { Contribution = c, User = u })
-                    .Join(faculties, cu => cu.User.FacultiesId, f => f.Id, (cu, f) => new { ContributionUser = cu, Faculty = f })
-                    .Join(closureDates, cf => cf.ContributionUser.Contribution.ClosureDatesId, cd => cd.Id, (cf, cd) => new { ContributionFacultyClosureDates = cf, ClosureDate = cd })
-                    .GroupBy(cfc => new { cfc.ContributionFacultyClosureDates.Faculty.FacultyName, cfc.ClosureDate.AcademicYear })
+        public virtual async Task<int> GetStatisticsApprovedContributions()
+        {
+            try
+            {
+                int contributionCount = await _context.Contributions.
+                    Where(c => c.IsApproved == true).
+                    CountAsync();
+                return contributionCount;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "{Repo} GetStatisticsUsers Function error", typeof(StatisticsRepository));
+                throw;
+            }
+        }
+
+
+        public virtual async Task<IEnumerable<ContributionStatistics>> GetPercentageWithAcademicYear()
+        {
+            try
+            {
+                var statistics = await _context.ClosureDates
+                    .SelectMany(cd => cd.Contributions, (cd, c) => new { ClosureDate = cd, Contribution = c })
+                    .GroupBy(x => x.ClosureDate.AcademicYear)
                     .Select(g => new ContributionStatistics
                     {
-                        FacultyName = g.Key.FacultyName,
-                        AcademicYear = g.Key.AcademicYear,
-                        Contributions = g.Count()
-                    });
-
-                var statistics = await query.ToListAsync();
-
-                foreach (var stat in statistics)
-                {
-                    var totalContributionsForYear = statistics
-                        .Where(s => s.AcademicYear == stat.AcademicYear)
-                        .Sum(s => s.Contributions);
-
-                    stat.Percentage = Math.Round((stat.Contributions * 100.0) / totalContributionsForYear, 2);
-                }
+                        AcademicYear = g.Key,
+                        Contributions = g.Count(),
+                        Percentage = Math.Round((double)g.Count() / _context.Contributions.Count() * 100, 0)
+                    })
+                    .ToListAsync();
 
                 return statistics;
-
             }
             catch (Exception e)
             {

@@ -16,6 +16,7 @@ import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import PieChartOutlineOutlinedIcon from '@mui/icons-material/PieChartOutlineOutlined';
 import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
+import StackedLineChartOutlinedIcon from '@mui/icons-material/StackedLineChartOutlined';
 
 import { useGetUserByEmailQuery } from '~/feature/user/userApiSlice';
 import { useSelector } from 'react-redux';
@@ -165,6 +166,13 @@ const Sidebar = () => {
                                     title="Bar Chart"
                                     to="/manager/bar"
                                     icon={<BarChartOutlinedIcon />}
+                                    selected={selected}
+                                    setSelected={setSelected}
+                                />
+                                <Item
+                                    title="Line Chart"
+                                    to="/manager/line"
+                                    icon={<StackedLineChartOutlinedIcon />}
                                     selected={selected}
                                     setSelected={setSelected}
                                 />

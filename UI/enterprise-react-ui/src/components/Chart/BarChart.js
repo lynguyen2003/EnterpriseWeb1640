@@ -83,7 +83,7 @@ const BarChart = ({ isDashboard = false, data, facultyNames }) => {
                 tickSize: 5,
                 tickPadding: 5,
                 tickRotation: 0,
-                legend: isDashboard ? undefined : 'Value',
+                legend: isDashboard ? undefined : 'Number of Contributions',
                 legendPosition: 'middle',
                 legendOffset: -40,
             }}

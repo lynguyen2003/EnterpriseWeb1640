@@ -129,7 +129,6 @@ namespace DataServices.JwtServices
 
             try
             {
-                _tokenValidationParameters.ValidateLifetime = false; // for testing
 
                 var tokenInVerification = jwtTokenHandler.ValidateToken(tokenRequest.Token, _tokenValidationParameters, out var validedToken);
 
@@ -141,7 +140,7 @@ namespace DataServices.JwtServices
                         return null;
                 }
 
-                var utcExpiryDate = long.Parse(tokenInVerification.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Exp).Value);
+                /*var utcExpiryDate = long.Parse(tokenInVerification.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Exp).Value);
 
                 var expiryDate = UnixTimeStampToDateTime(utcExpiryDate);
                 if (expiryDate > DateTime.Now)
@@ -154,7 +153,7 @@ namespace DataServices.JwtServices
                             "Expired token"
                         }
                     };
-                }
+                }*/
 
                 var storedToken = await _context.RefreshTokens.FirstOrDefaultAsync(x => x.Token == tokenRequest.RefreshToken);
 
@@ -170,7 +169,7 @@ namespace DataServices.JwtServices
                     };
                 }
 
-                if(storedToken.IsUsed)
+                /*if(storedToken.IsUsed)
                     return new AuthResult()
                     {
                         Result = false,
@@ -178,7 +177,7 @@ namespace DataServices.JwtServices
                         {
                             "Invalid tokens"
                         }
-                    };
+                    };*/
                 if(storedToken.IsRevoked)
                     return new AuthResult()
                     {
@@ -231,7 +230,7 @@ namespace DataServices.JwtServices
             }
         }
 
-        private DateTime UnixTimeStampToDateTime(long unixTimeStamp)
+        private static DateTime UnixTimeStampToDateTime(long unixTimeStamp)
         {
             var dateTimeVal = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             dateTimeVal = dateTimeVal.AddSeconds(unixTimeStamp).ToUniversalTime();

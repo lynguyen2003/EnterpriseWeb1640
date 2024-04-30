@@ -8,19 +8,37 @@ export const statisticsApiSlice = apiSlice.injectEndpoints({
                 method: 'GET',
             }),
         }),
+        getStatisticsUsers: builder.query({
+            query: () => ({
+                url: `/Statistics/users`,
+                method: 'GET',
+            }),
+        }),
+        getStatisticsApprovedContributions: builder.query({
+            query: () => ({
+                url: `/Statistics/approved-contributions`,
+                method: 'GET',
+            }),
+        }),
         getStatisticsWithFacutly: builder.query({
             query: () => ({
                 url: `/Statistics/faculty`,
                 method: 'GET',
             }),
         }),
-        getPercentage: builder.query({
+        getPercentageWithAcademicYear: builder.query({
             query: () => ({
-                url: `/Statistics/percentage`,
+                url: `/Statistics/percentage-academic_year`,
                 method: 'GET',
             }),
         }),
     }),
 });
 
-export const { useGetStatisticsQuery, useGetStatisticsWithFacutlyQuery, useGetPercentageQuery } = statisticsApiSlice;
+export const {
+    useGetStatisticsQuery,
+    useGetStatisticsUsersQuery,
+    useGetStatisticsApprovedContributionsQuery,
+    useGetStatisticsWithFacutlyQuery,
+    useGetPercentageWithAcademicYearQuery,
+} = statisticsApiSlice;

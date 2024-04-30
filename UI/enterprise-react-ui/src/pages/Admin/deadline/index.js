@@ -1,4 +1,4 @@
-import { Box, IconButton, useTheme, MenuItem } from '@mui/material';
+import { Box, IconButton, useTheme } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { tokens } from '../../../theme';
 import Header from '../../../components/Header';
@@ -26,7 +26,6 @@ const Deadlines = () => {
         academicYear: '',
         closureDate: '',
         finalClosureDate: '',
-        isSet: '',
     });
     const [open, setOpen] = useState(false);
     const colors = tokens(theme.palette.mode);
@@ -215,21 +214,6 @@ const Deadlines = () => {
                                 shrink: true,
                             }}
                         />
-                        <TextField
-                            select
-                            margin="dense"
-                            id="isSet"
-                            label="Set Date"
-                            fullWidth
-                            value={formPostData.isSet}
-                            onChange={(e) => setFormPostData({ ...formPostData, isSet: e.target.value })}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                        >
-                            <MenuItem value={true}>True</MenuItem>
-                            <MenuItem value={false}>False</MenuItem>
-                        </TextField>
                     </DialogContent>
                     <DialogActions>
                         <Button

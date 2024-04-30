@@ -29,7 +29,6 @@ const Users = () => {
         userName: '',
         fullName: '',
         email: '',
-        phone: '',
         role: '',
         facultiesId: '',
     });
@@ -64,7 +63,6 @@ const Users = () => {
                     userName: user.userName,
                     fullName: user.fullName,
                     email: user.email,
-                    phone: user.phoneNumber,
                     facultiesId: user.facultiesId,
                     faculties: facultyName,
                     role: roles ? roles : 'Unknown Role',
@@ -92,11 +90,6 @@ const Users = () => {
         {
             field: 'email',
             headerName: 'Email',
-            flex: 1,
-        },
-        {
-            field: 'phone',
-            headerName: 'Phone Number',
             flex: 1,
         },
         {
@@ -155,8 +148,6 @@ const Users = () => {
         }
     };
 
-    console.log(formData);
-
     const handleUpdate = () => {
         // Update the user here
         updateUser({
@@ -164,7 +155,6 @@ const Users = () => {
             userName: formData.userName,
             fullName: formData.fullName,
             email: formData.email,
-            phoneNumber: formData.phone,
             facultiesId: formData.facultiesId,
         })
             .unwrap()
@@ -177,7 +167,6 @@ const Users = () => {
                     userName: '',
                     fullName: '',
                     email: '',
-                    phoneNumber: '',
                     role: '',
                     facultiesId: '',
                 });
@@ -318,19 +307,6 @@ const Users = () => {
                             fullWidth
                             value={formData.email}
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                        />
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="phoneNumber"
-                            label="Phone Number"
-                            type="text"
-                            fullWidth
-                            value={formData.phone}
-                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                             InputLabelProps={{
                                 shrink: true,
                             }}

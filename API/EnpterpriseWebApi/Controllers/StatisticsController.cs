@@ -23,10 +23,6 @@ namespace EnpterpriseWebApi.Controllers
         [Route("general")]
         public async Task<IActionResult> GetStatistics([FromQuery] StatisticsFilter filter)
         {
-            if (filter == null)
-            {
-                return BadRequest();
-            }
 
             var result = await _unitOfWorks.Statistics.GetStatistics(filter);
 
@@ -37,20 +33,37 @@ namespace EnpterpriseWebApi.Controllers
         [Route("faculty")]
         public async Task<IActionResult> GetStatisticsWithFaculty([FromQuery]StatisticsFilter filter)
         {
-            if (filter == null)
-            {
-                return BadRequest();
-            }
 
             var result = await _unitOfWorks.Statistics.GetStatisticsWithFaculty(filter);
 
             return Ok(result);
         }
+
         [HttpGet]
-        [Route("percentage")]
+        [Route("users")]
+        public async Task<IActionResult> GetStatisticsUsers()
+        {
+
+            var result = await _unitOfWorks.Statistics.GetStatisticsUsers();
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("approved-contributions")]
+        public async Task<IActionResult> GetStatisticsApprovedContributions()
+        {
+
+            var result = await _unitOfWorks.Statistics.GetStatisticsApprovedContributions();
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("percentage-academic_year")]
         public async Task<IActionResult> GetPercentage()
         {
-            var result = await _unitOfWorks.Statistics.GetPercentage();
+            var result = await _unitOfWorks.Statistics.GetPercentageWithAcademicYear();
 
             return Ok(result);
         }

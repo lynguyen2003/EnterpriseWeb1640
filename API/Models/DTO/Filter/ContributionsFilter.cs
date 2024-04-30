@@ -12,6 +12,7 @@ namespace Models.DTO.Filter
         public int PageSize { get; set; } = 50;
         public bool? IsApproved { get; set; }
         public bool? IsPublished { get; set; }
+        public string? FacultyName { get; set; }
 
     }
 }

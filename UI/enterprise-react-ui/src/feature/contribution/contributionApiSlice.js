@@ -18,13 +18,14 @@ export const contributionApiSlice = apiSlice.injectEndpoints({
                 method: 'GET',
             }),
         }),
-        getContributionWithParams: builder.query({
+        getContributionWithParams: builder.mutation({
             query: (data) => {
                 const params = createParams({
                     PageNum: data.pageNum,
                     PageSize: data.pageSize,
                     isPublished: data.isPublished,
                     isApproved: data.isApproved,
+                    facultyName: data.facultyName,
                 });
 
                 return {
@@ -70,7 +71,7 @@ export const contributionApiSlice = apiSlice.injectEndpoints({
 
 export const {
     useGetAllContributionQuery,
-    useGetContributionWithParamsQuery,
+    useGetContributionWithParamsMutation,
     useGetContributionApprovedQuery,
     useGetContributionByUserIdQuery,
     usePutContributionMutation,

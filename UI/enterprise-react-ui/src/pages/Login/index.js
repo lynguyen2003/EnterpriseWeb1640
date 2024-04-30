@@ -25,7 +25,8 @@ const Login = () => {
         try {
             const userData = await login({ email, password }).unwrap();
             const token = userData.token;
-            dispatch(setCredentials({ token, email }));
+            const refreshToken = userData.refreshToken;
+            dispatch(setCredentials({ token, refreshToken, email }));
             setEmail('');
             setPassword('');
             navigate('/');

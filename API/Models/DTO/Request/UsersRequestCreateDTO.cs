@@ -15,8 +15,7 @@ namespace Models.DTO.Request
         public string Email { get; set; }
         [Required]
         public string FullName { get; set; }
-        [Required]
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
         [Required]
         public int FacultiesId { get; set; }
         public string RoleName { get; set; }

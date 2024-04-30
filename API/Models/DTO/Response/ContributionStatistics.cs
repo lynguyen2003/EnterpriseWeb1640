@@ -8,6 +8,7 @@ namespace Models.DTO.Response
 {
     public class ContributionStatistics
     {
+        public int Users { get; set; }
         public string FacultyName { get; set; }
         public string AcademicYear { get; set; }
         public int Contributions { get; set; }

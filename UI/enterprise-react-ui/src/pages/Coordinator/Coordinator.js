@@ -161,6 +161,10 @@ const Coordinator = () => {
                 isApproved: !row.isApproved,
             };
 
+            if (!updatedRow.isApproved) {
+                updatedRow.isPublished = false;
+            }
+
             await updateContribution(updatedRow).unwrap();
 
             refetch();
@@ -281,6 +285,7 @@ const Coordinator = () => {
                             sx={{ m: 1 }}
                             defaultChecked={params.row.isPublished}
                             onChange={() => handleSetPublish(params.row)}
+                            disabled={!params.row.isApproved}
                         />
                     }
                 />

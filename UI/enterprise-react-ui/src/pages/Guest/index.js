@@ -27,9 +27,11 @@ import { ref, getDownloadURL } from 'firebase/storage';
 import { ToastContainer, toast } from 'react-toastify';
 import { jwtDecode } from 'jwt-decode';
 
-import { useGetContributionWithParamsQuery } from '~/feature/contribution/contributionApiSlice';
+import { useGetContributionWithParamsMutation } from '~/feature/contribution/contributionApiSlice';
 import { useGetUserByUserIdMutation } from '~/feature/user/userApiSlice';
-import { selectCurrentToken } from '~/feature/auth/authSlice';
+import { selectCurrentEmail, selectCurrentToken } from '~/feature/auth/authSlice';
+import { useGetUserByEmailQuery } from '~/feature/user/userApiSlice';
+import { useGetFacultyIdQuery } from '~/feature/faculty/facultyApiSlice';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -42,6 +44,11 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 const Guest = () => {
     const currentToken = useSelector(selectCurrentToken);
+    const email = useSelector(selectCurrentEmail);
+    const { data: currentUser } = useGetUserByEmailQuery(email);
+    const { data: currentUserFaculty } = useGetFacultyIdQuery(
+        currentUser && currentUser.length > 0 ? currentUser[0].facultiesId : undefined,
+    );
     const userObject = currentToken ? jwtDecode(currentToken) : { role: null };
     const [imageUrls, setImageUrls] = useState({});
     const [open, setOpen] = useState(false);
@@ -52,21 +59,32 @@ const Guest = () => {
         pageSize: 8,
         isPublished: userObject.role === 'Guest' ? true : null,
         isApproved: true,
+        facultyName: null,
     });
-    const { data: contributions } = useGetContributionWithParamsQuery(params);
+    const [getAllContribution, { data: contributions }] = useGetContributionWithParamsMutation();
     const [getUserByUserId, { data: userData }] = useGetUserByUserIdMutation();
 
+    console.log(params);
     useEffect(() => {
         if (selectedContribution) {
             getUserByUserId(selectedContribution.usersId);
         }
-    }, [selectedContribution, getUserByUserId]);
+        if (currentUser && currentUserFaculty) {
+            setParams((prevParams) => ({
+                ...prevParams,
+                facultyName: currentUserFaculty ? currentUserFaculty.facultyName : null,
+            }));
+        }
+    }, [selectedContribution, getUserByUserId, currentUser, currentUserFaculty]);
 
     useEffect(() => {
         if (userData) {
             setSelectedUser(userData);
         }
-    }, [userData]);
+        if (currentUserFaculty) {
+            getAllContribution(params);
+        }
+    }, [userData, getAllContribution, params, currentUserFaculty]);
 
     useEffect(() => {
         if (Array.isArray(contributions)) {
@@ -184,7 +202,7 @@ const Guest = () => {
                 onClose={handleClose}
                 aria-labelledby="customized-dialog-title"
                 open={open}
-                maxWidth="1000px"
+                maxWidth="850px"
             >
                 <DialogTitle sx={{ m: 0, p: 2, width: '850px' }} id="customized-dialog-title">
                     {selectedContribution ? selectedContribution.title : 'Loading...'}

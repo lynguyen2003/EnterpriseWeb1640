@@ -8,6 +8,12 @@ export const facultyApiSlice = apiSlice.injectEndpoints({
                 method: 'GET',
             }),
         }),
+        getFacultyId: builder.query({
+            query: (id) => ({
+                url: `/Faculties/${id}`,
+                method: 'GET',
+            }),
+        }),
         GetAllFaculties: builder.query({
             query: () => ({
                 url: '/Faculties/',
@@ -17,4 +23,4 @@ export const facultyApiSlice = apiSlice.injectEndpoints({
     }),
 });
 
-export const { useGetFacultyByIdMutation, useGetAllFacultiesQuery } = facultyApiSlice;
+export const { useGetFacultyByIdMutation, useGetFacultyIdQuery, useGetAllFacultiesQuery } = facultyApiSlice;

@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import Header from '~/components/Header';
-import PieChart from '~/components/Chart/PieChartCount';
+import PieChart from '~/components/Chart/PieChart';
 import { useGetStatisticsWithFacutlyQuery } from '~/feature/statistics/statisticsApiSlice';
 
 const Pie = () => {
@@ -23,10 +23,7 @@ const Pie = () => {
 
     return (
         <Box m="20px">
-            <Header
-                title="Faculty Statistics"
-                subtitle="Distribution of Contribution Counts and Contributors by Faculty"
-            />
+            <Header title="Pie Chart" subtitle="Distribution of Contribution Counts and Contributors by Faculty" />
             <Box height="75vh" display="flex">
                 {contributions && <PieChart data={contributions} metricName="Total Contributions" />}
                 {contributors && <PieChart data={contributors} metricName="Total Contributors" />}

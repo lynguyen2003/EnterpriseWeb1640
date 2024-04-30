@@ -15,7 +15,9 @@ namespace DataServices.MappingProfile
 			CreateMap<CreateFacultyDTO, Faculties>();
 			CreateMap<UpdateFacultyDTO, Faculties>();
 
-            CreateMap<Contributions, ContributionsResponseDTO>();
+            CreateMap<Contributions, ContributionsResponseDTO>()
+                .ForMember(dest => dest.FacultyName, opt => opt.MapFrom(src => src.Users.Faculties.FacultyName))
+                .ReverseMap();
             CreateMap<ContributionsRequestUpdateDTO, Contributions>();
             CreateMap<ContributionsRequestCreateDTO, Contributions>()
 				.ForMember(dest => dest.Id, opt => opt.Ignore())
